@@ -1,0 +1,15 @@
+services:
+  xchange_psql:
+    image: postgres:17-alpine
+    container_name: xchange_psql_container
+    environment:
+      POSTGRES_USER: xchange_user
+      POSTGRES_PASSWORD: xchange_password
+      POSTGRES_DB: xchange_db
+    ports:
+      - "5432:5432"
+    networks:
+      - xchange_network
+
+networks:
+  xchange_network:
