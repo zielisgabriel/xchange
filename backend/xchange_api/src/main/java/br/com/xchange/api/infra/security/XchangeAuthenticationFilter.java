@@ -7,8 +7,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.MimeTypeUtils;
 
-import br.com.xchange.api.application.dto.request.LoginRequestDto;
+import br.com.xchange.api.application.dto.request.LoginUserRequestDto;
+import br.com.xchange.api.application.dto.response.LoginResponseDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,15 +29,14 @@ public class XchangeAuthenticationFilter extends UsernamePasswordAuthenticationF
     HttpServletResponse response
   ) throws AuthenticationException {
     try {
-      LoginRequestDto loginRequestDto = new ObjectMapper()
-        .readValue(request.getInputStream(), LoginRequestDto.class);
+      LoginUserRequestDto loginRequestDto = new ObjectMapper()
+        .readValue(request.getInputStream(), LoginUserRequestDto.class);
 
       UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
         loginRequestDto.email(),
         loginRequestDto.password()
       );
 
-      // return this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
       return getAuthenticationManager().authenticate(usernamePasswordAuthenticationToken);
     } catch (JacksonException | IOException e) {
       throw new RuntimeException(e);
@@ -43,9 +44,16 @@ public class XchangeAuthenticationFilter extends UsernamePasswordAuthenticationF
   }
 
   @Override
-  protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-      Authentication authResult) throws IOException, ServletException {
-    // TODO Auto-generated method stub
-    super.successfulAuthentication(request, response, chain, authResult);
+  protected void successfulAuthentication(
+    HttpServletRequest request,
+    HttpServletResponse response,
+    FilterChain chain,
+    Authentication authResult
+  ) throws IOException, ServletException {
+    LoginResponseDto loginResponseDto = new LoginResponseDto("access-token-test");
+
+    response.setContentType(MimeTypeUtils.APPLICATION_JSON.getType());
+    response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponseDto));
+    response.setStatus(200);
   }
 }
