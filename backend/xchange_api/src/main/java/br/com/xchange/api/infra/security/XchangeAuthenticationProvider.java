@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import br.com.xchange.api.domain.exceptions.EmailOrPasswordInvalidException;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -23,10 +24,10 @@ public class XchangeAuthenticationProvider implements AuthenticationProvider {
     UserDetails userDetails = this.userDetailsService.loadUserByUsername(authentication.getName());
 
     boolean isPasswordValid = this.passwordEncoder
-      .matches(userDetails.getPassword(), authentication.getCredentials().toString());
+      .matches(authentication.getCredentials().toString(), userDetails.getPassword());
 
     if (!isPasswordValid) {
-      throw new RuntimeException("Email ou senha inválida!");
+      throw new EmailOrPasswordInvalidException();
     }
 
     return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
