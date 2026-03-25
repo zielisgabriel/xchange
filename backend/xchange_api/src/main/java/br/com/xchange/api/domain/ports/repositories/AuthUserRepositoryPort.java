@@ -6,4 +6,5 @@ import br.com.xchange.api.domain.entities.AuthUser;
 
 public interface AuthUserRepositoryPort {
   Optional<AuthUser> findByEmail(String email);
+  AuthUser save(AuthUser authUser);
 }
