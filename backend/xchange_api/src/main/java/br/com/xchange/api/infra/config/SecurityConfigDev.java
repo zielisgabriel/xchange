@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import br.com.xchange.api.infra.handlers.XchangeAuthenticationFailureHandler;
 import br.com.xchange.api.infra.security.XchangeAuthenticationFilter;
 
 @Profile("dev")
@@ -38,12 +39,16 @@ public class SecurityConfigDev {
   }
 
   @Bean
-  public XchangeAuthenticationFilter xchangeAuthenticationFilter(AuthenticationManager authenticationManager) {
+  public XchangeAuthenticationFilter xchangeAuthenticationFilter(
+    AuthenticationManager authenticationManager,
+    XchangeAuthenticationFailureHandler xchangeAuthenticationFailureHandler
+  ) {
     XchangeAuthenticationFilter filter = new XchangeAuthenticationFilter(authenticationManager);
 
     filter.setUsernameParameter("email");
     filter.setPasswordParameter("password");
     filter.setFilterProcessesUrl("/auth/login");
+    filter.setAuthenticationFailureHandler(xchangeAuthenticationFailureHandler);
 
     return filter;
   }
