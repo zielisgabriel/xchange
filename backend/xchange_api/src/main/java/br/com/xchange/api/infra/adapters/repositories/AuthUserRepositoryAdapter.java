@@ -20,4 +20,10 @@ public class AuthUserRepositoryAdapter implements AuthUserRepositoryPort {
     return this.jpaAuthUserRepositoryImpl.findByEmail(email)
       .map(AuthUserJpa::toDomain);
   }
+
+  @Override
+  public AuthUser save(AuthUser authUser) {
+    return this.jpaAuthUserRepositoryImpl.save(AuthUserJpa.fromDomain(authUser))
+      .toDomain();
+  }
 }
