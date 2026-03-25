@@ -10,6 +10,8 @@ import br.com.xchange.api.domain.valueobject.BirthDate;
 import br.com.xchange.api.domain.valueobject.Cpf;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -20,6 +22,7 @@ import lombok.Data;
 @Table(name = "auth_users")
 public class AuthUserJpa {
   @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
   @Column(name = "first_name", length = 50, unique = false, nullable = false)
