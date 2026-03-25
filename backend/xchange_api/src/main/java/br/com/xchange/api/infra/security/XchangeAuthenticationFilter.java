@@ -13,13 +13,13 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 
-@RequiredArgsConstructor
 public class XchangeAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-  private final AuthenticationManager authenticationManager;
+  public XchangeAuthenticationFilter(AuthenticationManager authenticationManager) {
+    setAuthenticationManager(authenticationManager);
+  }
 
   @Override
   public Authentication attemptAuthentication(
@@ -35,7 +35,8 @@ public class XchangeAuthenticationFilter extends UsernamePasswordAuthenticationF
         loginRequestDto.password()
       );
 
-      return this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+      // return this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+      return getAuthenticationManager().authenticate(usernamePasswordAuthenticationToken);
     } catch (JacksonException | IOException e) {
       throw new RuntimeException(e);
     }
