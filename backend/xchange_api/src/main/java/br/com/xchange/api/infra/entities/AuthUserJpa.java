@@ -3,6 +3,8 @@ package br.com.xchange.api.infra.entities;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
+
 import br.com.xchange.api.domain.entities.AuthUser;
 import br.com.xchange.api.domain.valueobject.BirthDate;
 import br.com.xchange.api.domain.valueobject.Cpf;
@@ -14,6 +16,7 @@ import lombok.Data;
 
 @Data
 @Entity
+@Component
 @Table(name = "auth_users")
 public class AuthUserJpa {
   @Id
@@ -49,5 +52,18 @@ public class AuthUserJpa {
     authUser.setCpf(new Cpf(cpf));
 
     return authUser;
+  }
+
+  public static AuthUserJpa fromDomain(AuthUser authUser) {
+    AuthUserJpa authUserJpa = new AuthUserJpa();
+    authUserJpa.setId(authUser.getId());
+    authUserJpa.setFirstName(authUser.getFirstName());
+    authUserJpa.setLastName(authUser.getLastName());
+    authUserJpa.setEmail(authUser.getEmail());
+    authUserJpa.setPassword(authUser.getPassword());
+    authUserJpa.setBirthDate(authUser.getBirthDate().getValue());
+    authUserJpa.setCpf(authUser.getCpf().getValue());
+
+    return authUserJpa;
   }
 }
