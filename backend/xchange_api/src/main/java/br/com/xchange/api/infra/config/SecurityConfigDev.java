@@ -12,8 +12,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import br.com.xchange.api.domain.ports.services.AccessTokenServicePort;
+import br.com.xchange.api.infra.filters.AccessTokenFilter;
+import br.com.xchange.api.infra.filters.XchangeAuthenticationFilter;
+import br.com.xchange.api.infra.handlers.XchangeAccessDeniedHandler;
+import br.com.xchange.api.infra.handlers.XchangeAuthenticationEntryPoint;
 import br.com.xchange.api.infra.handlers.XchangeAuthenticationFailureHandler;
-import br.com.xchange.api.infra.security.XchangeAuthenticationFilter;
 
 @Profile("dev")
 @EnableWebSecurity
@@ -22,14 +26,24 @@ public class SecurityConfigDev {
   @Bean
   public SecurityFilterChain securityFilterChain(
     HttpSecurity http,
-    XchangeAuthenticationFilter xchangeAuthenticationFilter
-  ) {
+    XchangeAuthenticationFilter xchangeAuthenticationFilter,
+    AccessTokenFilter accessTokenFilter,
+    XchangeAuthenticationEntryPoint restAuthenticationEntryPoint,
+    XchangeAccessDeniedHandler restAccessDeniedHandler
+  ) throws Exception {
     return http
       .httpBasic(basic -> basic.disable())
       .csrf(csrf -> csrf.disable())
       .formLogin(form -> form.disable())
-      .addFilterBefore(xchangeAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-      .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+      .exceptionHandling(exceptions -> exceptions
+        .authenticationEntryPoint(restAuthenticationEntryPoint)
+        .accessDeniedHandler(restAccessDeniedHandler)
+      )
+      .addFilterBefore(accessTokenFilter, UsernamePasswordAuthenticationFilter.class)
+      .addFilterAt(xchangeAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+      .authorizeHttpRequests(auth -> auth
+        .requestMatchers("/test").authenticated()
+        .anyRequest().permitAll())
       .build();
   }
 
@@ -41,9 +55,10 @@ public class SecurityConfigDev {
   @Bean
   public XchangeAuthenticationFilter xchangeAuthenticationFilter(
     AuthenticationManager authenticationManager,
-    XchangeAuthenticationFailureHandler xchangeAuthenticationFailureHandler
+    XchangeAuthenticationFailureHandler xchangeAuthenticationFailureHandler,
+    AccessTokenServicePort accessTokenServicePort
   ) {
-    XchangeAuthenticationFilter filter = new XchangeAuthenticationFilter(authenticationManager);
+    XchangeAuthenticationFilter filter = new XchangeAuthenticationFilter(authenticationManager, accessTokenServicePort);
 
     filter.setUsernameParameter("email");
     filter.setPasswordParameter("password");
