@@ -6,3 +6,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/xchange_db
     username: xchange_user
     password: xchange_password
+
+jwt:
+  secret-key: bf683c54bcd4e29a58e24579c55a7828dfc4118d03484b8d19ff12b0548b3218
