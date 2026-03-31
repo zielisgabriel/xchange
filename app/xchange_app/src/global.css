@@ -1,0 +1,29 @@
+@import 'tailwindcss';
+@import 'uniwind';
+
+@theme {
+  --color-background: #000000;
+  --color-background-muted: #1a1a1a;
+  --color-foreground: #ffffff;
+  --color-foreground-muted: #a3a3a3;
+  
+  --color-primary: #8b5cf6;
+  --color-primary-muted: #7c3aed;
+  --color-primary-foreground: #ffffff;
+  
+  --color-accent-cyan: #00D4FF;
+  --color-accent-violet: #7B2FFF;
+  
+  --font-sora: Sora_400Regular, sans-serif;
+  --font-sora-thin: Sora_100Thin, sans-serif;
+  --font-sora-extralight: Sora_200ExtraLight, sans-serif;
+  --font-sora-light: Sora_300Light, sans-serif;
+  --font-sora-medium: Sora_500Medium, sans-serif;
+  --font-sora-semibold: Sora_600SemiBold, sans-serif;
+  --font-sora-bold: Sora_700Bold, sans-serif;
+  --font-sora-extrabold: Sora_800ExtraBold, sans-serif;
+}
+
+* {
+  font-family: var(--font-sora);
+}
