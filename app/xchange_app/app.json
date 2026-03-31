@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "xchange_app",
+    "slug": "xchange_app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "xchangeapp",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "backgroundImage": "./assets/images/android-icon-background.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "node_modules/@expo-google-fonts/sora/100Thin/Sora_100Thin.ttf",
+            "node_modules/@expo-google-fonts/sora/200ExtraLight/Sora_200ExtraLight.ttf",
+            "node_modules/@expo-google-fonts/sora/300Light/Sora_300Light.ttf",
+            "node_modules/@expo-google-fonts/sora/400Regular/Sora_400Regular.ttf",
+            "node_modules/@expo-google-fonts/sora/500Medium/Sora_500Medium.ttf",
+            "node_modules/@expo-google-fonts/sora/600SemiBold/Sora_600SemiBold.ttf",
+            "node_modules/@expo-google-fonts/sora/700Bold/Sora_700Bold.ttf",
+            "node_modules/@expo-google-fonts/sora/800ExtraBold/Sora_800ExtraBold.ttf"
+          ]
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
