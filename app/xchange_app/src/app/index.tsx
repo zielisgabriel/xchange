@@ -1,8 +1,9 @@
-import { View, Text } from "react-native"
+import { View } from "react-native"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { useRouter } from "expo-router"
+import { Text } from "@/components/ui/text"
 
 export default function Index() {
   const { push } = useRouter();
@@ -14,8 +15,7 @@ export default function Index() {
           <View className="items-center mt-16">
 
             <Text
-              className="text-foreground font-sora-extrabold"
-              style={{ fontSize: 42, letterSpacing: 3 }}
+              className="text-foreground font-sora-extrabold tracking-widest text-4xl"
             >
               XCHANGE
             </Text>
@@ -56,13 +56,13 @@ export default function Index() {
             className="text-muted-foreground text-center mt-6 text-[10px]"
           >
             Ao continuar, você concorda com nossos{"\n"}
-            <Text className="text-blue-400">
+            <Text className="text-blue-400 text-[10px]">
               <a href="">
                 Termos de Uso
               </a>
             </Text>
             {" e "}
-            <Text className="text-blue-400">
+            <Text className="text-blue-400 text-[10px]">
               <a href="">
                 Política de Privacidade
               </a>
