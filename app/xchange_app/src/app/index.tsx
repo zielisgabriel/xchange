@@ -2,8 +2,11 @@ import { View, Text } from "react-native"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { useRouter } from "expo-router"
 
 export default function Index() {
+  const { push } = useRouter();
+
   return (
     <GestureHandlerRootView className="flex-1">
       <View className="flex-1 bg-background">
@@ -28,6 +31,7 @@ export default function Index() {
             <Button
               variant="default"
               size="lg"
+              onPress={() => push("/login")}
             >
               <Text>
                 Fazer Login
