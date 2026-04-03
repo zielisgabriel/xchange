@@ -20,6 +20,8 @@ import {
 
 SplashScreen.preventAutoHideAsync();
 
+const isAuthenticate = true
+
 export default function Layout() {
   const [loaded, error] = useFonts({
     "Sora-Thin": Sora_100Thin,
@@ -44,7 +46,16 @@ export default function Layout() {
 
   return (
     <ThemeProvider value={NAV_THEME["dark"]}>
-      <Stack />
+      <Stack>
+        <Stack.Protected guard={isAuthenticate}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack.Protected>
+        <Stack.Protected guard={!isAuthenticate}>
+          <Stack.Screen name="auth" options={{ headerShown: false }} />
+          <Stack.Screen name="login" options={{ headerShown: false }} />
+          <Stack.Screen name="register" options={{ headerShown: false }} />
+        </Stack.Protected>
+      </Stack>
       <PortalHost />
     </ThemeProvider>
   );
