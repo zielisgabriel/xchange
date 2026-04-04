@@ -17,12 +17,13 @@ import {
   Sora_700Bold,
   Sora_800ExtraBold,
 } from "@expo-google-fonts/sora";
+import { useAuthStore } from "@/hooks/use-auth-store";
 
 SplashScreen.preventAutoHideAsync();
 
-const isAuthenticate = true
-
 export default function Layout() {
+  const { isAuthenticated } = useAuthStore()
+
   const [loaded, error] = useFonts({
     "Sora-Thin": Sora_100Thin,
     "Sora-ExtraLight": Sora_200ExtraLight,
@@ -47,10 +48,10 @@ export default function Layout() {
   return (
     <ThemeProvider value={NAV_THEME["dark"]}>
       <Stack>
-        <Stack.Protected guard={isAuthenticate}>
+        <Stack.Protected guard={isAuthenticated}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack.Protected>
-        <Stack.Protected guard={!isAuthenticate}>
+        <Stack.Protected guard={!isAuthenticated}>
           <Stack.Screen name="auth" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
           <Stack.Screen name="register" options={{ headerShown: false }} />
