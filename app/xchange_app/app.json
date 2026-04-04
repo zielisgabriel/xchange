@@ -26,7 +26,7 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "server",
+      "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
@@ -45,11 +45,17 @@
             "node_modules/@expo-google-fonts/sora/800ExtraBold/Sora_800ExtraBold.ttf"
           ]
         }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "configureAndroidBackup": true,
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
+        }
       ]
     ],
     "experiments": {
-      "typedRoutes": true,
-      "reactServerFunctions": true
+      "typedRoutes": true
     }
   }
 }
