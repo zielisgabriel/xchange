@@ -65,15 +65,15 @@ export default function Auth() {
           >
             Ao continuar, você concorda com nossos{"\n"}
             <Text className="text-blue-400 text-[10px]">
-              <a href="">
+              <Link href={"/"}>
                 Termos de Uso
-              </a>
+              </Link>
             </Text>
             {" e "}
             <Text className="text-blue-400 text-[10px]">
-              <a href="">
+              <Link href={"/"}>
                 Política de Privacidade
-              </a>
+              </Link>
             </Text>
           </Text>
         </View>

@@ -1,4 +1,4 @@
-"use server"
+"server-only"
 
 interface FetchClientProps {
   host?: string,
@@ -24,5 +24,10 @@ export async function fetchClient({
 
   }
 
-  return response
+  return {
+    ok: response.ok,
+    status: response.status,
+    statusText: response.statusText,
+    body
+  }
 }

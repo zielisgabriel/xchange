@@ -5,7 +5,7 @@ import { Input } from "./ui/input"
 import { Text } from "./ui/text"
 import { Button } from "./ui/button"
 import { useRef, useTransition } from "react"
-import { loginAction } from "@/actions/login-action"
+import loginAction from "@/actions/login-action"
 import { useAuthStore } from "@/hooks/use-auth-store"
 
 export function LoginForm() {

@@ -1,6 +1,6 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { useState } from "react";
 import { View } from "react-native";

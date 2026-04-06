@@ -1,8 +1,8 @@
-"use server"
+"server-only"
 
 import { fetchClient } from "@/lib/fetch-client"
 
-export async function loginAction(formData: FormData) {
+export default async function loginAction(formData: FormData) {
   const body = {
     email: formData.get("email"),
     password: formData.get("password")
@@ -10,6 +10,7 @@ export async function loginAction(formData: FormData) {
 
   const response = await fetchClient({
     init: {
+      method: "POST",
       body: JSON.stringify(body),
       headers: {
         "Content-Type": "application/json"
@@ -21,12 +22,10 @@ export async function loginAction(formData: FormData) {
   console.log(response)
 
   if (response.ok) {
-    const data = await response.json()
-
     return {
       "status": response.statusText,
       "code": response.status,
-      "access_token": data["access_token"] as string,
+      "access_token": response.body?.["access_token"] as string,
       "message": "Bem vindo(a)!"
     }
   }
