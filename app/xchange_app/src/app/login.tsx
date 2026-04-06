@@ -8,6 +8,7 @@ import GoogleIcon from "@/assets/icons8-google.svg"
 import { Separator } from "@/components/ui/separator";
 import { Link } from "expo-router";
 import { useAuthStore } from "@/hooks/use-auth-store";
+import { LoginForm } from "@/components/login-form";
 
 export default function Login() {
   const [stayConnected, setStayConnected] = useState<boolean>(true)
@@ -24,23 +25,7 @@ export default function Login() {
         </Text>
       </View>
 
-      <View className="space-y-4">
-        <Input placeholder="E-mail" className="placeholder:text-sm" />
-        <Input placeholder="Senha" className="placeholder:text-sm" />
-
-        <View className="flex flex-row items-center gap-2">
-          <Checkbox checked={stayConnected} onCheckedChange={() => setStayConnected(!stayConnected)} />
-          <Text>
-            Manter conectado
-          </Text>
-        </View>
-
-        <Button onPress={logIn}>
-          <Text className="font-bold">
-            Entrar
-          </Text>
-        </Button>
-      </View>
+      <LoginForm />
 
       <View>
         <Separator className="my-4" />
