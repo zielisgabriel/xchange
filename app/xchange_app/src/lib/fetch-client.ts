@@ -1,4 +1,6 @@
-"server-only"
+"use server"
+
+import { fetch } from "expo/fetch"
 
 interface FetchClientProps {
   host?: string,
