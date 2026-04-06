@@ -1,8 +1,8 @@
-"server-only"
+"use server"
 
 import { fetchClient } from "@/lib/fetch-client"
 
-export default async function loginAction(formData: FormData) {
+export async function loginAction(formData: FormData) {
   const body = {
     email: formData.get("email"),
     password: formData.get("password")
