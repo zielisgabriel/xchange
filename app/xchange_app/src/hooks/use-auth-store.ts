@@ -4,7 +4,8 @@ import { getItemAsync, setItemAsync, deleteItemAsync } from "expo-secure-store"
 
 type UserState = {
   isAuthenticated: boolean;
-  logIn: () => void;
+  token: null | string;
+  logIn: (token: string) => void;
   logOut: () => void;
 }
 
@@ -29,11 +30,13 @@ export const useAuthStore = create<UserState>(
   persist(
     (set) => ({
       isAuthenticated: false,
-      logIn: () => {
+      token: null,
+      logIn: (token) => {
         set((state) => {
           return {
             ...state,
-            isAuthenticated: true
+            isAuthenticated: true,
+            token
           }
         })
       },
@@ -41,7 +44,8 @@ export const useAuthStore = create<UserState>(
         set((state) => {
           return {
             ...state,
-            isAuthenticated: false
+            isAuthenticated: false,
+            token: null
           }
         })
       }
