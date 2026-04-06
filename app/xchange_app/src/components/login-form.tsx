@@ -5,7 +5,7 @@ import { Input } from "./ui/input"
 import { Text } from "./ui/text"
 import { Button } from "./ui/button"
 import { useRef, useTransition } from "react"
-import loginAction from "@/actions/login-action"
+import { loginAction } from "@/actions/login-action"
 import { useAuthStore } from "@/hooks/use-auth-store"
 
 export function LoginForm() {
@@ -37,17 +37,27 @@ export function LoginForm() {
       <Input
         placeholder="E-mail"
         className="placeholder:text-sm"
+        placeholderTextColor={"#FFF"}
+        textContentType="emailAddress"
+        autoComplete="off"
+        autoCorrect={false}
         onChangeText={value => emailRef.current = value}
       />
       <Input
         placeholder="Senha"
         className="placeholder:text-sm"
+        placeholderTextColor={"#FFF"}
+        autoComplete="off"
+        autoCorrect={false}
         onChangeText={value => passwordRef.current = value}
       />
 
-      <Button onPress={handleLogin}>
+      <Button
+        onPress={handleLogin}
+        disabled={isPeding}
+      >
         <Text className="font-bold">
-          Entrar
+          {isPeding ? "Carregando..." : "Entrar"}
         </Text>
       </Button>
     </View>
