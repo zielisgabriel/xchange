@@ -18,6 +18,8 @@ import {
   Sora_800ExtraBold,
 } from "@expo-google-fonts/sora";
 import { useAuthStore } from "@/hooks/use-auth-store";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Toaster } from "sonner-native"
 
 SplashScreen.preventAutoHideAsync();
 
@@ -46,18 +48,21 @@ export default function Layout() {
   }
 
   return (
-    <ThemeProvider value={NAV_THEME["dark"]}>
-      <Stack>
-        <Stack.Protected guard={isAuthenticated}>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack.Protected>
-        <Stack.Protected guard={!isAuthenticated}>
-          <Stack.Screen name="auth" options={{ headerShown: false }} />
-          <Stack.Screen name="login" options={{ headerShown: false }} />
-          <Stack.Screen name="register" options={{ headerShown: false }} />
-        </Stack.Protected>
-      </Stack>
-      <PortalHost />
-    </ThemeProvider>
+    <GestureHandlerRootView>
+      <ThemeProvider value={NAV_THEME["dark"]}>
+        <Stack>
+          <Stack.Protected guard={isAuthenticated}>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          </Stack.Protected>
+          <Stack.Protected guard={!isAuthenticated}>
+            <Stack.Screen name="auth" options={{ headerShown: false }} />
+            <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="register" options={{ headerShown: false }} />
+          </Stack.Protected>
+        </Stack>
+        <Toaster />
+        <PortalHost />
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
