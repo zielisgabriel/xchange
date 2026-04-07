@@ -4,18 +4,20 @@ import { View } from "react-native"
 import { Input } from "./ui/input"
 import { Text } from "./ui/text"
 import { Button } from "./ui/button"
-import { useRef, useTransition } from "react"
+import { useRef, useState, useTransition } from "react"
 import { loginAction } from "@/actions/login-action"
 import { useAuthStore } from "@/hooks/use-auth-store"
+import { toast } from "sonner-native"
 
 export function LoginForm() {
   const emailRef = useRef("")
   const passwordRef = useRef("")
   const { logIn } = useAuthStore()
-  const [isPeding, startTransition] = useTransition()
+  const [isPeding, setIsPeding] = useState<boolean>(false)
 
   function handleLogin() {
-    startTransition(async () => {
+    setIsPeding(true)
+    const promise = (async () => {
       const email = emailRef.current
       const password = passwordRef.current
       const formData = new FormData()
@@ -29,7 +31,15 @@ export function LoginForm() {
         console.log(response)
       }
       console.log(response)
+    })()
+
+    toast.promise(promise, {
+      loading: "Entrando...",
+      success: () => "Bem vindo(a)!",
+      error: "Error ao entrar na conta"
     })
+
+    promise.finally(() => setIsPeding(false))
   }
 
   return (
@@ -47,6 +57,8 @@ export function LoginForm() {
         placeholder="Senha"
         className="placeholder:text-sm"
         placeholderTextColor={"#FFF"}
+        textContentType="password"
+        secureTextEntry={true}
         autoComplete="off"
         autoCorrect={false}
         onChangeText={value => passwordRef.current = value}
