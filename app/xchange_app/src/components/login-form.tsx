@@ -4,7 +4,7 @@ import { View } from "react-native"
 import { Input } from "./ui/input"
 import { Text } from "./ui/text"
 import { Button } from "./ui/button"
-import { useRef, useState, useTransition } from "react"
+import { useRef, useTransition } from "react"
 import { loginAction } from "@/actions/login-action"
 import { useAuthStore } from "@/hooks/use-auth-store"
 import { toast } from "sonner-native"
@@ -13,11 +13,10 @@ export function LoginForm() {
   const emailRef = useRef("")
   const passwordRef = useRef("")
   const { logIn } = useAuthStore()
-  const [isPeding, setIsPeding] = useState<boolean>(false)
+  const [isPeding, startTransition] = useTransition()
 
   function handleLogin() {
-    setIsPeding(true)
-    const promise = (async () => {
+    startTransition(async () => {
       const email = emailRef.current
       const password = passwordRef.current
       const formData = new FormData()
@@ -29,17 +28,14 @@ export function LoginForm() {
       if (response.code == 200) {
         logIn(response.access_token!)
         console.log(response)
+        toast.success(response.message)
+        return
       }
+
+      toast.error(response.message)
+
       console.log(response)
-    })()
-
-    toast.promise(promise, {
-      loading: "Entrando...",
-      success: () => "Bem vindo(a)!",
-      error: "Error ao entrar na conta"
     })
-
-    promise.finally(() => setIsPeding(false))
   }
 
   return (
