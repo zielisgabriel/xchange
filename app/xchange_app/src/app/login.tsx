@@ -2,18 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
-import { useState } from "react";
 import { View } from "react-native";
 import GoogleIcon from "@/assets/icons8-google.svg"
 import { Separator } from "@/components/ui/separator";
 import { Link } from "expo-router";
-import { useAuthStore } from "@/hooks/use-auth-store";
 import { LoginForm } from "@/components/login-form";
 
 export default function Login() {
-  const [stayConnected, setStayConnected] = useState<boolean>(true)
-  const { logIn } = useAuthStore()
-
   return (
     <View className="flex justify-center h-full w-full px-4">
       <View className="mb-4">
