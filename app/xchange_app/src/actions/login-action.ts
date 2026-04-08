@@ -23,16 +23,16 @@ export async function loginAction(formData: FormData) {
 
   if (response.ok) {
     return {
-      "status": response.statusText,
       "code": response.status,
       "access_token": response.body?.["access_token"] as string,
       "message": "Bem vindo(a)!"
     }
   }
 
+  console.error(response.body)
+
   return {
-    "status": response.statusText,
     "code": response.status,
-    "message": "Não foi possível efetuar a autenticação"
+    "message": response.status === 409 ? response.body?.["message"] as string : "Não foi possível efetuar o login"
   }
 }
