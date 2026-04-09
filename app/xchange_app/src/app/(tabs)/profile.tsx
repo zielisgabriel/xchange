@@ -1,34 +1,147 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
+import { Icon } from "@/components/ui/icon";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { View } from "react-native";
+import { Separator } from "@/components/ui/separator";
+import { Pressable, ScrollView, View } from "react-native";
 import { useAuthStore } from "@/hooks/use-auth-store";
+import { LinearGradient } from "expo-linear-gradient";
+import {
+  User,
+  Bell,
+  Shield,
+  HelpCircle,
+  LogOut,
+  Pencil,
+  Settings,
+} from "lucide-react-native";
+import { MenuItem } from "@/components/menu-item";
 
 export default function Profile() {
   const { logOut } = useAuthStore()
 
   return (
-    <View className="flex-1 items-center">
-      <Avatar alt="avatar" className="w-30 h-30">
-        <AvatarFallback>
-          <Text className="text-5xl">JG</Text>
-        </AvatarFallback>
-      </Avatar>
-
-      <Text className="text-lg font-semibold">
-        José Gabriel
-      </Text>
-
-      <Button
-        variant={"destructive"}
-        size={"sm"}
-        className="max-w-40"
-        onPress={logOut}
+    <ScrollView
+      className="flex-1 bg-background"
+      contentContainerClassName="pb-10"
+      showsVerticalScrollIndicator={false}
+    >
+      <LinearGradient
+        colors={["hsl(0, 0%, 14%)", "hsl(0, 0%, 6%)"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        className="pt-16 pb-10 items-center rounded-b-[32px]"
       >
-        <Text>
-          Sair da conta
+        <View className="relative mb-4">
+          <Avatar alt="avatar" className="w-24 h-24 border-[3px] border-white/20">
+            <AvatarFallback className="bg-white/10">
+              <Text className="text-4xl font-bold text-white">JG</Text>
+            </AvatarFallback>
+          </Avatar>
+          <Pressable className="absolute bottom-0 right-0 w-8 h-8 bg-primary rounded-full items-center justify-center border-2 border-background">
+            <Icon as={Pencil} className="size-3.5 text-primary-foreground" />
+          </Pressable>
+        </View>
+
+        <Text className="text-xl font-bold text-white">
+          José Gabriel
         </Text>
-      </Button>
-    </View>
-  )
+        <Text className="text-sm text-white/50 mt-1">
+          @josegabriel
+        </Text>
+
+        {/* Stats row
+        <View className="flex-row mt-6 gap-8">
+          <View className="items-center">
+            <Text className="text-lg font-bold text-white">12</Text>
+            <Text className="text-xs text-white/50">Trocas</Text>
+          </View>
+          <View className="w-px bg-white/15 my-1" />
+          <View className="items-center">
+            <Text className="text-lg font-bold text-white">4.8</Text>
+            <Text className="text-xs text-white/50">Avaliação</Text>
+          </View>
+          <View className="w-px bg-white/15 my-1" />
+          <View className="items-center">
+            <Text className="text-lg font-bold text-white">3</Text>
+            <Text className="text-xs text-white/50">Skills</Text>
+          </View>
+        </View> */}
+      </LinearGradient>
+
+      {/* <View className="px-5 mt-6">
+        <View className="flex-row items-center justify-between mb-3">
+          <Text className="text-base font-semibold">Minhas Skills</Text>
+          <Pressable>
+            <Text className="text-sm text-primary font-medium">Editar</Text>
+          </Pressable>
+        </View>
+        <View className="flex-row flex-wrap gap-2">
+          {["React Native", "TypeScript", "UI/UX Design"].map((skill) => (
+            <View
+              key={skill}
+              className="flex-row items-center bg-muted px-3.5 py-2 rounded-full"
+            >
+              <Icon as={Star} className="size-3.5 text-primary mr-1.5" />
+              <Text className="text-sm font-medium">{skill}</Text>
+            </View>
+          ))}
+        </View>
+      </View> */}
+
+      <View className="mt-6">
+        <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-5 mb-1">
+          Conta
+        </Text>
+        <MenuItem
+          icon={User}
+          label="Informações pessoais"
+          subtitle="Nome, e-mail, telefone"
+        />
+        <MenuItem
+          icon={Shield}
+          label="Segurança"
+          subtitle="Senha e autenticação"
+        />
+      </View>
+
+      <View className="px-5 my-2">
+        <Separator />
+      </View>
+
+      <View>
+        <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-5 mb-1">
+          Preferências
+        </Text>
+        <MenuItem
+          icon={Bell}
+          label="Notificações"
+          subtitle="Push, e-mail, SMS"
+        />
+        <MenuItem
+          icon={Settings}
+          label="Configurações"
+          subtitle="Tema, idioma, privacidade"
+        />
+        <MenuItem
+          icon={HelpCircle}
+          label="Ajuda e suporte"
+          subtitle="Fale conosco"
+        />
+      </View>
+
+      <View className="px-5 my-2">
+        <Separator />
+      </View>
+
+      <MenuItem
+        icon={LogOut}
+        label="Sair da conta"
+        destructive
+        onPress={logOut}
+      />
+    </ScrollView>
+  );
 }
