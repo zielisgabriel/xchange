@@ -5,7 +5,6 @@ import { Input } from "./ui/input"
 import { Text } from "./ui/text"
 import { Button } from "./ui/button"
 import { useRef, useTransition } from "react"
-import { loginAction } from "@/actions/login-action"
 import { useAuthStore } from "@/hooks/use-auth-store"
 import { toast } from "sonner-native"
 
@@ -19,22 +18,29 @@ export function LoginForm() {
     startTransition(async () => {
       const email = emailRef.current
       const password = passwordRef.current
-      const formData = new FormData()
 
-      formData.append("email", email)
-      formData.append("password", password)
+      const response = await fetch("/api/login", {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      const data = await response.json()
 
-      const response = await loginAction(formData)
-      if (response.code == 200) {
-        logIn(response.access_token!)
-        console.log(response)
-        toast.success(response.message)
+      if (data.code == 200) {
+        logIn(data.access_token!)
+        console.log(data)
+        toast.success(data.message)
         return
       }
 
-      toast.error(response.message)
+      toast.error(data.message)
 
-      console.log(response)
+      console.log(data)
     })
   }
 
