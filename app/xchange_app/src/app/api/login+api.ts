@@ -1,0 +1,35 @@
+import { fetchClient } from "@/lib/fetch-client"
+
+export async function POST(req: Request) {
+  const { email, password } = await req.json()
+
+  const body = { email, password }
+
+  const response = await fetchClient({
+    init: {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    },
+    path: "/auth/login"
+  })
+
+  console.log(response)
+
+  if (response.ok) {
+    return Response.json({
+      "code": response.status,
+      "access_token": response.body?.["access_token"] as string,
+      "message": "Bem vindo(a)!"
+    })
+  }
+
+  console.error(response.body)
+
+  return Response.json({
+    "code": response.status,
+    "message": response.status === 409 ? response.body?.["message"] as string : "Não foi possível efetuar o login"
+  })
+}
