@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 public class AuthUser {
   private UUID id;
+  private Profile profile;
   private String firstName;
   private String lastName;
   private String email;
@@ -16,3 +17,4 @@ public class AuthUser {
   private BirthDate birthDate;
   private Cpf cpf;
 }
+
