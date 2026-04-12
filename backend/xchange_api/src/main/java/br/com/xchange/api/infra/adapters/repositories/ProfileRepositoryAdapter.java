@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import br.com.xchange.api.domain.entities.Profile;
 import br.com.xchange.api.domain.exceptions.UserNotFoundException;
@@ -13,7 +12,6 @@ import br.com.xchange.api.infra.adapters.implementations.JpaAuthUserRepositoryIm
 import br.com.xchange.api.infra.adapters.implementations.JpaProfileRepositoryImpl;
 import br.com.xchange.api.infra.entities.AuthUserJpa;
 import br.com.xchange.api.infra.entities.ProfileJpa;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -21,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
   private final JpaProfileRepositoryImpl jpaProfileRepositoryImpl;
   private final JpaAuthUserRepositoryImpl jpaAuthUserRepositoryImpl;
-  private final EntityManager entityManager;
 
   @Override
   public Optional<Profile> findById(UUID id) {
@@ -30,7 +27,6 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
   }
 
   @Override
-  @Transactional
   public Profile save(Profile profile) {
     AuthUserJpa authUser = this.jpaAuthUserRepositoryImpl.findById(profile.getId())
       .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado para criar perfil."));
@@ -39,8 +35,6 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
     profileJpa.setAuthUserJpa(authUser);
     profileJpa.setFavoriteCryptos(profile.getFavoriteCryptos());
 
-    entityManager.persist(profileJpa);
-
-    return profileJpa.toDomain();
+    return this.jpaProfileRepositoryImpl.save(profileJpa).toDomain();
   }
 }
