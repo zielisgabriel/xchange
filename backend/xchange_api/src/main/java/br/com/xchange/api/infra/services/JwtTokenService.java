@@ -5,10 +5,10 @@ import java.util.List;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import br.com.xchange.api.domain.ports.services.AccessTokenServicePort;
+import br.com.xchange.api.infra.entities.XchangeUserDetails;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
@@ -21,10 +21,10 @@ public class JwtTokenService implements AccessTokenServicePort {
   public String generate(Object principal) {
     SecretKey secretKey = Keys.hmacShaKeyFor(key.getBytes());
 
-    UserDetails userDetails = (UserDetails) principal;
+    XchangeUserDetails userDetails = (XchangeUserDetails) principal;
     
     String jwt = Jwts.builder()
-      .subject(userDetails.getUsername())
+      .subject(userDetails.getId().toString())
       .claim("authorities", userDetails.getAuthorities())
       .signWith(secretKey)
       .compact();
