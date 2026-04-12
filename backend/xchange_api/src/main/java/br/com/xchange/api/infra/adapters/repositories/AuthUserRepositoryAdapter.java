@@ -1,6 +1,7 @@
 package br.com.xchange.api.infra.adapters.repositories;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +19,12 @@ public class AuthUserRepositoryAdapter implements AuthUserRepositoryPort {
   @Override
   public Optional<AuthUser> findByEmail(String email) {
     return this.jpaAuthUserRepositoryImpl.findByEmail(email)
+      .map(AuthUserJpa::toDomain);
+  }
+
+  @Override
+  public Optional<AuthUser> findById(UUID id) {
+    return this.jpaAuthUserRepositoryImpl.findById(id)
       .map(AuthUserJpa::toDomain);
   }
 
