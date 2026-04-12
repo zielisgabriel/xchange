@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import org.hibernate.validator.constraints.br.CPF;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import br.com.xchange.api.domain.entities.AuthUser;
 import br.com.xchange.api.domain.valueobject.BirthDate;
 import br.com.xchange.api.domain.valueobject.Cpf;
@@ -14,15 +16,23 @@ import jakarta.validation.constraints.Past;
 public record RegisterUserRequestDto(
   @Email(message = "E-mail invalido!")
   String email,
+
   @CPF(message = "CPF inválido!")
   String cpf,
+  
   @Size(min = 3, max = 30, message = "O nome tem que ser maior que 3 e menor que 30 caracteres!")
+  @JsonProperty(value = "first_name")
   String firstName,
+
   @Size(min = 3, max = 30, message = "O sobrenome tem que ser maior que 3 e menor que 30 caracteres!")
+  @JsonProperty(value = "last_name")
   String lastName,
+
   @Size(min = 8, max = 100, message = "A senha tem que ser maior que 8 e menor que 100 caracteres!")
   String password,
+
   @Past(message = "A data de nascimento tem que ser uma data passada!")
+  @JsonProperty(value = "birth_date")
   LocalDate birthDate
 ) {
   public AuthUser toDomain() {
