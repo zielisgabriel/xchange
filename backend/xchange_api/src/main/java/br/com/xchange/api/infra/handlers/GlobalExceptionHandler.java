@@ -1,26 +1,52 @@
 package br.com.xchange.api.infra.handlers;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import br.com.xchange.api.application.dto.response.ApiErrorResponse;
 import br.com.xchange.api.domain.exceptions.EmailOrPasswordInvalidException;
+import br.com.xchange.api.domain.exceptions.ForbiddenChangeAnotherUserInfoException;
+import br.com.xchange.api.domain.exceptions.UserAlreadyExistsException;
+import br.com.xchange.api.domain.exceptions.UserNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
-  private final String DEFAULT_ERROR_VIEW = "error";
 
-  @ResponseStatus(value = HttpStatus.CONFLICT)
-  @ExceptionHandler(value = EmailOrPasswordInvalidException.class)
-  public ModelAndView emailOrPasswordInvalidHandler(EmailOrPasswordInvalidException exception) {
-    ModelAndView modelAndView = new ModelAndView();
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<ApiErrorResponse> handleUserNotFound(
+      UserNotFoundException exception, HttpServletRequest request) {
+    return buildResponse(HttpStatus.NOT_FOUND, exception.getMessage(), request);
+  }
 
-    modelAndView.setStatus(HttpStatus.CONFLICT);
-    modelAndView.setViewName(DEFAULT_ERROR_VIEW);
-    modelAndView.addObject("message", exception.getMessage());
+  @ExceptionHandler(EmailOrPasswordInvalidException.class)
+  public ResponseEntity<ApiErrorResponse> handleEmailOrPasswordInvalid(
+      EmailOrPasswordInvalidException exception, HttpServletRequest request) {
+    return buildResponse(HttpStatus.CONFLICT, exception.getMessage(), request);
+  }
 
-    return modelAndView;
+  @ExceptionHandler(ForbiddenChangeAnotherUserInfoException.class)
+  public ResponseEntity<ApiErrorResponse> handleForbiddenChange(
+      ForbiddenChangeAnotherUserInfoException exception, HttpServletRequest request) {
+    return buildResponse(HttpStatus.FORBIDDEN, exception.getMessage(), request);
+  }
+
+  @ExceptionHandler(UserAlreadyExistsException.class)
+  public ResponseEntity<ApiErrorResponse> handleUserAlreadyExists(
+      UserAlreadyExistsException exception, HttpServletRequest request) {
+    return buildResponse(HttpStatus.CONFLICT, exception.getMessage(), request);
+  }
+
+  private ResponseEntity<ApiErrorResponse> buildResponse(
+      HttpStatus status, String message, HttpServletRequest request) {
+    ApiErrorResponse body = ApiErrorResponse.of(
+      status.value(),
+      status.getReasonPhrase(),
+      message,
+      request.getRequestURI()
+    );
+    return ResponseEntity.status(status).body(body);
   }
 }
