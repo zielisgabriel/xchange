@@ -42,7 +42,7 @@ public class SecurityConfigDev {
       .addFilterBefore(accessTokenFilter, UsernamePasswordAuthenticationFilter.class)
       .addFilterAt(xchangeAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
       .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/test").authenticated()
+        .requestMatchers("/profile/**").authenticated()
         .anyRequest().permitAll())
       .build();
   }
