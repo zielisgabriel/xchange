@@ -54,18 +54,18 @@ public class AuthUserJpa {
     AuthUser authUser = new AuthUser();
 
     authUser.setId(id);
-    if (profileJpa != null) {
-      Profile profile = new Profile();
-      profile.setId(profileJpa.getId());
-      profile.setFavoriteCryptos(profileJpa.getFavoriteCryptos());
-      authUser.setProfile(profile);
-    }
     authUser.setFirstName(firstName);
     authUser.setLastName(lastName);
     authUser.setEmail(email);
     authUser.setPassword(password);
     authUser.setBirthDate(new BirthDate(birthDate));
     authUser.setCpf(new Cpf(cpf));
+    if (profileJpa != null) {
+      Profile profile = new Profile();
+      profile.setId(profileJpa.getId());
+      profile.setFavoriteCryptos(profileJpa.getFavoriteCryptos());
+      authUser.setProfile(profile);
+    }
 
     return authUser;
   }
