@@ -19,9 +19,7 @@ public class CreateProfileUseCase {
         throw new UserAlreadyExistsException("Perfil já existe");
       });
 
-    Profile profile = new Profile();
-    profile.setId(requestDto.userId());
-    profile.setFavoriteCryptos(requestDto.favoriteCryptos());
+    Profile profile = requestDto.toDomain();
 
     return this.repositoryPort.save(profile);
   }
