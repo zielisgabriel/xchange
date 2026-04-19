@@ -1,3 +1,6 @@
+volumes:
+  redis-data:
+
 services:
   xchange_psql:
     image: postgres:17-alpine
@@ -10,6 +13,16 @@ services:
       - "5432:5432"
     networks:
       - xchange_network
+
+  xchange_redis:
+    image: redis:8.4.2-alpine
+    container_name: xchange_redis_container
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_ARGS: --requirepass xchange_password --appendonly yes
+    volumes:
+      - redis-data:/data
 
 networks:
   xchange_network:
