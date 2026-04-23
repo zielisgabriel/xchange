@@ -1,6 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { Icon } from "@/components/ui/icon";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -14,8 +13,8 @@ import {
   Shield,
   HelpCircle,
   LogOut,
-  Pencil,
   Settings,
+  CameraIcon,
 } from "lucide-react-native";
 import { MenuItem } from "@/components/menu-item";
 
@@ -40,16 +39,14 @@ export default function Profile() {
               <Text className="text-4xl font-bold text-white">JG</Text>
             </AvatarFallback>
           </Avatar>
+
           <Pressable className="absolute bottom-0 right-0 w-8 h-8 bg-primary rounded-full items-center justify-center border-2 border-background">
-            <Icon as={Pencil} className="size-3.5 text-primary-foreground" />
+            <Icon as={CameraIcon} className="size-3.5 text-primary-foreground" />
           </Pressable>
         </View>
 
         <Text className="text-xl font-bold text-white">
           José Gabriel
-        </Text>
-        <Text className="text-sm text-white/50 mt-1">
-          @josegabriel
         </Text>
 
         {/* Stats row
