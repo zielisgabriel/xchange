@@ -1,3 +1,4 @@
+import { TrendingCoins } from "@/components/trending-coins";
 import { Text } from "@/components/ui/text";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -7,9 +8,11 @@ export default function Index() {
   return (
     <SafeAreaView>
       <View>
-        <Text className="text-foreground">
-          Home screen
+        <Text className="text-foreground text-xl font-bold">
+          Destaques do dia
         </Text>
+
+        <TrendingCoins />
       </View>
     </SafeAreaView>
   )
