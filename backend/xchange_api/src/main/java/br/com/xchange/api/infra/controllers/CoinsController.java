@@ -1,5 +1,7 @@
 package br.com.xchange.api.infra.controllers;
 
+import java.util.List;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +22,7 @@ public class CoinsController {
   @Cacheable(value = "coins")
   @ResponseStatus(code = HttpStatus.OK)
   @GetMapping("/trending")
-  public TrendingCoinResponse getTrendingCoins() {
+  public List<TrendingCoinResponse> getTrendingCoins() {
     return this.getTrendingCoinUseCase.execute();
   }
 }
