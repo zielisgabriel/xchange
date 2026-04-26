@@ -12,14 +12,6 @@ import org.springframework.data.redis.serializer.RedisSerializationContext.Seria
 
 @Configuration
 public class RedisCacheConfig {
-  // @Bean
-  // public RedisCacheConfiguration cacheConfiguration() {
-  //   return RedisCacheConfiguration.defaultCacheConfig()
-  //     .entryTtl(Duration.ofMinutes(10)) 
-  //     .disableCachingNullValues()
-  //     .serializeValuesWith(SerializationPair.fromSerializer(RedisSerializer.json()));
-  //   }
-
   @Bean
   public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
     return (builder) -> builder

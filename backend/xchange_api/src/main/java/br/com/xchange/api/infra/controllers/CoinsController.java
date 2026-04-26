@@ -7,20 +7,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.xchange.api.infra.services.CoinsGeckoService;
-import br.com.xchange.api.infra.services.dto.coingecko.TrendingCoinsCoinsGeckoResponse;
+import br.com.xchange.api.application.dto.response.TrendingCoinResponse;
+import br.com.xchange.api.application.usecase.GetTrendingCoinUseCase;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/coins")
 public class CoinsController {
-  private final CoinsGeckoService coinsService;
+  private final GetTrendingCoinUseCase getTrendingCoinUseCase;
 
   @Cacheable(value = "coins")
   @ResponseStatus(code = HttpStatus.OK)
   @GetMapping("/trending")
-  public TrendingCoinsCoinsGeckoResponse getTrendingCoins() {
-    return this.coinsService.getTrendingCoins();
+  public TrendingCoinResponse getTrendingCoins() {
+    return this.getTrendingCoinUseCase.execute();
   }
 }
