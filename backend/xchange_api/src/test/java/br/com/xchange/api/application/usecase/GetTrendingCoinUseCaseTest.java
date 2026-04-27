@@ -14,10 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import br.com.xchange.api.application.dto.CoinWithMarketData;
 import br.com.xchange.api.application.dto.response.TrendingCoinResponse;
 import br.com.xchange.api.application.dto.response.TrendingCoinResponse.TrendingCoinWrapper;
-import br.com.xchange.api.domain.entities.Coin;
+import br.com.xchange.api.domain.entities.CoinWithMarketData;
 import br.com.xchange.api.domain.ports.services.CoinServicePort;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,11 +35,8 @@ class GetTrendingCoinUseCaseTest {
     @Test
     @DisplayName("Deve retornar uma resposta com as moedas em tendência")
     void shouldReturnTrendingCoinsResponse() {
-      Coin bitcoin = createCoin("bitcoin", "Bitcoin", "btc", "https://img.com/btc.png", 100000);
-      CoinWithMarketData btcData = new CoinWithMarketData(bitcoin, 1.0, "$2T", "$50B", "sparkline_btc");
-
-      Coin ethereum = createCoin("ethereum", "Ethereum", "eth", "https://img.com/eth.png", 3000);
-      CoinWithMarketData ethData = new CoinWithMarketData(ethereum, 0.05, "$400B", "$20B", "sparkline_eth");
+      CoinWithMarketData btcData = createCoinWithMarketData("bitcoin", "Bitcoin", "btc", "https://img.com/btc.png", 100000, 1.0, "$2T", "$50B", "sparkline_btc");
+      CoinWithMarketData ethData = createCoinWithMarketData("ethereum", "Ethereum", "eth", "https://img.com/eth.png", 3000, 0.05, "$400B", "$20B", "sparkline_eth");
 
       when(coinServicePort.getTrendingCoinsDetailed()).thenReturn(List.of(btcData, ethData));
 
@@ -53,8 +49,7 @@ class GetTrendingCoinUseCaseTest {
     @Test
     @DisplayName("Deve mapear corretamente os campos da moeda para o wrapper")
     void shouldMapCoinFieldsToWrapperCorrectly() {
-      Coin bitcoin = createCoin("bitcoin", "Bitcoin", "btc", "https://img.com/btc.png", 100000);
-      CoinWithMarketData btcData = new CoinWithMarketData(bitcoin, 1.0, "$2T", "$50B", "sparkline_btc");
+      CoinWithMarketData btcData = createCoinWithMarketData("bitcoin", "Bitcoin", "btc", "https://img.com/btc.png", 100000, 1.0, "$2T", "$50B", "sparkline_btc");
 
       when(coinServicePort.getTrendingCoinsDetailed()).thenReturn(List.of(btcData));
 
@@ -96,14 +91,10 @@ class GetTrendingCoinUseCaseTest {
     @Test
     @DisplayName("Deve preservar a ordem das moedas retornadas pelo serviço")
     void shouldPreserveOrderFromService() {
-      Coin bitcoin = createCoin("bitcoin", "Bitcoin", "btc", "https://img.com/btc.png", 100000);
-      Coin ethereum = createCoin("ethereum", "Ethereum", "eth", "https://img.com/eth.png", 3000);
-      Coin solana = createCoin("solana", "Solana", "sol", "https://img.com/sol.png", 150);
-
       List<CoinWithMarketData> serviceData = List.of(
-          new CoinWithMarketData(bitcoin, 1.0, "$2T", "$50B", "sparkline_btc"),
-          new CoinWithMarketData(ethereum, 0.05, "$400B", "$20B", "sparkline_eth"),
-          new CoinWithMarketData(solana, 0.002, "$60B", "$5B", "sparkline_sol")
+          createCoinWithMarketData("bitcoin", "Bitcoin", "btc", "https://img.com/btc.png", 100000, 1.0, "$2T", "$50B", "sparkline_btc"),
+          createCoinWithMarketData("ethereum", "Ethereum", "eth", "https://img.com/eth.png", 3000, 0.05, "$400B", "$20B", "sparkline_eth"),
+          createCoinWithMarketData("solana", "Solana", "sol", "https://img.com/sol.png", 150, 0.002, "$60B", "$5B", "sparkline_sol")
       );
       when(coinServicePort.getTrendingCoinsDetailed()).thenReturn(serviceData);
 
@@ -115,13 +106,19 @@ class GetTrendingCoinUseCaseTest {
     }
   }
 
-  private Coin createCoin(String id, String name, String symbol, String imageUrl, Integer price) {
-    Coin coin = new Coin();
+  private CoinWithMarketData createCoinWithMarketData(
+      String id, String name, String symbol, String imageUrl, Integer price,
+      Double priceBtc, String marketCap, String totalVolume, String sparkline) {
+    CoinWithMarketData coin = new CoinWithMarketData();
     coin.setId(id);
     coin.setName(name);
     coin.setSymbol(symbol);
     coin.setImageUrl(imageUrl);
     coin.setPrice(price);
+    coin.setPriceBtc(priceBtc);
+    coin.setMarketCap(marketCap);
+    coin.setTotalVolume(totalVolume);
+    coin.setSparkline(sparkline);
     return coin;
   }
 }

@@ -17,15 +17,15 @@ public class GetTrendingCoinUseCase {
   public TrendingCoinResponse execute() {
     List<TrendingCoinWrapper> coins = this.coinServicePort.getTrendingCoinsDetailed().stream()
       .map(data -> new TrendingCoinResponse.TrendingCoinWrapper(
-        data.coin().getId(),
-        data.coin().getName(),
-        data.coin().getSymbol(),
-        data.coin().getImageUrl(),
-        data.coin().getPrice(),
-        data.priceBtc(),
-        data.marketCap(),
-        data.totalVolume(),
-        data.sparkline()
+        data.getId(),
+        data.getName(),
+        data.getSymbol(),
+        data.getImageUrl(),
+        data.getPrice(),
+        data.getPriceBtc(),
+        data.getMarketCap(),
+        data.getTotalVolume(),
+        data.getSparkline()
       )).toList();
 
     return new TrendingCoinResponse(coins);
