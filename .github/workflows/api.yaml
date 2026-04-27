@@ -3,8 +3,6 @@ name: API CI pipeline
 on:
   push:
     branches: ["main"]
-    paths:
-      - "backend/xchange_api/**"
   pull_request:
     branches: ["main"]
     paths:
@@ -20,6 +18,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6.0.2
+
+      - name: Run Docker Compose
+        run: docker compose up -d
 
       - name: Setup Java JDK
         uses: actions/setup-java@v5.2.0
