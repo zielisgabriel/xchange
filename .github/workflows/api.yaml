@@ -1,0 +1,29 @@
+name: API CI pipeline
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "backend/xchange_api/**"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "backend/xchange_api/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "backend/xchange_api"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v5.2.0
+        with:
+          distribution: "temurin"
+          java-version: "25"
+      - run: mvn clean package
