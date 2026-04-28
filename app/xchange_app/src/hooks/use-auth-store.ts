@@ -29,7 +29,7 @@ const authStorage = {
 export const useAuthStore = create<UserState>(
   persist(
     (set) => ({
-      isAuthenticated: false,
+      isAuthenticated: true,
       token: null,
       logIn: (token) => {
         set((state) => {

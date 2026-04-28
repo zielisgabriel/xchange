@@ -20,6 +20,8 @@ import {
 import { useAuthStore } from "@/hooks/use-auth-store";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner-native"
+import { QueryClientProvider } from "@tanstack/react-query"
+import { queryClient } from "@/lib/query-client";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -49,20 +51,22 @@ export default function Layout() {
 
   return (
     <GestureHandlerRootView>
-      <ThemeProvider value={NAV_THEME["dark"]}>
-        <Stack>
-          <Stack.Protected guard={isAuthenticated}>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          </Stack.Protected>
-          <Stack.Protected guard={!isAuthenticated}>
-            <Stack.Screen name="auth" options={{ headerShown: false }} />
-            <Stack.Screen name="login" options={{ headerShown: false }} />
-            <Stack.Screen name="register" options={{ headerShown: false }} />
-          </Stack.Protected>
-        </Stack>
-        <Toaster />
-        <PortalHost />
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider value={NAV_THEME["dark"]}>
+          <Stack>
+            <Stack.Protected guard={isAuthenticated}>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            </Stack.Protected>
+            <Stack.Protected guard={!isAuthenticated}>
+              <Stack.Screen name="auth" options={{ headerShown: false }} />
+              <Stack.Screen name="login" options={{ headerShown: false }} />
+              <Stack.Screen name="register" options={{ headerShown: false }} />
+            </Stack.Protected>
+          </Stack>
+          <Toaster />
+          <PortalHost />
+        </ThemeProvider>
+      </QueryClientProvider>
     </GestureHandlerRootView>
   );
 }
