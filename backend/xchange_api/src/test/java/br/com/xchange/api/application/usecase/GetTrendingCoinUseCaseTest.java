@@ -3,6 +3,7 @@ package br.com.xchange.api.application.usecase;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,8 +36,8 @@ class GetTrendingCoinUseCaseTest {
     @Test
     @DisplayName("Deve retornar uma resposta com as moedas em tendência")
     void shouldReturnTrendingCoinsResponse() {
-      CoinWithMarketData btcData = createCoinWithMarketData("bitcoin", "Bitcoin", "btc", "https://img.com/btc.png", 100000, 1.0, "$2T", "$50B", "sparkline_btc");
-      CoinWithMarketData ethData = createCoinWithMarketData("ethereum", "Ethereum", "eth", "https://img.com/eth.png", 3000, 0.05, "$400B", "$20B", "sparkline_eth");
+      CoinWithMarketData btcData = createCoinWithMarketData("bitcoin", "Bitcoin", "btc", "https://img.com/btc.png", BigDecimal.valueOf(100000), BigDecimal.valueOf(1.0), "$2T", "$50B", "sparkline_btc");
+      CoinWithMarketData ethData = createCoinWithMarketData("ethereum", "Ethereum", "eth", "https://img.com/eth.png", BigDecimal.valueOf(3000), BigDecimal.valueOf(0.05), "$400B", "$20B", "sparkline_eth");
 
       when(coinServicePort.getTrendingCoinsDetailed()).thenReturn(List.of(btcData, ethData));
 
@@ -49,7 +50,7 @@ class GetTrendingCoinUseCaseTest {
     @Test
     @DisplayName("Deve mapear corretamente os campos da moeda para o wrapper")
     void shouldMapCoinFieldsToWrapperCorrectly() {
-      CoinWithMarketData btcData = createCoinWithMarketData("bitcoin", "Bitcoin", "btc", "https://img.com/btc.png", 100000, 1.0, "$2T", "$50B", "sparkline_btc");
+      CoinWithMarketData btcData = createCoinWithMarketData("bitcoin", "Bitcoin", "btc", "https://img.com/btc.png", BigDecimal.valueOf(100000), BigDecimal.valueOf(1.0), "$2T", "$50B", "sparkline_btc");
 
       when(coinServicePort.getTrendingCoinsDetailed()).thenReturn(List.of(btcData));
 
@@ -60,8 +61,8 @@ class GetTrendingCoinUseCaseTest {
       assertEquals("Bitcoin", wrapper.name());
       assertEquals("btc", wrapper.symbol());
       assertEquals("https://img.com/btc.png", wrapper.imageUrl());
-      assertEquals(100000, wrapper.price());
-      assertEquals(1.0, wrapper.priceBtc());
+      assertEquals(BigDecimal.valueOf(100000), wrapper.price());
+      assertEquals(BigDecimal.valueOf(1.0), wrapper.priceBtc());
       assertEquals("$2T", wrapper.marketCap());
       assertEquals("$50B", wrapper.totalVolume());
       assertEquals("sparkline_btc", wrapper.sparkline());
@@ -92,9 +93,9 @@ class GetTrendingCoinUseCaseTest {
     @DisplayName("Deve preservar a ordem das moedas retornadas pelo serviço")
     void shouldPreserveOrderFromService() {
       List<CoinWithMarketData> serviceData = List.of(
-          createCoinWithMarketData("bitcoin", "Bitcoin", "btc", "https://img.com/btc.png", 100000, 1.0, "$2T", "$50B", "sparkline_btc"),
-          createCoinWithMarketData("ethereum", "Ethereum", "eth", "https://img.com/eth.png", 3000, 0.05, "$400B", "$20B", "sparkline_eth"),
-          createCoinWithMarketData("solana", "Solana", "sol", "https://img.com/sol.png", 150, 0.002, "$60B", "$5B", "sparkline_sol")
+          createCoinWithMarketData("bitcoin", "Bitcoin", "btc", "https://img.com/btc.png", BigDecimal.valueOf(100000), BigDecimal.valueOf(1.0), "$2T", "$50B", "sparkline_btc"),
+          createCoinWithMarketData("ethereum", "Ethereum", "eth", "https://img.com/eth.png", BigDecimal.valueOf(3000), BigDecimal.valueOf(0.05), "$400B", "$20B", "sparkline_eth"),
+          createCoinWithMarketData("solana", "Solana", "sol", "https://img.com/sol.png", BigDecimal.valueOf(150), BigDecimal.valueOf(0.002), "$60B", "$5B", "sparkline_sol")
       );
       when(coinServicePort.getTrendingCoinsDetailed()).thenReturn(serviceData);
 
@@ -107,8 +108,8 @@ class GetTrendingCoinUseCaseTest {
   }
 
   private CoinWithMarketData createCoinWithMarketData(
-      String id, String name, String symbol, String imageUrl, Integer price,
-      Double priceBtc, String marketCap, String totalVolume, String sparkline) {
+      String id, String name, String symbol, String imageUrl, BigDecimal price,
+      BigDecimal priceBtc, String marketCap, String totalVolume, String sparkline) {
     CoinWithMarketData coin = new CoinWithMarketData();
     coin.setId(id);
     coin.setName(name);
