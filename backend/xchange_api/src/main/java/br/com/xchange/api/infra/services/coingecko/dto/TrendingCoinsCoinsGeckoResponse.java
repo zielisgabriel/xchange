@@ -1,5 +1,6 @@
 package br.com.xchange.api.infra.services.coingecko.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -26,14 +27,14 @@ public record TrendingCoinsCoinsGeckoResponse(
     String small,
     String large,
     String slug,
-    @JsonProperty("price_btc") Double priceBtc,
+    @JsonProperty("price_btc") BigDecimal priceBtc,
     Integer score,
     CoinData data
   ) {}
 
   @JsonIgnoreProperties(ignoreUnknown = true)
   public record CoinData(
-    Double price,
+    BigDecimal price,
     @JsonProperty("price_btc") String priceBtcStr,
     @JsonProperty("market_cap") String marketCap,
     @JsonProperty("market_cap_btc") String marketCapBtc,

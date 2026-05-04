@@ -1,5 +1,7 @@
 package br.com.xchange.api.domain.entities;
 
+import java.math.BigDecimal;
+
 import lombok.Data;
 
 @Data
@@ -8,6 +10,6 @@ public class Coin {
   private String name;
   private String symbol;
   private String imageUrl;
-  private Integer price;
+  private BigDecimal price;
   private String updatedAt;
 }

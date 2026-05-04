@@ -1,5 +1,6 @@
 package br.com.xchange.api.application.dto.response;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public record TrendingCoinResponse(
@@ -10,8 +11,8 @@ public record TrendingCoinResponse(
     String name,
     String symbol,
     String imageUrl,
-    Integer price,
-    Double priceBtc,
+    BigDecimal price,
+    BigDecimal priceBtc,
     String marketCap,
     String totalVolume,
     String sparkline

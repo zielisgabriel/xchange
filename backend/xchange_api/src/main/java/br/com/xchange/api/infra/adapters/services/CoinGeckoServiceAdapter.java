@@ -1,5 +1,6 @@
 package br.com.xchange.api.infra.adapters.services;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -48,7 +49,7 @@ public class CoinGeckoServiceAdapter implements CoinServicePort {
         coinWithMarketData.setImageUrl(item.large());
         coinWithMarketData.setMarketCap(item.data().marketCap());
         coinWithMarketData.setName(item.name());
-        coinWithMarketData.setPrice(item.data().price().intValue());
+        coinWithMarketData.setPrice(new BigDecimal(item.data().price().doubleValue()));
         coinWithMarketData.setPriceBtc(item.priceBtc());
         coinWithMarketData.setSparkline(item.data().sparkline());
         coinWithMarketData.setSymbol(item.symbol());
@@ -67,7 +68,7 @@ public class CoinGeckoServiceAdapter implements CoinServicePort {
     coin.setImageUrl(item.large());
 
     if (item.data() != null) {
-      coin.setPrice(item.data().price() != null ? item.data().price().intValue() : null);
+      coin.setPrice(item.data().price() != null ? new BigDecimal(item.data().price().doubleValue()) : null);
     }
 
     return coin;
