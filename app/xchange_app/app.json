@@ -34,12 +34,19 @@
         }
       ],
       [
+        "expo-image",
+        {
+          "disableLibdav1d": true
+        }
+      ],
+      [
         "expo-secure-store",
         {
           "configureAndroidBackup": true,
           "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
         }
-      ]
+      ],
+      "expo-image"
     ],
     "experiments": {
       "typedRoutes": true,
