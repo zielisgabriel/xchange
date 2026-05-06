@@ -26,14 +26,14 @@ export default function Login() {
         <Separator className="my-4" />
       </View>
 
-      <View>
+      {/* <View>
         <Button variant={"outline"} className="text-foreground">
           <GoogleIcon width={32} height={32} />
           <Text>
             Entrar com uma conta
           </Text>
         </Button>
-      </View>
+      </View> */}
 
       <View className="flex flex-row justify-center gap-1 mt-4">
         <Text className="text-sm">
