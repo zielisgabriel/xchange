@@ -1,6 +1,7 @@
 package br.com.xchange.api.infra.controllers;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ public class AuthController {
 
   @PostMapping("/register")
   @ResponseStatus(code = HttpStatus.CREATED)
-  public AuthUser register(@RequestBody RegisterUserRequestDto requestDto) {
+  public AuthUser register(@Validated @RequestBody RegisterUserRequestDto requestDto) {
     return this.registerUserUseCase.execute(requestDto);
   }
 }
