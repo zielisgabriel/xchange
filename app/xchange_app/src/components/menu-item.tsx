@@ -27,15 +27,15 @@ export function MenuItem({ icon, label, subtitle, onPress, destructive }: MenuIt
         <Text className={`text-[15px] font-medium ${destructive ? "text-destructive" : ""}`}>
           {label}
         </Text>
-        {subtitle && (
+        {subtitle ? (
           <Text className="text-xs text-muted-foreground mt-0.5">
             {subtitle}
           </Text>
-        )}
+        ) : null}
       </View>
-      {!destructive && (
+      {!destructive ? (
         <Icon as={ChevronRight} className="size-5 text-muted-foreground/50" />
-      )}
+      ) : null}
     </Pressable>
   );
 }

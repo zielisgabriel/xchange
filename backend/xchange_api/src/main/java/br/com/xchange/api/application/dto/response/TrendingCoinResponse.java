@@ -15,6 +15,7 @@ public record TrendingCoinResponse(
     BigDecimal priceBtc,
     String marketCap,
     String totalVolume,
-    String sparkline
+    String sparkline,
+    BigDecimal priceChangePercentage24h
   ) {};
 }

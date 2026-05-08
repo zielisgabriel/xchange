@@ -41,12 +41,18 @@ public record TrendingCoinsCoinsGeckoResponse(
     @JsonProperty("total_volume") String totalVolume,
     @JsonProperty("total_volume_btc") String totalVolumeBtc,
     String sparkline,
-    CoinContent content
+    CoinContent content,
+    @JsonProperty("price_change_percentage_24h") PriceChangePercentage24h priceChangePercentage24h
   ) {}
 
   @JsonIgnoreProperties(ignoreUnknown = true)
   public record CoinContent(
     String title,
     String description
+  ) {}
+
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public record PriceChangePercentage24h(
+    BigDecimal usd
   ) {}
 }

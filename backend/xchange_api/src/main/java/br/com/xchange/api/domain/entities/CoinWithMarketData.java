@@ -12,4 +12,5 @@ public class CoinWithMarketData extends Coin {
   private String marketCap;
   private String totalVolume;
   private String sparkline;
+  private BigDecimal priceChangePercentage24h;
 }

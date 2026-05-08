@@ -25,7 +25,8 @@ public class GetTrendingCoinUseCase {
         data.getPriceBtc(),
         data.getMarketCap(),
         data.getTotalVolume(),
-        data.getSparkline()
+        data.getSparkline(),
+        data.getPriceChangePercentage24h()
       )).toList();
 
     return new TrendingCoinResponse(coins);

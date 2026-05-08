@@ -48,45 +48,8 @@ export default function Profile() {
         <Text className="text-xl font-bold text-white">
           José Gabriel
         </Text>
-
-        {/* Stats row
-        <View className="flex-row mt-6 gap-8">
-          <View className="items-center">
-            <Text className="text-lg font-bold text-white">12</Text>
-            <Text className="text-xs text-white/50">Trocas</Text>
-          </View>
-          <View className="w-px bg-white/15 my-1" />
-          <View className="items-center">
-            <Text className="text-lg font-bold text-white">4.8</Text>
-            <Text className="text-xs text-white/50">Avaliação</Text>
-          </View>
-          <View className="w-px bg-white/15 my-1" />
-          <View className="items-center">
-            <Text className="text-lg font-bold text-white">3</Text>
-            <Text className="text-xs text-white/50">Skills</Text>
-          </View>
-        </View> */}
       </LinearGradient>
 
-      {/* <View className="px-5 mt-6">
-        <View className="flex-row items-center justify-between mb-3">
-          <Text className="text-base font-semibold">Minhas Skills</Text>
-          <Pressable>
-            <Text className="text-sm text-primary font-medium">Editar</Text>
-          </Pressable>
-        </View>
-        <View className="flex-row flex-wrap gap-2">
-          {["React Native", "TypeScript", "UI/UX Design"].map((skill) => (
-            <View
-              key={skill}
-              className="flex-row items-center bg-muted px-3.5 py-2 rounded-full"
-            >
-              <Icon as={Star} className="size-3.5 text-primary mr-1.5" />
-              <Text className="text-sm font-medium">{skill}</Text>
-            </View>
-          ))}
-        </View>
-      </View> */}
 
       <View className="mt-6">
         <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-5 mb-1">
