@@ -18,6 +18,10 @@ public class RedisCacheConfig {
       .withCacheConfiguration("coins", RedisCacheConfiguration
         .defaultCacheConfig().entryTtl(TtlFunction.just(Duration.ofHours(4)))
         .serializeValuesWith(SerializationPair.fromSerializer(RedisSerializer.json()))
+      )
+      .withCacheConfiguration("globalCoinMetrics", RedisCacheConfiguration
+        .defaultCacheConfig().entryTtl(TtlFunction.just(Duration.ofHours(4)))
+        .serializeValuesWith(SerializationPair.fromSerializer(RedisSerializer.json()))
       );
   }
 }

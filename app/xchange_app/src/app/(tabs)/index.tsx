@@ -1,34 +1,51 @@
-import { TrendingCoins } from "@/components/trending-coins";
-import { SectionHeader } from "@/components/section-header";
-import { Text } from "@/components/ui/text";
-import { IconBadge } from "@/components/ui/icon-badge";
-import { Icon } from "@/components/ui/icon";
+import { TrendingCoins } from "@/components/trending-coins"
+import { SectionHeader } from "@/components/section-header"
+import { Text } from "@/components/ui/text"
+import { Icon } from "@/components/ui/icon"
 import {
   TrendingUp,
   Search,
-  Bell,
-  ArrowUpRight,
-  ArrowDownRight,
-  BarChart3,
-  Activity,
-} from "lucide-react-native";
-import { Pressable, ScrollView, View } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
+  Bell
+} from "lucide-react-native"
+import { Pressable, RefreshControl, ScrollView, View } from "react-native"
+import { LinearGradient } from "expo-linear-gradient"
+import Animated, { FadeInDown, FadeIn } from "react-native-reanimated"
+import { useQueryClient } from "@tanstack/react-query"
+import { useCallback, useState } from "react"
+import { GlobalCoinsHeader } from "@/components/global-coins-header"
 
 function getGreeting(): string {
-  const hour = new Date().getHours();
-  if (hour < 12) return "Bom dia";
-  if (hour < 18) return "Boa tarde";
-  return "Boa noite";
+  const hour = new Date().getHours()
+  if (hour < 12) return "Bom dia"
+  if (hour < 18) return "Boa tarde"
+  return "Boa noite"
 }
 
 export default function Index() {
+  const queryClient = useQueryClient()
+  const [refreshing, setRefreshing] = useState(false)
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true)
+    await queryClient.invalidateQueries({ queryKey: ["trending-coins"] })
+    await new Promise((resolve) => setTimeout(resolve, 800))
+    setRefreshing(false)
+  }, [queryClient])
+
   return (
     <ScrollView
       className="flex-1 bg-background"
       contentInsetAdjustmentBehavior="automatic"
       showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          tintColor="#a1a1aa"
+          colors={["#a1a1aa"]}
+          progressBackgroundColor="#18181b"
+        />
+      }
     >
       <LinearGradient
         colors={["hsl(0, 0%, 12%)", "hsl(0, 0%, 5%)"]}
@@ -64,44 +81,7 @@ export default function Index() {
         </Animated.View>
       </LinearGradient>
 
-      <Animated.View
-        entering={FadeInDown.delay(200).duration(500).springify().damping(16)}
-        className="px-4 -mt-6"
-      >
-        <View className="flex-row gap-3">
-          <View className="flex-1 bg-card rounded-2xl p-4 gap-2 border border-border/50 shadow-sm">
-            <View className="flex-row items-center gap-1.5">
-              <IconBadge icon={BarChart3} variant="success" size="sm" />
-              <Text className="text-xs text-muted-foreground font-medium">
-                Market Cap
-              </Text>
-            </View>
-            <Text className="text-lg font-bold">$3.2T</Text>
-            <View className="flex-row items-center gap-0.5">
-              <ArrowUpRight size={12} color="#22c55e" />
-              <Text className="text-xs font-medium" style={{ color: "#22c55e" }}>
-                +2.4%
-              </Text>
-            </View>
-          </View>
-
-          <View className="flex-1 bg-card rounded-2xl p-4 gap-2 border border-border/50 shadow-sm">
-            <View className="flex-row items-center gap-1.5">
-              <IconBadge icon={Activity} variant="info" size="sm" />
-              <Text className="text-xs text-muted-foreground font-medium">
-                Volume 24h
-              </Text>
-            </View>
-            <Text className="text-lg font-bold">$128B</Text>
-            <View className="flex-row items-center gap-0.5">
-              <ArrowDownRight size={12} color="#ef4444" />
-              <Text className="text-xs font-medium" style={{ color: "#ef4444" }}>
-                -1.1%
-              </Text>
-            </View>
-          </View>
-        </View>
-      </Animated.View>
+      <GlobalCoinsHeader />
 
       <Animated.View
         entering={FadeInDown.delay(300).duration(500)}
@@ -117,5 +97,5 @@ export default function Index() {
 
       <View className="h-8" />
     </ScrollView>
-  );
+  )
 }

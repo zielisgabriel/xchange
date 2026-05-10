@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record TrendingCoinsCoinsGeckoResponse(
+public record TrendingCoinsCoinsGecko(
   List<CoinWrapper> coins
 ) {
 

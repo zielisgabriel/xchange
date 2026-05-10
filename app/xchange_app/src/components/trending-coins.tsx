@@ -3,7 +3,6 @@ import { Text } from "./ui/text"
 import { useQuery } from "@tanstack/react-query"
 import { Pressable, View } from "react-native"
 import { Button } from "./ui/button"
-import { ScrollView } from "react-native-gesture-handler"
 import { Avatar, AvatarImage } from "./ui/avatar"
 import { Image } from "expo-image"
 import { useState } from "react"
@@ -19,7 +18,7 @@ interface TrendingCoinResponse {
 const currencyFormat = new Intl.NumberFormat("en-US", {
   currency: "USD",
   style: "currency",
-  maximumFractionDigits: 4,
+  maximumFractionDigits: 7,
 })
 
 const percentageFormat = new Intl.NumberFormat("pt-BR", {
@@ -63,7 +62,7 @@ export function TrendingCoins() {
             key={i}
             entering={FadeInDown.delay(i * 60).duration(400)}
           >
-            <View className="flex-row items-center justify-between px-1 py-3">
+            <View className="flex-row items-center justify-between px-1 py-3 gap-3">
               <View className="flex-row items-center gap-3">
                 <Skeleton className="w-5 h-4 rounded" />
                 <Skeleton className="w-10 h-10 rounded-full" />

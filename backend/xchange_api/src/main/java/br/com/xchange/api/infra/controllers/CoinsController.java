@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.xchange.api.application.dto.response.GlobalCoinMetricsResponse;
 import br.com.xchange.api.application.dto.response.TrendingCoinResponse;
+import br.com.xchange.api.application.usecase.GetGlobalCoinMetrics;
 import br.com.xchange.api.application.usecase.GetTrendingCoinUseCase;
 import lombok.RequiredArgsConstructor;
 
@@ -16,11 +18,19 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/coins")
 public class CoinsController {
   private final GetTrendingCoinUseCase getTrendingCoinUseCase;
+  private final GetGlobalCoinMetrics getGlobalCoinMetrics;
 
   @Cacheable(value = "coins")
   @ResponseStatus(code = HttpStatus.OK)
   @GetMapping("/trending")
   public TrendingCoinResponse getTrendingCoins() {
     return this.getTrendingCoinUseCase.execute();
+  }
+
+  @Cacheable(value = "globalCoinMetrics")
+  @ResponseStatus(code = HttpStatus.OK)
+  @GetMapping("/global")
+  public GlobalCoinMetricsResponse getGlobalCoinMetrics() {
+    return this.getGlobalCoinMetrics.execute();
   }
 }
