@@ -13,13 +13,15 @@ import {
   Shield,
   HelpCircle,
   LogOut,
-  Settings,
-  CameraIcon,
+  Settings
 } from "lucide-react-native";
 import { MenuItem } from "@/components/menu-item";
+import { useProfileSimple } from "@/hooks/use-profile-simple";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Profile() {
   const { logOut } = useAuthStore()
+  const { data: profileSimple, isLoading, isError } = useProfileSimple()
 
   return (
     <ScrollView
@@ -36,18 +38,22 @@ export default function Profile() {
         <View className="relative mb-4">
           <Avatar alt="avatar" className="w-24 h-24 border-[3px] border-white/20">
             <AvatarFallback className="bg-white/10">
-              <Text className="text-4xl font-bold text-white">JG</Text>
+              <Icon as={User} className="w-[50%] h-[50%]" />
             </AvatarFallback>
           </Avatar>
 
-          <Pressable className="absolute bottom-0 right-0 w-8 h-8 bg-primary rounded-full items-center justify-center border-2 border-background">
+          {/* <Pressable className="absolute bottom-0 right-0 w-8 h-8 bg-primary rounded-full items-center justify-center border-2 border-background">
             <Icon as={CameraIcon} className="size-3.5 text-primary-foreground" />
-          </Pressable>
+          </Pressable> */}
         </View>
 
-        <Text className="text-xl font-bold text-white">
-          José Gabriel
-        </Text>
+        {isLoading ? (
+          <Skeleton className="h-8 w-32" />
+        ) : (
+          <Text className="text-xl font-bold text-foreground">
+            {isError ? "Usuário" : profileSimple?.firstName}
+          </Text>
+        )}
       </LinearGradient>
 
 

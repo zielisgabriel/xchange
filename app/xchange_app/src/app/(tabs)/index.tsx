@@ -14,6 +14,8 @@ import { useQueryClient } from "@tanstack/react-query"
 import { useCallback, useState } from "react"
 import { GlobalCoinsHeader } from "@/components/global-coins-header"
 import { useAuthStore } from "@/hooks/use-auth-store"
+import { useProfileSimple } from "@/hooks/use-profile-simple"
+import { Skeleton } from "@/components/ui/skeleton"
 
 function getGreeting(): string {
   const hour = new Date().getHours()
@@ -25,7 +27,7 @@ function getGreeting(): string {
 export default function Index() {
   const queryClient = useQueryClient()
   const [refreshing, setRefreshing] = useState(false)
-  const { profileSimple } = useAuthStore()
+  const { data: profileSimple, isLoading, isError } = useProfileSimple()
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true)
@@ -60,23 +62,27 @@ export default function Index() {
           className="flex-row items-center justify-between"
         >
           <View className="gap-1">
-            <Text className="text-white/50 text-sm font-medium">
+            <Text className="text-foreground/50 text-sm font-medium">
               {getGreeting()} 👋
             </Text>
-            <Text className="text-white text-xl font-bold tracking-tight">
-              {profileSimple?.firstName}
-            </Text>
+            {isLoading ? (
+              <Skeleton className="h-8 w-32" />
+            ) : (
+              <Text className="text-foreground text-xl font-bold tracking-tight">
+                {isError ? "Usuário" : profileSimple?.firstName}
+              </Text>
+            )}
           </View>
 
           <Pressable className="w-10 h-10 rounded-full bg-white/10 items-center justify-center active:bg-white/20">
-            <Icon as={Bell} className="size-5 text-white/70" />
+            <Icon as={Bell} className="size-5 text-foreground/70" />
           </Pressable>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(100).duration(500)}>
           <Pressable className="flex-row items-center gap-2.5 bg-white/8 rounded-2xl px-4 py-3 mt-5">
-            <Icon as={Search} className="size-4 text-white/40" />
-            <Text className="text-white/30 text-sm">
+            <Icon as={Search} className="size-4 text-foreground/40" />
+            <Text className="text-foreground/30 text-sm">
               Buscar criptomoedas...
             </Text>
           </Pressable>

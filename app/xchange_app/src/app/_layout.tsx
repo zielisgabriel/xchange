@@ -22,15 +22,13 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner-native"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { queryClient } from "@/lib/query-client";
+import { useProfileSimple } from "@/hooks/use-profile-simple";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function Layout() {
+function AppLayout() {
   const {
-    token,
-    isAuthenticated,
-    profileSimple,
-    setProfileSimple
+    isAuthenticated
   } = useAuthStore()
 
   const [loaded, error] = useFonts({
@@ -42,52 +40,41 @@ export default function Layout() {
     "Sora-SemiBold": Sora_600SemiBold,
     "Sora-Bold": Sora_700Bold,
     "Sora-ExtraBold": Sora_800ExtraBold,
-  });
+  })
 
-  async function getProfileSimple() {
-    if (!profileSimple && isAuthenticated) {
-      
-      const response = await fetch("/api/profile/simple", {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setProfileSimple(data)
-      }
-    }
-  }
-
-  useEffect(() => {
-    getProfileSimple()
-  }, [profileSimple, token])
+  useProfileSimple()
 
   useEffect(() => {
     if (loaded || error) SplashScreen.hideAsync();
-  }, [loaded, error]);
+  }, [loaded, error])
 
   if (!loaded && !error) return null
 
   return (
+    <ThemeProvider value={NAV_THEME["dark"]}>
+      <Stack>
+        <Stack.Protected guard={isAuthenticated}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack.Protected>
+        <Stack.Protected guard={!isAuthenticated}>
+          <Stack.Screen name="auth" options={{ headerShown: false }} />
+          <Stack.Screen name="login" options={{ headerShown: false }} />
+          <Stack.Screen name="register" options={{ headerShown: false }} />
+        </Stack.Protected>
+      </Stack>
+      <Toaster />
+      <PortalHost />
+    </ThemeProvider>
+  )
+}
+
+export default function Layout() {
+  
+
+  return (
     <GestureHandlerRootView>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider value={NAV_THEME["dark"]}>
-          <Stack>
-            <Stack.Protected guard={isAuthenticated}>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            </Stack.Protected>
-            <Stack.Protected guard={!isAuthenticated}>
-              <Stack.Screen name="auth" options={{ headerShown: false }} />
-              <Stack.Screen name="login" options={{ headerShown: false }} />
-              <Stack.Screen name="register" options={{ headerShown: false }} />
-            </Stack.Protected>
-          </Stack>
-          <Toaster />
-          <PortalHost />
-        </ThemeProvider>
+        <AppLayout />
       </QueryClientProvider>
     </GestureHandlerRootView>
   );

@@ -26,7 +26,7 @@ export default function Auth() {
           <Text className="text-foreground font-sora-extrabold tracking-widest text-4xl">
             XCHANGE
           </Text>
-          <Text className="text-white/50 font-light text-sm text-center mt-2 leading-5">
+          <Text className="text-foreground/50 font-light text-sm text-center mt-2 leading-5">
             Plataforma para investidores de cripto
           </Text>
         </View>
@@ -54,14 +54,14 @@ export default function Auth() {
 
           <Link href="/register" asChild>
             <Button variant="outline" size="lg" className="border-white/15 bg-white/5">
-              <Icon as={UserPlus} className="size-4 text-white" />
-              <Text className="text-white">Criar Conta</Text>
+              <Icon as={UserPlus} className="size-4 text-foreground" />
+              <Text className="text-foreground">Criar Conta</Text>
             </Button>
           </Link>
 
           <Separator className="my-5 bg-white/10" />
 
-          <Text className="text-white/30 text-center text-[10px] leading-4">
+          <Text className="text-foreground/30 text-center text-[10px] leading-4">
             Ao continuar, você concorda com nossos{"\n"}
             <Text className="text-blue-400 text-[10px]">
               <Link href="/">Termos de Uso</Link>
