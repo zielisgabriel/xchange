@@ -4,8 +4,10 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import br.com.xchange.api.domain.entities.AuthUser;
 import br.com.xchange.api.domain.entities.Profile;
 import br.com.xchange.api.domain.exceptions.UserNotFoundException;
+import br.com.xchange.api.domain.ports.repositories.AuthUserRepositoryPort;
 import br.com.xchange.api.domain.ports.repositories.ProfileRepositoryPort;
 import lombok.RequiredArgsConstructor;
 
@@ -13,9 +15,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GetProfileUseCase {
   private final ProfileRepositoryPort repositoryPort;
+  private final AuthUserRepositoryPort authUserRepositoryPort;
 
   public Profile execute(UUID userId) {
     return this.repositoryPort.findById(userId)
       .orElseThrow(() -> new UserNotFoundException("Perfil não encontrado ou não existe."));
+  }
+
+  public AuthUser simple(UUID userId) {
+    return this.authUserRepositoryPort.findById(userId)
+      .orElseThrow(() -> new UserNotFoundException());
   }
 }

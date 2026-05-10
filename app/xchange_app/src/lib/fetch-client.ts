@@ -13,6 +13,8 @@ export async function fetchClient({
   path,
   host
 }: FetchClientProps) {
+  console.log(init)
+
   const apiUrl = host ?? process.env.API_URL ?? "http://localhost:8080"
 
   const response = await fetch(`${apiUrl + path}`, {

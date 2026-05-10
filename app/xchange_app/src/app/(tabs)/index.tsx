@@ -13,6 +13,7 @@ import Animated, { FadeInDown, FadeIn } from "react-native-reanimated"
 import { useQueryClient } from "@tanstack/react-query"
 import { useCallback, useState } from "react"
 import { GlobalCoinsHeader } from "@/components/global-coins-header"
+import { useAuthStore } from "@/hooks/use-auth-store"
 
 function getGreeting(): string {
   const hour = new Date().getHours()
@@ -24,6 +25,7 @@ function getGreeting(): string {
 export default function Index() {
   const queryClient = useQueryClient()
   const [refreshing, setRefreshing] = useState(false)
+  const { profileSimple } = useAuthStore()
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true)
@@ -62,7 +64,7 @@ export default function Index() {
               {getGreeting()} 👋
             </Text>
             <Text className="text-white text-xl font-bold tracking-tight">
-              Usuário
+              {profileSimple?.firstName}
             </Text>
           </View>
 

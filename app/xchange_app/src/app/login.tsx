@@ -1,9 +1,7 @@
 "use client"
 
-import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { View } from "react-native";
-import GoogleIcon from "@/assets/icons8-google.svg"
 import { Separator } from "@/components/ui/separator";
 import { Link } from "expo-router";
 import { LoginForm } from "@/components/login-form";

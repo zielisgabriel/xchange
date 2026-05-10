@@ -26,7 +26,12 @@ import { queryClient } from "@/lib/query-client";
 SplashScreen.preventAutoHideAsync();
 
 export default function Layout() {
-  const { isAuthenticated } = useAuthStore()
+  const {
+    token,
+    isAuthenticated,
+    profileSimple,
+    setProfileSimple
+  } = useAuthStore()
 
   const [loaded, error] = useFonts({
     "Sora-Thin": Sora_100Thin,
@@ -39,15 +44,32 @@ export default function Layout() {
     "Sora-ExtraBold": Sora_800ExtraBold,
   });
 
-  useEffect(() => {
-    if (loaded || error) {
-      SplashScreen.hideAsync();
+  async function getProfileSimple() {
+    if (!profileSimple && isAuthenticated) {
+      
+      const response = await fetch("/api/profile/simple", {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setProfileSimple(data)
+      }
     }
+  }
+
+  useEffect(() => {
+    getProfileSimple()
+  }, [profileSimple, token])
+
+  useEffect(() => {
+    if (loaded || error) SplashScreen.hideAsync();
   }, [loaded, error]);
 
-  if (!loaded && !error) {
-    return null;
-  }
+  if (!loaded && !error) return null
 
   return (
     <GestureHandlerRootView>
