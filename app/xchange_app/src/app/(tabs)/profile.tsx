@@ -41,10 +41,6 @@ export default function Profile() {
               <Icon as={User} className="w-[50%] h-[50%]" />
             </AvatarFallback>
           </Avatar>
-
-          {/* <Pressable className="absolute bottom-0 right-0 w-8 h-8 bg-primary rounded-full items-center justify-center border-2 border-background">
-            <Icon as={CameraIcon} className="size-3.5 text-primary-foreground" />
-          </Pressable> */}
         </View>
 
         {isLoading ? (
