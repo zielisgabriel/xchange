@@ -7,10 +7,11 @@ import { Activity, ArrowDownRight, ArrowUpRight, BarChart3 } from "lucide-react-
 import { useQuery } from "@tanstack/react-query";
 import { GlobalCoinMetrics } from "@/types/global-coin-metrics";
 import clsx from "clsx";
+import { apiFetch } from "@/lib/api-fetch";
 
 export function GlobalCoinsHeader() {
   async function getGlobalCoinMetrics() {
-    const response = await fetch("/api/coins/global", {
+    const response = await apiFetch("/api/coins/global", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

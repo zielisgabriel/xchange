@@ -15,6 +15,7 @@ import br.com.xchange.api.application.dto.response.FieldValidationErrorResponse;
 import br.com.xchange.api.application.dto.response.FieldValidationErrorResponse.FieldErrors;
 import br.com.xchange.api.domain.exceptions.EmailOrPasswordInvalidException;
 import br.com.xchange.api.domain.exceptions.ForbiddenChangeAnotherUserInfoException;
+import br.com.xchange.api.domain.exceptions.InvalidUserException;
 import br.com.xchange.api.domain.exceptions.UserAlreadyExistsException;
 import br.com.xchange.api.domain.exceptions.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -64,6 +65,18 @@ public class GlobalExceptionHandler {
     response.put("status", STATUS_VALUE);
 
     return ResponseEntity.status(STATUS_VALUE).body(response);
+  }
+
+  @ExceptionHandler(InvalidUserException.class)
+  public ResponseEntity<ApiErrorResponse> handlerInvalidUserException(
+    InvalidUserException exception,
+    HttpServletRequest request
+  ) {
+    return buildResponse(
+      HttpStatus.UNAUTHORIZED,
+      exception.getMessage(),
+      request
+    );
   }
 
   private ResponseEntity<ApiErrorResponse> buildResponse(

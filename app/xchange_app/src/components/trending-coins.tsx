@@ -1,4 +1,5 @@
 import { CoinWithMarketData } from "@/types/coin-with-market-data"
+import { apiFetch } from "@/lib/api-fetch"
 import { Text } from "./ui/text"
 import { useQuery } from "@tanstack/react-query"
 import { Pressable, View } from "react-native"
@@ -34,7 +35,7 @@ export function TrendingCoins() {
   const router = useRouter()
 
   async function getTrendingCoins() {
-    const response = await fetch("/api/coins/trending", {
+    const response = await apiFetch("/api/coins/trending", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

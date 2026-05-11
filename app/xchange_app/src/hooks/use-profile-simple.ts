@@ -1,4 +1,5 @@
 import { useAuthStore } from "./use-auth-store";
+import { apiFetch } from "@/lib/api-fetch";
 import { ProfileSimple } from "@/types/profile-simple";
 import { Minute } from "@/valueobject/Minute";
 import { useQuery } from "@tanstack/react-query";
@@ -9,7 +10,7 @@ export function useProfileSimple() {
   return useQuery<ProfileSimple>({
     queryKey: ["profile-simple"],
     queryFn: async () => {
-      const response = await fetch("/api/profile/simple", {
+      const response = await apiFetch("/api/profile/simple", {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,

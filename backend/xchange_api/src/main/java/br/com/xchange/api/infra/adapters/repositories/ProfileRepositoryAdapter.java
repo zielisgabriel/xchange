@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Repository;
 
 import br.com.xchange.api.domain.entities.Profile;
-import br.com.xchange.api.domain.exceptions.UserNotFoundException;
+import br.com.xchange.api.domain.exceptions.InvalidUserException;
 import br.com.xchange.api.domain.ports.repositories.ProfileRepositoryPort;
 import br.com.xchange.api.infra.adapters.implementations.JpaAuthUserRepositoryImpl;
 import br.com.xchange.api.infra.adapters.implementations.JpaProfileRepositoryImpl;
@@ -29,7 +29,7 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
   @Override
   public Profile save(Profile profile) {
     AuthUserJpa authUser = this.jpaAuthUserRepositoryImpl.findById(profile.getId())
-      .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado para criar perfil."));
+      .orElseThrow(() -> new InvalidUserException());
 
     ProfileJpa profileJpa = new ProfileJpa();
     profileJpa.setAuthUserJpa(authUser);
