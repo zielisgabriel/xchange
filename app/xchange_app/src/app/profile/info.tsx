@@ -1,97 +1,110 @@
 "use client"
 
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { Text } from "@/components/ui/text";
-import { useRef } from "react";
-import { View } from "react-native";
+import { Text } from "@/components/ui/text"
+import { Input } from "@/components/ui/input"
+import { Separator } from "@/components/ui/separator"
+import { Icon } from "@/components/ui/icon"
+import { IconBadge } from "@/components/ui/icon-badge"
+import { useProfileSimple } from "@/hooks/use-profile-simple"
+import { Skeleton } from "@/components/ui/skeleton"
+import { ScrollView, View } from "react-native"
+import { User, Mail, Phone, AtSign } from "lucide-react-native"
+
+type InfoFieldProps = {
+  label: string
+  value?: string
+  placeholder: string
+  icon: typeof User
+  isLoading: boolean
+}
+
+function InfoField({ label, value, placeholder, icon, isLoading }: InfoFieldProps) {
+  return (
+    <View className="gap-1.5">
+      <View className="flex-row items-center gap-2">
+        <Icon as={icon} className="size-3.5 text-muted-foreground" />
+        <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+          {label}
+        </Text>
+      </View>
+      {isLoading ? (
+        <Skeleton className="h-10 w-full rounded-md" />
+      ) : (
+        <Input
+          value={value}
+          placeholder={placeholder}
+          placeholderTextColor="#71717a"
+          editable={false}
+        />
+      )}
+    </View>
+  )
+}
 
 export default function ProfileInfo() {
-  const firstNameRef = useRef<string>("")
-  const emailRef = useRef<string>("")
+  const { data: profile, isLoading } = useProfileSimple()
 
   return (
-    <View className="px-5 pt-8">
-      <Text className="text-xs font-semibold text-foreground uppercase tracking-wider mb-1">
-        Informações pessoais
-      </Text>
-
-      <View>
-        <Separator className="my-2" />
+    <ScrollView
+      className="flex-1"
+      contentContainerClassName="px-5 pt-6 pb-10 gap-6"
+      showsVerticalScrollIndicator={false}
+    >
+      <View className="items-center gap-3 pb-2">
+        <IconBadge icon={User} variant="muted" size="lg" />
+        <Text className="text-sm text-muted-foreground">
+          Seus dados pessoais
+        </Text>
       </View>
 
-      <View className="flex gap-2">
-        <View className="grid grid-cols-2 gap-2">
-          <View className="flex gap-2">
-            <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Nome
-            </Text>
+      <Separator />
 
-            <Input
-              className="placeholder:text-sm"
-              placeholderTextColor={"#FFF"}
-              textContentType="name"
-              autoComplete="off"
-              autoCorrect={false}
-              onChangeText={value => firstNameRef.current = value}
+      <View className="gap-4">
+        <View className="flex-row gap-3">
+          <View className="flex-1">
+            <InfoField
+              label="Nome"
+              value={profile?.firstName}
+              placeholder="Seu nome"
+              icon={User}
+              isLoading={isLoading}
             />
           </View>
-
-          <View className="flex gap-2">
-            <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Sobrenome
-            </Text>
-
-            <Input
-              className="placeholder:text-sm"
-              placeholderTextColor={"#FFF"}
-              textContentType="name"
-              autoComplete="off"
-              autoCorrect={false}
-              onChangeText={value => emailRef.current = value}
+          <View className="flex-1">
+            <InfoField
+              label="Sobrenome"
+              value={profile?.lastName}
+              placeholder="Seu sobrenome"
+              icon={User}
+              isLoading={isLoading}
             />
           </View>
         </View>
 
-        <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-          Usuário
-        </Text>
-
-        <Input
-          className="placeholder:text-sm"
-          placeholderTextColor={"#FFF"}
-          textContentType="emailAddress"
-          autoComplete="off"
-          autoCorrect={false}
-          onChangeText={value => emailRef.current = value}
+        <InfoField
+          label="Usuário"
+          value={profile?.username}
+          placeholder="@usuario"
+          icon={AtSign}
+          isLoading={isLoading}
         />
 
-        <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-          Email
-        </Text>
-
-        <Input
-          className="placeholder:text-sm"
-          placeholderTextColor={"#FFF"}
-          textContentType="emailAddress"
-          autoComplete="off"
-          autoCorrect={false}
-          onChangeText={value => emailRef.current = value}
+        <InfoField
+          label="E-mail"
+          value={profile?.email}
+          placeholder="seuemail@exemplo.com"
+          icon={Mail}
+          isLoading={isLoading}
         />
 
-        <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-          Email
-        </Text>
-
-        <Input
-          className="placeholder:text-sm"
-          placeholderTextColor={"#FFF"}
-          textContentType="emailAddress"
-          autoComplete="off"
-          autoCorrect={false}
-          onChangeText={value => emailRef.current = value}
+        <InfoField
+          label="Telefone"
+          value={profile?.phone}
+          placeholder="(00) 00000-0000"
+          icon={Phone}
+          isLoading={isLoading}
         />
       </View>
-    </View>
+    </ScrollView>
   )
 }

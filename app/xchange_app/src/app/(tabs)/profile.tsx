@@ -1,25 +1,26 @@
 "use client"
 
-import { Text } from "@/components/ui/text";
-import { Icon } from "@/components/ui/icon";
+import { Text } from "@/components/ui/text"
+import { Icon } from "@/components/ui/icon"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Separator } from "@/components/ui/separator";
-import { Pressable, ScrollView, View } from "react-native";
-import { useAuthStore } from "@/hooks/use-auth-store";
-import { LinearGradient } from "expo-linear-gradient";
+import { Separator } from "@/components/ui/separator"
+import { Pressable, ScrollView, View } from "react-native"
+import { useAuthStore } from "@/hooks/use-auth-store"
+import { LinearGradient } from "expo-linear-gradient"
+import { useRouter } from "expo-router"
 import {
   User,
   Bell,
   Shield,
-  HelpCircle,
   LogOut,
   Settings
-} from "lucide-react-native";
-import { MenuItem } from "@/components/menu-item";
-import { useProfileSimple } from "@/hooks/use-profile-simple";
-import { Skeleton } from "@/components/ui/skeleton";
+} from "lucide-react-native"
+import { MenuItem } from "@/components/menu-item"
+import { useProfileSimple } from "@/hooks/use-profile-simple"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function Profile() {
+  const router = useRouter()
   const { logOut } = useAuthStore()
   const { data: profileSimple, isLoading, isError } = useProfileSimple()
 
@@ -52,7 +53,6 @@ export default function Profile() {
         )}
       </LinearGradient>
 
-
       <View className="mt-6">
         <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-5 mb-1">
           Conta
@@ -61,11 +61,13 @@ export default function Profile() {
           icon={User}
           label="Informações pessoais"
           subtitle="Nome, e-mail, telefone"
+          onPress={() => router.push("/profile/info")}
         />
         <MenuItem
           icon={Shield}
           label="Segurança"
           subtitle="Senha e autenticação"
+          onPress={() => router.push("/profile/security")}
         />
       </View>
 
@@ -81,16 +83,13 @@ export default function Profile() {
           icon={Bell}
           label="Notificações"
           subtitle="Push, e-mail, SMS"
+          onPress={() => router.push("/profile/notifications")}
         />
         <MenuItem
           icon={Settings}
           label="Configurações"
           subtitle="Tema, idioma, privacidade"
-        />
-        <MenuItem
-          icon={HelpCircle}
-          label="Ajuda e suporte"
-          subtitle="Fale conosco"
+          onPress={() => router.push("/profile/settings")}
         />
       </View>
 
@@ -105,5 +104,5 @@ export default function Profile() {
         onPress={logOut}
       />
     </ScrollView>
-  );
+  )
 }

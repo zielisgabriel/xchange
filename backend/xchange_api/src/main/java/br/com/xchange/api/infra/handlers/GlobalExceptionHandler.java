@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import br.com.xchange.api.application.dto.response.ApiErrorResponse;
 import br.com.xchange.api.application.dto.response.FieldValidationErrorResponse;
 import br.com.xchange.api.application.dto.response.FieldValidationErrorResponse.FieldErrors;
+import br.com.xchange.api.domain.exceptions.AccessTokenInvalidException;
 import br.com.xchange.api.domain.exceptions.EmailOrPasswordInvalidException;
 import br.com.xchange.api.domain.exceptions.ForbiddenChangeAnotherUserInfoException;
 import br.com.xchange.api.domain.exceptions.InvalidUserException;
@@ -70,6 +71,18 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(InvalidUserException.class)
   public ResponseEntity<ApiErrorResponse> handlerInvalidUserException(
     InvalidUserException exception,
+    HttpServletRequest request
+  ) {
+    return buildResponse(
+      HttpStatus.UNAUTHORIZED,
+      exception.getMessage(),
+      request
+    );
+  }
+
+  @ExceptionHandler(AccessTokenInvalidException.class)
+  public ResponseEntity<ApiErrorResponse> handlerAccessTokenInvalidException(
+    AccessTokenInvalidException exception,
     HttpServletRequest request
   ) {
     return buildResponse(

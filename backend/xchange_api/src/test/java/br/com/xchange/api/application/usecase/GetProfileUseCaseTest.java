@@ -16,7 +16,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.xchange.api.domain.entities.Profile;
-import br.com.xchange.api.domain.exceptions.UserNotFoundException;
+import br.com.xchange.api.domain.exceptions.InvalidUserException;
+import br.com.xchange.api.domain.ports.repositories.AuthUserRepositoryPort;
 import br.com.xchange.api.domain.ports.repositories.ProfileRepositoryPort;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,6 +25,9 @@ class GetProfileUseCaseTest {
 
   @Mock
   private ProfileRepositoryPort repositoryPort;
+
+  @Mock
+  private AuthUserRepositoryPort authUserRepositoryPort;
 
   @InjectMocks
   private GetProfileUseCase getProfileUseCase;
@@ -69,12 +73,12 @@ class GetProfileUseCaseTest {
     void shouldThrowWhenProfileNotFound() {
       when(repositoryPort.findById(TEST_USER_ID)).thenReturn(Optional.empty());
 
-      UserNotFoundException exception = assertThrows(
-          UserNotFoundException.class,
+      InvalidUserException exception = assertThrows(
+          InvalidUserException.class,
           () -> getProfileUseCase.execute(TEST_USER_ID)
       );
 
-      assertEquals("Perfil não encontrado ou não existe.", exception.getMessage());
+      assertEquals("Usuário inválido, faça o login novamente!", exception.getMessage());
     }
 
     @Test
@@ -83,7 +87,7 @@ class GetProfileUseCaseTest {
       UUID unknownId = UUID.randomUUID();
       when(repositoryPort.findById(unknownId)).thenReturn(Optional.empty());
 
-      assertThrows(UserNotFoundException.class,
+      assertThrows(InvalidUserException.class,
           () -> getProfileUseCase.execute(unknownId));
 
       verify(repositoryPort).findById(unknownId);
