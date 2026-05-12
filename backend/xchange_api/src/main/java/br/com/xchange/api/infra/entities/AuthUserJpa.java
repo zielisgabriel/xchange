@@ -9,6 +9,7 @@ import br.com.xchange.api.domain.entities.AuthUser;
 import br.com.xchange.api.domain.entities.Profile;
 import br.com.xchange.api.domain.valueobject.BirthDate;
 import br.com.xchange.api.domain.valueobject.Cpf;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,7 +29,7 @@ public class AuthUserJpa {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
-  @OneToOne(mappedBy = "authUserJpa")
+  @OneToOne(mappedBy = "authUserJpa", cascade = CascadeType.ALL)
   @PrimaryKeyJoinColumn
   private ProfileJpa profileJpa;
 

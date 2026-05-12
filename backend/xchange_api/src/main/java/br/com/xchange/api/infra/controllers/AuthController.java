@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.xchange.api.application.dto.request.RegisterUserRequestDto;
+import br.com.xchange.api.application.dto.response.ProfileResponseDto;
 import br.com.xchange.api.application.usecase.RegisterUserUseCase;
-import br.com.xchange.api.domain.entities.AuthUser;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -21,7 +21,7 @@ public class AuthController {
 
   @PostMapping("/register")
   @ResponseStatus(code = HttpStatus.CREATED)
-  public AuthUser register(@Validated @RequestBody RegisterUserRequestDto requestDto) {
-    return this.registerUserUseCase.execute(requestDto);
+  public ProfileResponseDto register(@Validated @RequestBody RegisterUserRequestDto requestDto) {
+    return ProfileResponseDto.fromDomain(this.registerUserUseCase.execute(requestDto));
   }
 }

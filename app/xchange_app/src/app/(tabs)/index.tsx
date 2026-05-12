@@ -1,5 +1,6 @@
 import { TrendingCoins } from "@/components/trending-coins"
 import { SectionHeader } from "@/components/section-header"
+import { SearchCryptoModal } from "@/components/search-crypto-modal"
 import { Text } from "@/components/ui/text"
 import { Icon } from "@/components/ui/icon"
 import {
@@ -27,6 +28,7 @@ function getGreeting(): string {
 export default function Index() {
   const queryClient = useQueryClient()
   const [refreshing, setRefreshing] = useState(false)
+  const [searchVisible, setSearchVisible] = useState(false)
   const { data: profileSimple, isLoading, isError } = useProfileSimple()
 
   const onRefresh = useCallback(async () => {
@@ -80,7 +82,10 @@ export default function Index() {
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(100).duration(500)}>
-          <Pressable className="flex-row items-center gap-2.5 bg-white/8 rounded-2xl px-4 py-3 mt-5">
+          <Pressable
+            onPress={() => setSearchVisible(true)}
+            className="flex-row items-center gap-2.5 bg-white/8 rounded-2xl px-4 py-3 mt-5"
+          >
             <Icon as={Search} className="size-4 text-foreground/40" />
             <Text className="text-foreground/30 text-sm">
               Buscar criptomoedas...
@@ -104,6 +109,11 @@ export default function Index() {
       </Animated.View>
 
       <View className="h-8" />
+
+      <SearchCryptoModal
+        visible={searchVisible}
+        onClose={() => setSearchVisible(false)}
+      />
     </ScrollView>
   )
 }

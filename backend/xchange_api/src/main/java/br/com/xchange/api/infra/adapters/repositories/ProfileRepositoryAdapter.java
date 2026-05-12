@@ -28,7 +28,7 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
 
   @Override
   public Profile save(Profile profile) {
-    AuthUserJpa authUser = this.jpaAuthUserRepositoryImpl.findById(profile.getId())
+    AuthUserJpa authUser = this.jpaAuthUserRepositoryImpl.findById(profile.getAuthUser().getId())
       .orElseThrow(() -> new InvalidUserException());
 
     ProfileJpa profileJpa = new ProfileJpa();
