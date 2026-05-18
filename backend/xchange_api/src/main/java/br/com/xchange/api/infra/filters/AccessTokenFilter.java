@@ -3,13 +3,19 @@ package br.com.xchange.api.infra.filters;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import br.com.xchange.api.domain.exceptions.AccessTokenInvalidException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import br.com.xchange.api.application.dto.response.ApiErrorResponse;
 import br.com.xchange.api.domain.ports.services.AccessTokenServicePort;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -23,6 +29,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AccessTokenFilter extends OncePerRequestFilter {
   private final AccessTokenServicePort servicePort;
+  private final ObjectMapper objectMapper = new ObjectMapper()
+    .registerModule(new JavaTimeModule())
+    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
   @Override
   protected void doFilterInternal(
@@ -36,25 +45,39 @@ public class AccessTokenFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
       return;
     }
-    
-    String token = recoverToken(tokenHeader);
-    boolean isTokenValid = this.servicePort.validate(token);
-    if (!isTokenValid) throw new AccessTokenInvalidException();
 
-    String email = this.servicePort.getSubject(token);
-    List<SimpleGrantedAuthority> authorities = this.servicePort.getAuthorities(token)
-      .stream()
-      .map(authority -> new SimpleGrantedAuthority(authority.toString()))
-      .toList();
+    try {
+      String token = recoverToken(tokenHeader);
 
-    SecurityContextHolder.getContext()
-      .setAuthentication(new UsernamePasswordAuthenticationToken(
-      email,
-      null,
-      authorities
-    ));
+      String email = this.servicePort.getSubject(token);
+      List<SimpleGrantedAuthority> authorities = this.servicePort.getAuthorities(token)
+        .stream()
+        .map(authority -> new SimpleGrantedAuthority(authority.toString()))
+        .toList();
 
-    filterChain.doFilter(request, response);
+      SecurityContextHolder.getContext()
+        .setAuthentication(new UsernamePasswordAuthenticationToken(
+        email,
+        null,
+        authorities
+      ));
+
+      filterChain.doFilter(request, response);
+    } catch (Exception exception) {
+      HttpStatus status = HttpStatus.UNAUTHORIZED;
+
+      ApiErrorResponse errorResponse = ApiErrorResponse.of(
+        status.value(),
+        status.getReasonPhrase(),
+        "Access token inválido ou expirado!",
+        request.getRequestURI()
+      );
+
+      response.setStatus(status.value());
+      response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+      response.setCharacterEncoding("UTF-8");
+      response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+    }
   }
 
   private String recoverToken(String tokenHeader) {

@@ -11,6 +11,7 @@ import { ChevronDown, ChevronUp } from "lucide-react-native"
 import { useRouter } from "expo-router"
 import { Skeleton } from "./ui/skeleton"
 import Animated, { FadeInDown } from "react-native-reanimated"
+import { useAuthStore } from "@/hooks/use-auth-store"
 
 interface TrendingCoinResponse {
   coins: CoinWithMarketData[]
@@ -33,13 +34,14 @@ const sparklineStyle = { width: 80, height: 32 }
 export function TrendingCoins() {
   const [showMoreCoins, setShowMoreCoins] = useState<boolean>(false)
   const router = useRouter()
+  const { accessToken, refreshToken } = useAuthStore()
 
   async function getTrendingCoins() {
-    const response = await apiFetch("/api/coins/trending", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const response = await apiFetch({
+      input: "/api/coins/trending",
+      init: {
+        method: "GET"
+      }
     })
 
     const data: TrendingCoinResponse = await response.json()
@@ -98,7 +100,7 @@ export function TrendingCoins() {
 
   return (
     <View className="gap-1">
-      {trendingCoins?.coins
+      {trendingCoins?.coins && trendingCoins?.coins.length > 0 && trendingCoins?.coins
         .slice(0, showMoreCoins ? 15 : 5)
         .map((coin, index) => (
           <Animated.View

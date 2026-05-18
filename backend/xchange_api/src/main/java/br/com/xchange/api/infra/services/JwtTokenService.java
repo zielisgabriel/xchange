@@ -1,6 +1,8 @@
 package br.com.xchange.api.infra.services;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.crypto.SecretKey;
 
@@ -23,13 +25,34 @@ public class JwtTokenService implements AccessTokenServicePort {
 
     XchangeUserDetails userDetails = (XchangeUserDetails) principal;
     
+    Date now = new Date();
+    Date expiration = new Date(now.getTime() + 10 * 60 * 1000);
+
     String jwt = Jwts.builder()
       .subject(userDetails.getId().toString())
       .claim("authorities", userDetails.getAuthorities())
+      .issuedAt(now)
+      .expiration(expiration)
       .signWith(secretKey)
       .compact();
 
     return jwt;
+  }
+
+  @Override
+  public String generateFromUserId(UUID userId) {
+    SecretKey secretKey = Keys.hmacShaKeyFor(key.getBytes());
+
+    Date now = new Date();
+    Date expiration = new Date(now.getTime() + 10 * 60 * 1000);
+
+    return Jwts.builder()
+      .subject(userId.toString())
+      .claim("authorities", List.of())
+      .issuedAt(now)
+      .expiration(expiration)
+      .signWith(secretKey)
+      .compact();
   }
 
   @Override

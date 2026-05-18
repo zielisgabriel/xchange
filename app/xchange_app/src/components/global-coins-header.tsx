@@ -11,10 +11,10 @@ import { apiFetch } from "@/lib/api-fetch";
 
 export function GlobalCoinsHeader() {
   async function getGlobalCoinMetrics() {
-    const response = await apiFetch("/api/coins/global", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await apiFetch({
+      input: "/api/coins/global",
+      init: {
+        method: "GET"
       },
     })
 
@@ -70,7 +70,7 @@ export function GlobalCoinsHeader() {
               <Skeleton className="h-4 max-w-12" />
             </View>
           </>
-        ) : isError ? (
+        ) : isError || !globalCoinMetrics?.data ? (
           <View className="flex-1 bg-card rounded-2xl p-4 gap-2 border border-border shadow-sm items-center justify-center">
             <Text className="text-sm text-muted-foreground">
               Não foi possível carregar os dados globais.
@@ -89,7 +89,7 @@ export function GlobalCoinsHeader() {
                 </Text>
               </View>
               <Text className="text-lg font-bold">
-                {currencyFormater.format(globalCoinMetrics?.data.totalMarketCap!)}
+                {globalCoinMetrics?.data ? currencyFormater.format(globalCoinMetrics?.data.totalMarketCap) : currencyFormater.format(0)}
               </Text>
               <View>
                 <Text className={clsx("flex flex-row text-xs items-center gap-0.5", {

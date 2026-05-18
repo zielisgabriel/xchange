@@ -22,6 +22,7 @@ export async function POST(req: Request) {
     return Response.json({
       "code": response.status,
       "access_token": response.body?.["access_token"] as string,
+      "refresh_token": response.body?.["refresh_token"] as string,
       "message": "Bem vindo(a)!"
     })
   }

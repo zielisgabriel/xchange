@@ -6,6 +6,7 @@ export async function GET(req: Request) {
     path: "/profile/simple",
     init: {
       headers: req.headers,
+      body: req.body,
       method: "GET"
     },
   })

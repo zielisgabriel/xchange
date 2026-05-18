@@ -5,16 +5,15 @@ import { Minute } from "@/valueobject/Minute";
 import { useQuery } from "@tanstack/react-query";
 
 export function useProfileSimple() {
-  const { token, isAuthenticated } = useAuthStore()
+  const { accessToken, isAuthenticated } = useAuthStore()
 
   return useQuery<ProfileSimple>({
     queryKey: ["profile-simple"],
     queryFn: async () => {
-      const response = await apiFetch("/api/profile/simple", {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
+      const response = await apiFetch({
+        input: "/api/profile/simple",
+        init: {
+          method: "GET"
         }
       })
 
@@ -22,7 +21,7 @@ export function useProfileSimple() {
 
       return response.json() as Promise<ProfileSimple>
     },
-    enabled: isAuthenticated && !!token,
+    enabled: isAuthenticated && !!accessToken,
     staleTime: new Minute(10).toMilliseconds(),
     retry: true,
   })

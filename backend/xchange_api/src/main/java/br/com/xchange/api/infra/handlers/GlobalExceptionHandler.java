@@ -17,6 +17,8 @@ import br.com.xchange.api.domain.exceptions.AccessTokenInvalidException;
 import br.com.xchange.api.domain.exceptions.EmailOrPasswordInvalidException;
 import br.com.xchange.api.domain.exceptions.ForbiddenChangeAnotherUserInfoException;
 import br.com.xchange.api.domain.exceptions.InvalidUserException;
+import br.com.xchange.api.domain.exceptions.RefreshTokenAlreadyExistsException;
+import br.com.xchange.api.domain.exceptions.RefreshTokenNotFoundException;
 import br.com.xchange.api.domain.exceptions.UserAlreadyExistsException;
 import br.com.xchange.api.domain.exceptions.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -83,6 +85,30 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(AccessTokenInvalidException.class)
   public ResponseEntity<ApiErrorResponse> handlerAccessTokenInvalidException(
     AccessTokenInvalidException exception,
+    HttpServletRequest request
+  ) {
+    return buildResponse(
+      HttpStatus.UNAUTHORIZED,
+      exception.getMessage(),
+      request
+    );
+  }
+
+  @ExceptionHandler(RefreshTokenAlreadyExistsException.class)
+  public ResponseEntity<ApiErrorResponse> handlerRefreshTokenAlreadyExistsException(
+    RefreshTokenAlreadyExistsException exception,
+    HttpServletRequest request
+  ) {
+    return buildResponse(
+      HttpStatus.CONFLICT,
+      exception.getMessage(),
+      request
+    );
+  }
+
+  @ExceptionHandler(RefreshTokenNotFoundException.class)
+  public ResponseEntity<ApiErrorResponse> handlerRefreshTokenNotFoundException(
+    RefreshTokenNotFoundException exception,
     HttpServletRequest request
   ) {
     return buildResponse(

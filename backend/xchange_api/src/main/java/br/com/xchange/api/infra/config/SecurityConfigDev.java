@@ -18,6 +18,7 @@ import br.com.xchange.api.infra.filters.XchangeAuthenticationFilter;
 import br.com.xchange.api.infra.handlers.XchangeAccessDeniedHandler;
 import br.com.xchange.api.infra.handlers.XchangeAuthenticationEntryPoint;
 import br.com.xchange.api.infra.handlers.XchangeAuthenticationFailureHandler;
+import br.com.xchange.api.infra.services.RefreshTokenService;
 
 @Profile("dev")
 @EnableWebSecurity
@@ -42,7 +43,7 @@ public class SecurityConfigDev {
       .addFilterBefore(accessTokenFilter, UsernamePasswordAuthenticationFilter.class)
       .addFilterAt(xchangeAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
       .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/profile/**").authenticated()
+        .requestMatchers("/profile/**", "/coins/**").authenticated()
         .anyRequest().permitAll())
       .build();
   }
@@ -56,9 +57,14 @@ public class SecurityConfigDev {
   public XchangeAuthenticationFilter xchangeAuthenticationFilter(
     AuthenticationManager authenticationManager,
     XchangeAuthenticationFailureHandler xchangeAuthenticationFailureHandler,
-    AccessTokenServicePort accessTokenServicePort
+    AccessTokenServicePort accessTokenServicePort,
+    RefreshTokenService refreshTokenService
   ) {
-    XchangeAuthenticationFilter filter = new XchangeAuthenticationFilter(authenticationManager, accessTokenServicePort);
+    XchangeAuthenticationFilter filter = new XchangeAuthenticationFilter(
+      authenticationManager,
+      accessTokenServicePort,
+      refreshTokenService
+    );
 
     filter.setUsernameParameter("email");
     filter.setPasswordParameter("password");

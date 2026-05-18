@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class GetGlobalCoinMetrics {
+public class GetGlobalCoinMetricsUseCase {
   private final CoinServicePort service;
 
   public GlobalCoinMetricsResponse execute() {

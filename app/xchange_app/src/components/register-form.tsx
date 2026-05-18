@@ -11,6 +11,7 @@ import { router } from "expo-router"
 import { twMerge } from "tailwind-merge"
 import clsx from "clsx"
 import DateTimePicker from "@react-native-community/datetimepicker"
+import { apiFetch } from "@/lib/api-fetch"
 
 interface FieldError {
   field: string,
@@ -64,20 +65,22 @@ export function RegisterForm() {
       const birth_date = birthDateRef.current
       const cpf = cpfRef.current
 
-      const response = await fetch("/api/register", {
-        method: "POST",
-        body: JSON.stringify({
-          first_name: firstName,
-          last_name: lastName,
-          email,
-          password,
-          birth_date,
-          cpf
-        }),
-        headers: {
-          "Content-Type": "application/json"
-        }
+      const response = await apiFetch({
+        input: "/api/auth/register",
+        init: {
+          method: "POST",
+          body: JSON.stringify({
+            first_name: firstName,
+            last_name: lastName,
+            email,
+            password,
+            birth_date,
+            cpf
+          })
+        },
+        isAuth: false
       })
+
       const data = await response.json()
 
       if (data.code == 201) {

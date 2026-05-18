@@ -4,13 +4,13 @@ import { getItemAsync, setItemAsync, deleteItemAsync } from "expo-secure-store"
 
 type UserState = {
   isAuthenticated: boolean;
-  token: null | string;
-  logIn: (token: string) => void;
+  accessToken: null | string;
+  refreshToken: null | string;
+  logIn: ({ accessToken, refreshToken }: { accessToken: string, refreshToken: string }) => void;
   logOut: () => void;
 }
 
 import { Platform } from "react-native"
-import { ProfileSimple } from "@/types/profile-simple";
 
 const authStorage = {
   getItem: async (key: string) => {
@@ -31,13 +31,15 @@ export const useAuthStore = create<UserState>(
   persist(
     (set) => ({
       isAuthenticated: false,
-      token: null,
-      logIn: (token) => {
+      accessToken: null,
+      refreshToken: null,
+      logIn: ({ accessToken, refreshToken }) => {
         set((state) => {
           return {
             ...state,
             isAuthenticated: true,
-            token
+            accessToken,
+            refreshToken
           }
         })
       },
@@ -46,7 +48,8 @@ export const useAuthStore = create<UserState>(
           return {
             ...state,
             isAuthenticated: false,
-            token: null
+            accessToken: null,
+            refreshToken: null
           }
         })
       }

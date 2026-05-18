@@ -12,6 +12,7 @@ import org.springframework.util.MimeTypeUtils;
 import br.com.xchange.api.application.dto.request.LoginUserRequestDto;
 import br.com.xchange.api.application.dto.response.LoginResponseDto;
 import br.com.xchange.api.domain.ports.services.AccessTokenServicePort;
+import br.com.xchange.api.infra.services.RefreshTokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,13 +22,16 @@ import tools.jackson.databind.ObjectMapper;
 
 public class XchangeAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
   private AccessTokenServicePort accessTokenServicePort;
+  private RefreshTokenService refreshTokenService;
 
   public XchangeAuthenticationFilter(
     AuthenticationManager authenticationManager,
-    AccessTokenServicePort accessTokenServicePort
+    AccessTokenServicePort accessTokenServicePort,
+    RefreshTokenService refreshTokenService
   ) {
     setAuthenticationManager(authenticationManager);
     this.accessTokenServicePort = accessTokenServicePort;
+    this.refreshTokenService = refreshTokenService;
   }
 
   @Override
@@ -58,8 +62,9 @@ public class XchangeAuthenticationFilter extends UsernamePasswordAuthenticationF
     Authentication authResult
   ) throws IOException, ServletException {
     String accessToken = this.accessTokenServicePort.generate(authResult.getPrincipal());
+    String refreshToken = this.refreshTokenService.generate(authResult.getPrincipal());
 
-    LoginResponseDto loginResponseDto = new LoginResponseDto(accessToken);
+    LoginResponseDto loginResponseDto = new LoginResponseDto(accessToken, refreshToken);
 
     response.setContentType(MimeTypeUtils.APPLICATION_JSON.getType());
     response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponseDto));

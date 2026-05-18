@@ -1,13 +1,12 @@
 import { fetchClient } from "@/lib/fetch-client";
 
-export async function GET() {
+export async function GET(req: Request) {
   const response = await fetchClient({
     path: "/coins/global",
     init: {
-      headers: {
-        "Content-Type": "application/json"
-      },
-      method: "GET"
+      method: "GET",
+      headers: req.headers,
+      body: req.body
     }
   })
 

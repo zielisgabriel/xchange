@@ -7,6 +7,7 @@ import { Button } from "./ui/button"
 import { useRef, useTransition } from "react"
 import { useAuthStore } from "@/hooks/use-auth-store"
 import { toast } from "sonner-native"
+import { apiFetch } from "@/lib/api-fetch"
 
 export function LoginForm() {
   const emailRef = useRef("")
@@ -19,21 +20,27 @@ export function LoginForm() {
       const email = emailRef.current
       const password = passwordRef.current
 
-      const response = await fetch("/api/login", {
-        method: "POST",
-        body: JSON.stringify({
-          email,
-          password
-        }),
-        headers: {
-          "Content-Type": "application/json"
-        }
+      const response = await apiFetch({
+        input: "/api/auth/login",
+        init: {
+          method: "POST",
+          body: JSON.stringify({
+            email,
+            password
+          })
+        },
+        isAuth: false
       })
+
       const data = await response.json()
 
       if (data.code == 200) {
-        logIn(data.access_token!)
-        console.log(data)
+        console.log("FRONTEND LOGIN DATA:", data)
+        logIn({
+          accessToken: data.access_token!,
+          refreshToken: data.refresh_token!
+        })
+        console.log("STORE AFTER LOGIN:", useAuthStore.getState())
         toast.success(data.message)
         return
       }
