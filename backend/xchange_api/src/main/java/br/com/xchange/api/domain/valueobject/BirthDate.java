@@ -3,9 +3,9 @@ package br.com.xchange.api.domain.valueobject;
 import java.time.LocalDate;
 
 import br.com.xchange.api.domain.exceptions.BirthDateException;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class BirthDate {
   private final LocalDate value;
   
@@ -14,7 +14,7 @@ public class BirthDate {
     this.value = birthDate;
   }
 
-  private boolean validate(LocalDate birthDate) {
+  private void validate(LocalDate birthDate) {
     if (birthDate.isAfter(LocalDate.now())) {
       throw new BirthDateException("Data de aniversário inválida!");
     }
@@ -22,7 +22,5 @@ public class BirthDate {
     if (birthDate.isAfter(LocalDate.now().minusYears(18))) {
       throw new BirthDateException("Proibido para menores de 18 anos!");
     }
-
-    return true;
   }
 }

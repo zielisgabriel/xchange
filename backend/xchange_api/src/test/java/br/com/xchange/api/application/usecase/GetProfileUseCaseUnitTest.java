@@ -21,7 +21,7 @@ import br.com.xchange.api.domain.ports.repositories.AuthUserRepositoryPort;
 import br.com.xchange.api.domain.ports.repositories.ProfileRepositoryPort;
 
 @ExtendWith(MockitoExtension.class)
-class GetProfileUseCaseTest {
+class GetProfileUseCaseUnitTest {
 
   @Mock
   private ProfileRepositoryPort repositoryPort;

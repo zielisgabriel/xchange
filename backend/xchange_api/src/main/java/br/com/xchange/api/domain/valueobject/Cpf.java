@@ -1,9 +1,9 @@
 package br.com.xchange.api.domain.valueobject;
 
 import br.com.xchange.api.domain.exceptions.CpfException;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class Cpf {
     private final String value;
 

@@ -21,7 +21,7 @@ import br.com.xchange.api.domain.entities.CoinWithMarketData;
 import br.com.xchange.api.domain.ports.services.CoinServicePort;
 
 @ExtendWith(MockitoExtension.class)
-class GetTrendingCoinUseCaseTest {
+class GetTrendingCoinUseCaseUnitTest {
 
   @Mock
   private CoinServicePort coinServicePort;
