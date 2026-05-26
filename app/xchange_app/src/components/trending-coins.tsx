@@ -125,7 +125,7 @@ export function TrendingCoins() {
                   <Text className="font-semibold uppercase tracking-wide text-sm">
                     {coin.symbol}
                   </Text>
-                  <Text className="text-xs text-muted-foreground">
+                  <Text className="text-xs text-muted-foreground truncate w-22">
                     {coin.name}
                   </Text>
                 </View>
