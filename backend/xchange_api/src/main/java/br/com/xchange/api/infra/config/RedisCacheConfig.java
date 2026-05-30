@@ -16,7 +16,7 @@ public class RedisCacheConfig {
   public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
     return (builder) -> builder
       .withCacheConfiguration("coins", RedisCacheConfiguration
-        .defaultCacheConfig().entryTtl(TtlFunction.just(Duration.ofHours(4)))
+        .defaultCacheConfig().entryTtl(TtlFunction.just(Duration.ofMinutes(10)))
         .serializeValuesWith(SerializationPair.fromSerializer(RedisSerializer.json()))
       )
       .withCacheConfiguration("globalCoinMetrics", RedisCacheConfiguration
