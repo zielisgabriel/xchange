@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class CoinWithMarketData extends Coin {
-  private BigDecimal priceBtc;
+  private String priceBtc;
   private String marketCap;
   private String totalVolume;
   private String sparkline;

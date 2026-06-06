@@ -61,9 +61,9 @@ public class AccessTokenFilter extends OncePerRequestFilter {
         null,
         authorities
       ));
-
-      filterChain.doFilter(request, response);
     } catch (Exception exception) {
+      log.error("Falha na validação do token JWT: {}", exception.getMessage());
+
       HttpStatus status = HttpStatus.UNAUTHORIZED;
 
       ApiErrorResponse errorResponse = ApiErrorResponse.of(
@@ -77,7 +77,10 @@ public class AccessTokenFilter extends OncePerRequestFilter {
       response.setContentType(MediaType.APPLICATION_JSON_VALUE);
       response.setCharacterEncoding("UTF-8");
       response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+      return;
     }
+
+    filterChain.doFilter(request, response);
   }
 
   private String recoverToken(String tokenHeader) {

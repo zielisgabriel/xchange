@@ -22,7 +22,6 @@ public class GetTrendingCoinUseCase {
         data.getSymbol(),
         data.getImageUrl(),
         data.getPrice(),
-        data.getPriceBtc(),
         data.getMarketCap(),
         data.getTotalVolume(),
         data.getSparkline(),

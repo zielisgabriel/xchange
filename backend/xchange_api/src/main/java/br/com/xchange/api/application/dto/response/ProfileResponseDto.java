@@ -3,12 +3,13 @@ package br.com.xchange.api.application.dto.response;
 import java.util.Set;
 import java.util.UUID;
 
+import br.com.xchange.api.domain.entities.FavoriteCoin;
 import br.com.xchange.api.domain.entities.Profile;
 
 public record ProfileResponseDto(
   UUID id,
   AuthUserResponseDto authUser,
-  Set<String> favoriteCryptos
+  Set<FavoriteCoin> favoriteCoins
 ) {
   public static ProfileResponseDto fromDomain(Profile profile) {
     if (profile == null) return null;
@@ -16,7 +17,7 @@ public record ProfileResponseDto(
     return new ProfileResponseDto(
       profile.getId(),
       AuthUserResponseDto.fromDomain(profile.getAuthUser()),
-      profile.getFavoriteCryptos()
+      profile.getFavoriteCoins()
     );
   }
 }

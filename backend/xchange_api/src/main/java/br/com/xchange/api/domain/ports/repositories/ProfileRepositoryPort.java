@@ -6,6 +6,6 @@ import java.util.UUID;
 import br.com.xchange.api.domain.entities.Profile;
 
 public interface ProfileRepositoryPort {
-  public Optional<Profile> findById(UUID id);
-  public Profile save(Profile profile);
+  Optional<Profile> findById(UUID id);
+  Profile save(Profile profile);
 }

@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.xchange.api.application.dto.response.GlobalCoinMetricsResponse;
+import br.com.xchange.api.application.dto.response.SimpleCoinsListResponse;
+import br.com.xchange.api.application.dto.response.SimpleCoinsListResponse.SimpleCoinsListWrapper;
 import br.com.xchange.api.application.dto.response.TrendingCoinResponse;
+import br.com.xchange.api.application.usecase.GetCoinsWithMarketDataUseCase;
 import br.com.xchange.api.application.usecase.GetGlobalCoinMetricsUseCase;
 import br.com.xchange.api.application.usecase.GetTrendingCoinUseCase;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +22,26 @@ import lombok.RequiredArgsConstructor;
 public class CoinsController {
   private final GetTrendingCoinUseCase getTrendingCoinUseCase;
   private final GetGlobalCoinMetricsUseCase getGlobalCoinMetrics;
+  private final GetCoinsWithMarketDataUseCase getCoinsListWithMarketData;
 
-  @Cacheable(value = "coins")
+  @Cacheable(value = "simpleCoinsList")
+  @ResponseStatus(code = HttpStatus.OK)
+  @GetMapping("/simple")
+  public SimpleCoinsListResponse getSimpleCoinsListResponse() {
+    SimpleCoinsListResponse response = new SimpleCoinsListResponse(
+      this.getCoinsListWithMarketData.execute()
+        .stream()
+        .map((item) -> new SimpleCoinsListWrapper(
+          item.getId(),
+          item.getName(),
+          item.getSymbol(),
+          item.getImageUrl()
+        )).toList()
+    );
+    return response;
+  }
+
+  @Cacheable(value = "trendingCoins")
   @ResponseStatus(code = HttpStatus.OK)
   @GetMapping("/trending")
   public TrendingCoinResponse getTrendingCoins() {

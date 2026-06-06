@@ -8,6 +8,7 @@ import br.com.xchange.api.domain.entities.CoinWithMarketData;
 
 public interface CoinServicePort {
   List<Coin> getTrendingCoins();
+  List<CoinWithMarketData> getCoinsWithMarketData();
   List<CoinWithMarketData> getTrendingCoinsDetailed();
   GlobalCoinMetricsResponse getGlobalCoinMetrics();
 }

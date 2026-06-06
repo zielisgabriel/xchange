@@ -35,12 +35,10 @@ export function LoginForm() {
       const data = await response.json()
 
       if (data.code == 200) {
-        console.log("FRONTEND LOGIN DATA:", data)
         logIn({
           accessToken: data.access_token!,
           refreshToken: data.refresh_token!
         })
-        console.log("STORE AFTER LOGIN:", useAuthStore.getState())
         toast.success(data.message)
         return
       }

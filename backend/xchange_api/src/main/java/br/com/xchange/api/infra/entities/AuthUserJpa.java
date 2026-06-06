@@ -2,6 +2,7 @@ package br.com.xchange.api.infra.entities;
 
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -51,6 +52,9 @@ public class AuthUserJpa {
   @Column(name = "cpf", unique = true, nullable = false)
   private String cpf;
 
+  @Column(name = "onboarding_finished")
+  private boolean onboardingFinished = false;
+
   public AuthUser toDomain() {
     AuthUser authUser = new AuthUser();
 
@@ -61,10 +65,13 @@ public class AuthUserJpa {
     authUser.setPassword(password);
     authUser.setBirthDate(new BirthDate(birthDate));
     authUser.setCpf(new Cpf(cpf));
+    authUser.setOnboardingFinished(onboardingFinished);
     if (profileJpa != null) {
       Profile profile = new Profile();
       profile.setId(profileJpa.getId());
-      profile.setFavoriteCryptos(profileJpa.getFavoriteCryptos());
+      profile.setFavoriteCoins(profileJpa.getFavoriteCoins().stream()
+        .map(FavoriteCoinsJpa::toDomain)
+        .collect(Collectors.toSet()));
       authUser.setProfile(profile);
     }
 
@@ -81,6 +88,7 @@ public class AuthUserJpa {
     authUserJpa.setPassword(authUser.getPassword());
     authUserJpa.setBirthDate(authUser.getBirthDate().getValue());
     authUserJpa.setCpf(authUser.getCpf().getValue());
+    authUserJpa.setOnboardingFinished(authUser.isOnboardingFinished());
 
     return authUserJpa;
   }

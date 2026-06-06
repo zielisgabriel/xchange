@@ -16,5 +16,9 @@ public class AuthUser {
   private String password;
   private BirthDate birthDate;
   private Cpf cpf;
-}
+  private boolean onboardingFinished;
 
+  public void finishOnboarding() {
+    this.onboardingFinished = true;
+  }
+}

@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import br.com.xchange.api.domain.entities.FavoriteCoin;
 import br.com.xchange.api.domain.entities.Profile;
 import br.com.xchange.api.domain.exceptions.InvalidUserException;
 import br.com.xchange.api.domain.ports.repositories.AuthUserRepositoryPort;
@@ -41,16 +42,26 @@ class GetProfileUseCaseUnitTest {
     @Test
     @DisplayName("Deve retornar o perfil quando encontrado")
     void shouldReturnProfileWhenFound() {
+      FavoriteCoin bitcoin = new FavoriteCoin();
+      bitcoin.setCoinId("bitcoin");
+      bitcoin.setName("Bitcoin");
+      bitcoin.setSymbol("BTC");
+
+      FavoriteCoin ethereum = new FavoriteCoin();
+      ethereum.setCoinId("ethereum");
+      ethereum.setName("Ethereum");
+      ethereum.setSymbol("ETH");
+
       Profile expectedProfile = new Profile();
       expectedProfile.setId(TEST_USER_ID);
-      expectedProfile.setFavoriteCryptos(Set.of("bitcoin", "ethereum"));
+      expectedProfile.setFavoriteCoins(Set.of(bitcoin, ethereum));
       when(repositoryPort.findById(TEST_USER_ID)).thenReturn(Optional.of(expectedProfile));
 
       Profile result = getProfileUseCase.execute(TEST_USER_ID);
 
       assertNotNull(result);
       assertEquals(TEST_USER_ID, result.getId());
-      assertEquals(Set.of("bitcoin", "ethereum"), result.getFavoriteCryptos());
+      assertEquals(Set.of(bitcoin, ethereum), result.getFavoriteCoins());
     }
 
     @Test

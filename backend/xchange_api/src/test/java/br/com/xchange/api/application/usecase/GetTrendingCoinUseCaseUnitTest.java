@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import br.com.xchange.api.application.dto.response.TrendingCoinResponse;
 import br.com.xchange.api.application.dto.response.TrendingCoinResponse.TrendingCoinWrapper;
 import br.com.xchange.api.domain.entities.CoinWithMarketData;
+import br.com.xchange.api.domain.entities.currencies.Usd;
 import br.com.xchange.api.domain.ports.services.CoinServicePort;
 
 @ExtendWith(MockitoExtension.class)
@@ -62,7 +63,6 @@ class GetTrendingCoinUseCaseUnitTest {
       assertEquals("btc", wrapper.symbol());
       assertEquals("https://img.com/btc.png", wrapper.imageUrl());
       assertEquals(BigDecimal.valueOf(100000), wrapper.price());
-      assertEquals(BigDecimal.valueOf(1.0), wrapper.priceBtc());
       assertEquals("$2T", wrapper.marketCap());
       assertEquals("$50B", wrapper.totalVolume());
       assertEquals("sparkline_btc", wrapper.sparkline());
@@ -108,15 +108,22 @@ class GetTrendingCoinUseCaseUnitTest {
   }
 
   private CoinWithMarketData createCoinWithMarketData(
-      String id, String name, String symbol, String imageUrl, BigDecimal price,
-      BigDecimal priceBtc, String marketCap, String totalVolume, String sparkline) {
+      String id,
+      String name,
+      String symbol,
+      String imageUrl,
+      BigDecimal price,
+      BigDecimal priceBtc,
+      String marketCap,
+      String totalVolume,
+      String sparkline
+    ) {
     CoinWithMarketData coin = new CoinWithMarketData();
     coin.setId(id);
     coin.setName(name);
     coin.setSymbol(symbol);
     coin.setImageUrl(imageUrl);
-    coin.setPrice(price);
-    coin.setPriceBtc(priceBtc);
+    coin.setPrice(new Usd(price).formatted(4, 7));
     coin.setMarketCap(marketCap);
     coin.setTotalVolume(totalVolume);
     coin.setSparkline(sparkline);

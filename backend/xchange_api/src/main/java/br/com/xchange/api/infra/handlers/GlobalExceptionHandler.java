@@ -14,6 +14,7 @@ import br.com.xchange.api.application.dto.response.ApiErrorResponse;
 import br.com.xchange.api.application.dto.response.FieldValidationErrorResponse;
 import br.com.xchange.api.application.dto.response.FieldValidationErrorResponse.FieldErrors;
 import br.com.xchange.api.domain.exceptions.AccessTokenInvalidException;
+import br.com.xchange.api.domain.exceptions.CpfException;
 import br.com.xchange.api.domain.exceptions.EmailOrPasswordInvalidException;
 import br.com.xchange.api.domain.exceptions.ForbiddenChangeAnotherUserInfoException;
 import br.com.xchange.api.domain.exceptions.InvalidUserException;
@@ -113,6 +114,18 @@ public class GlobalExceptionHandler {
   ) {
     return buildResponse(
       HttpStatus.UNAUTHORIZED,
+      exception.getMessage(),
+      request
+    );
+  }
+
+  @ExceptionHandler(CpfException.class)
+  public ResponseEntity<ApiErrorResponse> handlerCpfException(
+    CpfException exception,
+    HttpServletRequest request
+  ) {
+    return buildResponse(
+      HttpStatus.BAD_REQUEST,
       exception.getMessage(),
       request
     );

@@ -4,10 +4,12 @@ import { getItemAsync, setItemAsync, deleteItemAsync } from "expo-secure-store"
 
 type UserState = {
   isAuthenticated: boolean;
+  onboardingFinished: boolean;
   accessToken: null | string;
   refreshToken: null | string;
   logIn: ({ accessToken, refreshToken }: { accessToken: string, refreshToken: string }) => void;
   logOut: () => void;
+  finishOnboarding: () => void;
 }
 
 import { Platform } from "react-native"
@@ -31,6 +33,7 @@ export const useAuthStore = create<UserState>(
   persist(
     (set) => ({
       isAuthenticated: false,
+      onboardingFinished: false,
       accessToken: null,
       refreshToken: null,
       logIn: ({ accessToken, refreshToken }) => {
@@ -48,8 +51,17 @@ export const useAuthStore = create<UserState>(
           return {
             ...state,
             isAuthenticated: false,
+            onboardingFinished: false,
             accessToken: null,
             refreshToken: null
+          }
+        })
+      },
+      finishOnboarding: () => {
+        set((state) => {
+          return {
+            ...state,
+            onboardingFinished: true
           }
         })
       }

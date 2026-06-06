@@ -28,7 +28,9 @@ SplashScreen.preventAutoHideAsync();
 
 function AppLayout() {
   const {
-    isAuthenticated
+    isAuthenticated,
+    onboardingFinished,
+    finishOnboarding
   } = useAuthStore()
 
   const [loaded, error] = useFonts({
@@ -42,7 +44,13 @@ function AppLayout() {
     "Sora-ExtraBold": Sora_800ExtraBold,
   })
 
-  useProfileSimple()
+  const {data: profile} = useProfileSimple()
+  
+  useEffect(() => {
+    if (profile?.onboardingFinished && !onboardingFinished) {
+      finishOnboarding()
+    }
+  }, [profile?.onboardingFinished, onboardingFinished, finishOnboarding])
 
   useEffect(() => {
     if (loaded || error) SplashScreen.hideAsync();
@@ -53,8 +61,11 @@ function AppLayout() {
   return (
     <ThemeProvider value={NAV_THEME["dark"]}>
       <Stack>
-        <Stack.Protected guard={isAuthenticated}>
+        <Stack.Protected guard={isAuthenticated && onboardingFinished}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack.Protected>
+        <Stack.Protected guard={isAuthenticated && !onboardingFinished}>
+          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
         </Stack.Protected>
         <Stack.Protected guard={!isAuthenticated}>
           <Stack.Screen name="auth" options={{ headerShown: false }} />

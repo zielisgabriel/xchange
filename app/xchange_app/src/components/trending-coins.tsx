@@ -17,12 +17,6 @@ interface TrendingCoinResponse {
   coins: CoinWithMarketData[]
 }
 
-const currencyFormat = new Intl.NumberFormat("en-US", {
-  currency: "USD",
-  style: "currency",
-  maximumFractionDigits: 7,
-})
-
 const percentageFormat = new Intl.NumberFormat("pt-BR", {
   style: "percent",
   minimumFractionDigits: 2,
@@ -142,7 +136,7 @@ export function TrendingCoins() {
 
                 <View className="items-end gap-0.5">
                   <Text className="text-sm font-medium">
-                    {currencyFormat.format(coin.price)}
+                    {coin.price}
                   </Text>
                   <View className="flex-row items-center">
                     {isPositive(coin.priceChangePercentage24h) ? (

@@ -3,11 +3,8 @@ package br.com.xchange.api.domain.entities;
 import lombok.Data;
 
 @Data
-public class Coin {
-  private String id;
+public class FavoriteCoin {
+  private String coinId;
   private String name;
   private String symbol;
-  private String imageUrl;
-  private String price;
-  private String updatedAt;
 }
