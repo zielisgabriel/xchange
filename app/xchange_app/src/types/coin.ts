@@ -3,6 +3,6 @@ export interface Coin {
   name: string,
   symbol: string,
   imageUrl: string,
-  price: number,
+  price: string,
   updatedAt: string
 }

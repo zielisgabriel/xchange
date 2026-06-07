@@ -2,33 +2,20 @@ import { CoinWithMarketData } from "@/types/coin-with-market-data"
 import { apiFetch } from "@/lib/api-fetch"
 import { Text } from "./ui/text"
 import { useQuery } from "@tanstack/react-query"
-import { Pressable, View } from "react-native"
+import { View } from "react-native"
 import { Button } from "./ui/button"
-import { Avatar, AvatarImage } from "./ui/avatar"
-import { Image } from "expo-image"
 import { useState } from "react"
 import { ChevronDown, ChevronUp } from "lucide-react-native"
-import { useRouter } from "expo-router"
 import { Skeleton } from "./ui/skeleton"
 import Animated, { FadeInDown } from "react-native-reanimated"
-import { useAuthStore } from "@/hooks/use-auth-store"
+import { CoinItem } from "./coin-item"
 
 interface TrendingCoinResponse {
   coins: CoinWithMarketData[]
 }
 
-const percentageFormat = new Intl.NumberFormat("pt-BR", {
-  style: "percent",
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-})
-
-const sparklineStyle = { width: 80, height: 32 }
-
 export function TrendingCoins() {
   const [showMoreCoins, setShowMoreCoins] = useState<boolean>(false)
-  const router = useRouter()
-  const { accessToken, refreshToken } = useAuthStore()
 
   async function getTrendingCoins() {
     const response = await apiFetch({
@@ -90,77 +77,41 @@ export function TrendingCoins() {
     )
   }
 
-  const isPositive = (value: number) => value >= 0
-
   return (
     <View className="gap-1">
       {trendingCoins?.coins && trendingCoins?.coins.length > 0 && trendingCoins?.coins
         .slice(0, showMoreCoins ? 15 : 5)
         .map((coin, index) => (
-          <Animated.View
-            key={coin.id}
-            entering={FadeInDown.delay(index * 50)
-              .duration(400)
-              .springify()
-              .damping(18)}
-          >
-            <Pressable
-              onPress={() => router.push("/")}
-              className="flex-row items-center justify-between px-2 py-3 rounded-2xl active:bg-muted/50"
-            >
-              <View className="flex-row items-center gap-2.5">
-                <Text className="text-xs text-muted-foreground/70 w-5 text-center">
-                  {index + 1}
-                </Text>
-                <Avatar alt={coin.name} className="w-9 h-9">
-                  <AvatarImage source={{ uri: coin.imageUrl }} />
-                </Avatar>
-                <View>
-                  <Text className="font-semibold uppercase tracking-wide text-sm">
-                    {coin.symbol}
-                  </Text>
-                  <Text className="text-xs text-muted-foreground truncate w-22">
-                    {coin.name}
-                  </Text>
-                </View>
-              </View>
+          <CoinItem.Root key={coin.id} coinId={coin.id} index={index} routeUrl="/">
+            <CoinItem.Content>
+              <CoinItem.Rank>
+                {index + 1}
+              </CoinItem.Rank>
+              <CoinItem.Logo name={coin.id} imageUrl={coin.imageUrl} />
 
-              <View className="flex-row items-center gap-3">
-                <Image
-                  source={{ uri: coin.sparkline }}
-                  style={sparklineStyle}
-                  contentFit="contain"
-                  transition={200}
-                  cachePolicy="memory-disk"
-                />
+              <CoinItem.TitleContent>
+                <CoinItem.Symbol>
+                  {coin.symbol}
+                </CoinItem.Symbol>
+                <CoinItem.Name>
+                  {coin.name}
+                </CoinItem.Name>
+              </CoinItem.TitleContent>
+            </CoinItem.Content>
 
-                <View className="items-end gap-0.5">
-                  <Text className="text-sm font-medium">
-                    {coin.price}
-                  </Text>
-                  <View className="flex-row items-center">
-                    {isPositive(coin.priceChangePercentage24h) ? (
-                      <ChevronUp size={12} color="#22c55e" />
-                    ) : (
-                      <ChevronDown size={12} color="#ef4444" />
-                    )}
-                    <Text
-                      className="text-xs font-medium"
-                      style={{
-                        color: isPositive(coin.priceChangePercentage24h)
-                          ? "#22c55e"
-                          : "#ef4444",
-                      }}
-                    >
-                      {percentageFormat.format(
-                        Math.abs(coin.priceChangePercentage24h)
-                      )}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </Pressable>
-          </Animated.View>
+            <CoinItem.MarketContent>
+              <CoinItem.Sparkline sparklineUri={coin.sparkline} />
+
+              <CoinItem.MarketData>
+                <CoinItem.Price>
+                  {coin.price}
+                </CoinItem.Price>
+                <CoinItem.Percentage>
+                  {coin.priceChangePercentage24h}
+                </CoinItem.Percentage>
+              </CoinItem.MarketData>
+            </CoinItem.MarketContent>
+          </CoinItem.Root>
         ))}
 
       <Button
