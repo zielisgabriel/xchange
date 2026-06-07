@@ -17,7 +17,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -29,10 +28,6 @@ public class AuthUserJpa {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
-
-  @OneToOne(mappedBy = "authUserJpa", cascade = CascadeType.ALL)
-  @PrimaryKeyJoinColumn
-  private ProfileJpa profileJpa;
 
   @Column(name = "first_name", length = 50, unique = false, nullable = false)
   private String firstName;
@@ -54,6 +49,9 @@ public class AuthUserJpa {
 
   @Column(name = "onboarding_finished")
   private boolean onboardingFinished = false;
+
+  @OneToOne(mappedBy = "authUserJpa", cascade = CascadeType.ALL)
+  private ProfileJpa profileJpa;
 
   public AuthUser toDomain() {
     AuthUser authUser = new AuthUser();

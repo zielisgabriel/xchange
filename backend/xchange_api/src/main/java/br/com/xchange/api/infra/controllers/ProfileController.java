@@ -1,7 +1,6 @@
 package br.com.xchange.api.infra.controllers;
 
 import java.security.Principal;
-import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +13,7 @@ import br.com.xchange.api.application.dto.request.OnboardingRequestDto;
 import br.com.xchange.api.application.dto.response.ProfileResponseDto;
 import br.com.xchange.api.application.dto.response.ProfileSimpleResponseDto;
 import br.com.xchange.api.application.usecase.GetProfileUseCase;
+import br.com.xchange.api.application.utils.PrincipalUtils;
 import br.com.xchange.api.application.usecase.FinishOnboardingUseCase;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,12 +30,12 @@ public class ProfileController {
 
   @GetMapping("/details")
   public ProfileResponseDto getDetails(Principal principal) {
-    return ProfileResponseDto.fromDomain(this.getProfileUseCase.execute(recoverUserId(principal)));
+    return ProfileResponseDto.fromDomain(this.getProfileUseCase.execute(PrincipalUtils.recoverUserId(principal)));
   }
 
   @GetMapping("/simple")
   public ProfileSimpleResponseDto getSimple(Principal principal) {
-    return ProfileSimpleResponseDto.fromDomain(this.getProfileUseCase.execute(recoverUserId(principal)));
+    return ProfileSimpleResponseDto.fromDomain(this.getProfileUseCase.execute(PrincipalUtils.recoverUserId(principal)));
   }
 
   @PostMapping("/onboarding")
@@ -45,10 +45,6 @@ public class ProfileController {
     @Valid @RequestBody OnboardingRequestDto onboardingRequestDto
   ) {
     this.finishOnboardingUseCase
-      .execute(this.recoverUserId(principal), onboardingRequestDto);
-  }
-
-  private UUID recoverUserId(Principal principal) {
-    return UUID.fromString(principal.getName());
+      .execute(PrincipalUtils.recoverUserId(principal), onboardingRequestDto);
   }
 }

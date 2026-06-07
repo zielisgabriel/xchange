@@ -15,6 +15,10 @@ public class RedisCacheConfig {
   @Bean
   public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
     return (builder) -> builder
+      .withCacheConfiguration("coinsList", RedisCacheConfiguration
+        .defaultCacheConfig().entryTtl(TtlFunction.just(Duration.ofMinutes(10)))
+        .serializeValuesWith(SerializationPair.fromSerializer(RedisSerializer.json()))
+      )
       .withCacheConfiguration("simpleCoinsList", RedisCacheConfiguration
         .defaultCacheConfig().entryTtl(TtlFunction.just(Duration.ofDays(15)))
         .serializeValuesWith(SerializationPair.fromSerializer(RedisSerializer.json()))

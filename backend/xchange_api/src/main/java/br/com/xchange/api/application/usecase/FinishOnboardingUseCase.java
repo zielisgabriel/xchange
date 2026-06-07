@@ -1,6 +1,5 @@
 package br.com.xchange.api.application.usecase;
 
-import java.util.HashSet;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -18,10 +17,11 @@ public class FinishOnboardingUseCase {
 
   public void execute(UUID userId, OnboardingRequestDto onboardingRequestDto) {
     Profile profile = this.profileRepositoryPort.findById(userId)
-      .orElseThrow(UserNotFoundException::new);
+      .orElseThrow(() -> new UserNotFoundException());
 
-    profile.setFavoriteCoins(new HashSet<>(onboardingRequestDto.favoriteCoins()));
-    profile.getAuthUser().finishOnboarding();
+      profile.getFavoriteCoins().clear();
+      profile.setFavoriteCoins(onboardingRequestDto.favoriteCoins());
+      profile.getAuthUser().finishOnboarding();
 
     this.profileRepositoryPort.save(profile);
   }

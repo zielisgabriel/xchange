@@ -45,9 +45,12 @@ public class ProfileJpa {
   public static ProfileJpa fromDomain(Profile profile) {
     ProfileJpa profileJpa = new ProfileJpa();
     profileJpa.setId(profile.getId());
-    profileJpa.setFavoriteCoins(profile.getFavoriteCoins()
-      .stream()
-      .map(FavoriteCoinsJpa::fromDomain).collect(Collectors.toSet()));
+    profileJpa.setFavoriteCoins(
+      profile.getFavoriteCoins()
+        .stream()
+        .map(FavoriteCoinsJpa::fromDomain)
+        .collect(Collectors.toSet())
+    );
     if (profile.getAuthUser() != null) {
       profileJpa.setAuthUserJpa(AuthUserJpa.fromDomain(profile.getAuthUser()));
     }

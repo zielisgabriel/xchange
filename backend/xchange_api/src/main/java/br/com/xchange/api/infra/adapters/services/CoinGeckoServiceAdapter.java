@@ -39,6 +39,7 @@ public class CoinGeckoServiceAdapter implements CoinServicePort {
         coinWithMarketData.setTotalVolume(item.totalVolume() != null ? new Usd(item.totalVolume()).formatted(0, 0) : null);
         coinWithMarketData.setPriceChangePercentage24h(item.priceChangePercentage24h());
         coinWithMarketData.setUpdatedAt(item.lastUpdated());
+
         return coinWithMarketData;
       }).toList();
   }
