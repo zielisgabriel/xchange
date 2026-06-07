@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { GlobalCoinMetrics } from "@/types/global-coin-metrics";
 import clsx from "clsx";
 import { apiFetch } from "@/lib/api-fetch";
+import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 
 export function GlobalCoinsHeader() {
   async function getGlobalCoinMetrics() {
@@ -53,45 +54,57 @@ export function GlobalCoinsHeader() {
       <View className="flex-row gap-3">
         {isLoading ? (
           <>
-            <View className="flex-1 bg-card rounded-2xl p-4 gap-2 border border-border/50 shadow-sm">
-              <View className="flex-row items-center gap-1.5">
+            <Card className="flex-1">
+              <CardHeader className="flex-row items-center gap-1.5">
                 <Skeleton className="w-6 h-6 rounded-full" />
                 <Skeleton className="flex-1 h-6 rounded-full" />
-              </View>
-              <Skeleton className="h-6 max-w-20" />
-              <Skeleton className="h-4 max-w-12" />
-            </View>
-            <View className="flex-1 bg-card rounded-2xl p-4 gap-2 border border-border/50 shadow-sm">
-              <View className="flex-row items-center gap-1.5">
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-6 max-w-20" />
+              </CardContent>
+              <CardFooter>
+                <Skeleton className="h-4 max-w-12" />
+              </CardFooter>
+            </Card>
+            <Card className="flex-1">
+              <CardHeader className="flex-row items-center gap-1.5">
                 <Skeleton className="w-6 h-6 rounded-full" />
                 <Skeleton className="flex-1 h-6 rounded-full" />
-              </View>
-              <Skeleton className="h-6 max-w-20" />
-              <Skeleton className="h-4 max-w-12" />
-            </View>
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-6 max-w-20" />
+              </CardContent>
+              <CardFooter>
+                <Skeleton className="h-4 max-w-12" />
+              </CardFooter>
+            </Card>
           </>
         ) : isError || !globalCoinMetrics?.data ? (
-          <View className="flex-1 bg-card rounded-2xl p-4 gap-2 border border-border shadow-sm items-center justify-center">
-            <Text className="text-sm text-muted-foreground">
-              Não foi possível carregar os dados globais.
-            </Text>
-            <Text className="text-xs text-muted-foreground/60">
-              Puxe para baixo para tentar novamente.
-            </Text>
-          </View>
+          <Card className="flex-1 items-center justify-center">
+            <CardContent>
+              <Text className="text-sm text-muted-foreground">
+                Não foi possível carregar os dados globais.
+              </Text>
+              <Text className="text-xs text-muted-foreground/60">
+                Puxe para baixo para tentar novamente.
+              </Text>
+            </CardContent>
+          </Card>
         ) : (
           <>
-            <View className="flex-1 bg-card rounded-2xl p-4 gap-2 border border-border/50 shadow-sm">
-              <View className="flex-row items-center gap-1.5">
+            <Card className="flex-1">
+              <CardHeader className="flex-row items-center gap-1.5">
                 <IconBadge icon={BarChart3} variant="success" size="sm" />
                 <Text className="text-xs text-muted-foreground font-medium">
                   Market Cap
                 </Text>
-              </View>
-              <Text className="text-lg font-bold">
-                {globalCoinMetrics?.data ? currencyFormater.format(globalCoinMetrics?.data.totalMarketCap) : currencyFormater.format(0)}
-              </Text>
-              <View>
+              </CardHeader>
+              <CardContent>
+                <Text className="text-lg font-bold">
+                  {globalCoinMetrics?.data ? currencyFormater.format(globalCoinMetrics?.data.totalMarketCap) : currencyFormater.format(0)}
+                </Text>
+              </CardContent>
+              <CardFooter>
                 <Text className={clsx("flex flex-row text-xs items-center gap-0.5", {
                   "text-red-500": globalCoinMetrics?.data.marketCapChangePercentage24hUsd! < 0,
                   "text-green-500" : globalCoinMetrics?.data.marketCapChangePercentage24hUsd! > 0
@@ -103,20 +116,22 @@ export function GlobalCoinsHeader() {
                   )}
                   {percentageFormat.format(globalCoinMetrics?.data.marketCapChangePercentage24hUsd!)}
                 </Text>
-              </View>
-            </View>
+              </CardFooter>
+            </Card>
 
-            <View className="flex-1 bg-card rounded-2xl p-4 gap-2 border border-border/50 shadow-sm">
-              <View className="flex-row items-center gap-1.5">
+            <Card className="flex-1">
+              <CardHeader className="flex-row items-center gap-1.5">
                 <IconBadge icon={Activity} variant="info" size="sm" />
                 <Text className="text-xs text-muted-foreground font-medium">
                   Volume 24h
                 </Text>
-              </View>
-              <Text className="text-lg font-bold">
-                {currencyFormater.format(globalCoinMetrics?.data.totalVolume!)}
-              </Text>
-              <View>
+              </CardHeader>
+              <CardContent>
+                <Text className="text-lg font-bold">
+                  {currencyFormater.format(globalCoinMetrics?.data.totalVolume!)}
+                </Text>
+              </CardContent>
+              <CardFooter>
                 <Text className={clsx("flex flex-row text-xs items-center gap-0.5", {
                   "text-red-500": globalCoinMetrics?.data.volumeChangePercentage24hUsd! < 0,
                   "text-green-500" : globalCoinMetrics?.data.volumeChangePercentage24hUsd! > 0
@@ -128,8 +143,8 @@ export function GlobalCoinsHeader() {
                   )}
                   {percentageFormat.format(globalCoinMetrics?.data.volumeChangePercentage24hUsd!)}
                 </Text>
-              </View>
-            </View>
+              </CardFooter>
+            </Card>
           </>
         )}
       </View>

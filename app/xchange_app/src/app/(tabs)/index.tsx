@@ -7,7 +7,8 @@ import {
   TrendingUp,
   Search,
   Bell,
-  Coins
+  Coins,
+  Star
 } from "lucide-react-native"
 import { Pressable, RefreshControl, ScrollView, View } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
@@ -18,6 +19,7 @@ import { GlobalCoinsHeader } from "@/components/global-coins-header"
 import { useProfileSimple } from "@/hooks/use-profile-simple"
 import { Skeleton } from "@/components/ui/skeleton"
 import { CoinsList } from "@/components/coins-list"
+import { FavoriteCoins } from "@/components/favorite-coins"
 
 function getGreeting(): string {
   const hour = new Date().getHours()
@@ -96,6 +98,18 @@ export default function Index() {
       </LinearGradient>
 
       <GlobalCoinsHeader />
+
+      <Animated.View
+        entering={FadeInDown.delay(300).duration(500)}
+        className="px-4 mt-6"
+      >
+        <SectionHeader
+          icon={Star}
+          title="Favoritos"
+          subtitle="Seus favoritos para acompanhar"
+        />
+        <FavoriteCoins />
+      </Animated.View>
 
       <Animated.View
         entering={FadeInDown.delay(300).duration(500)}
