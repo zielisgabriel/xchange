@@ -6,7 +6,8 @@ import { Icon } from "@/components/ui/icon"
 import {
   TrendingUp,
   Search,
-  Bell
+  Bell,
+  Coins
 } from "lucide-react-native"
 import { Pressable, RefreshControl, ScrollView, View } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
@@ -14,9 +15,9 @@ import Animated, { FadeInDown, FadeIn } from "react-native-reanimated"
 import { useQueryClient } from "@tanstack/react-query"
 import { useCallback, useState } from "react"
 import { GlobalCoinsHeader } from "@/components/global-coins-header"
-import { useAuthStore } from "@/hooks/use-auth-store"
 import { useProfileSimple } from "@/hooks/use-profile-simple"
 import { Skeleton } from "@/components/ui/skeleton"
+import { CoinsList } from "@/components/coins-list"
 
 function getGreeting(): string {
   const hour = new Date().getHours()
@@ -101,9 +102,21 @@ export default function Index() {
         className="px-4 mt-6"
       >
         <SectionHeader
+          icon={Coins}
+          title="Moedas"
+          subtitle="Mais populares"
+        />
+        <CoinsList />
+      </Animated.View>
+
+      <Animated.View
+        entering={FadeInDown.delay(300).duration(500)}
+        className="px-4 mt-6"
+      >
+        <SectionHeader
           icon={TrendingUp}
           title="Tendências"
-          subtitle="Mais populares agora"
+          subtitle="Com alta movimentação"
         />
         <TrendingCoins />
       </Animated.View>
