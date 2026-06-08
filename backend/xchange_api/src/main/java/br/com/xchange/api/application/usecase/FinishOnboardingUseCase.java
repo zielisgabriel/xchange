@@ -19,9 +19,9 @@ public class FinishOnboardingUseCase {
     Profile profile = this.profileRepositoryPort.findById(userId)
       .orElseThrow(() -> new UserNotFoundException());
 
-      profile.getFavoriteCoins().clear();
-      profile.setFavoriteCoins(onboardingRequestDto.favoriteCoins());
-      profile.getAuthUser().finishOnboarding();
+    profile.getFavoriteCoins().clear();
+    profile.setFavoriteCoins(onboardingRequestDto.favoriteCoins());
+    profile.getAuthUser().finishOnboarding();
 
     this.profileRepositoryPort.save(profile);
   }

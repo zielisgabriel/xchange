@@ -27,8 +27,9 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
   @Override
   public Profile save(Profile profile) {
     ProfileJpa profileJpa = ProfileJpa.fromDomain(profile);
+    Profile profileSaved = this.jpaProfileRepositoryImpl.save(profileJpa).toDomain();
 
-    return this.jpaProfileRepositoryImpl.save(profileJpa).toDomain();
+    return profileSaved;
   }
 
 

@@ -29,8 +29,7 @@ SplashScreen.preventAutoHideAsync();
 function AppLayout() {
   const {
     isAuthenticated,
-    onboardingFinished,
-    finishOnboarding
+    onboardingFinished
   } = useAuthStore()
 
   const [loaded, error] = useFonts({
@@ -44,13 +43,7 @@ function AppLayout() {
     "Sora-ExtraBold": Sora_800ExtraBold,
   })
 
-  const {data: profile} = useProfileSimple()
-  
-  useEffect(() => {
-    if (profile?.onboardingFinished && !onboardingFinished) {
-      finishOnboarding()
-    }
-  }, [profile?.onboardingFinished, onboardingFinished, finishOnboarding])
+  useProfileSimple()
 
   useEffect(() => {
     if (loaded || error) SplashScreen.hideAsync();

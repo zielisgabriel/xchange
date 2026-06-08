@@ -20,6 +20,7 @@ import { StepCryptos } from "@/components/onboarding/step-cryptos"
 import { StepFinish } from "@/components/onboarding/step-finish"
 import { onboardingSchema } from "@/schemas/onboarding-schema"
 import { toast } from "sonner-native"
+import { queryClient } from "@/lib/query-client"
 
 const TOTAL_STEPS = 3
 
@@ -60,6 +61,15 @@ export default function Onboarding() {
       setCurrentStep(1)
       return
     }
+
+    queryClient.setQueryData(["profile-simple"], (old: any) => {
+      if (!old) return old
+      return {
+        ...old,
+        onboardingFinished: true,
+        favoriteCoins: selectedCryptos
+      }
+    })
 
     finishOnboarding()
   }

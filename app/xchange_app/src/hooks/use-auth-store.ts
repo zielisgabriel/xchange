@@ -9,6 +9,7 @@ type UserState = {
   refreshToken: null | string;
   logIn: ({ accessToken, refreshToken }: { accessToken: string, refreshToken: string }) => void;
   logOut: () => void;
+  startOnboarding: () => void;
   finishOnboarding: () => void;
 }
 
@@ -33,7 +34,7 @@ export const useAuthStore = create<UserState>(
   persist(
     (set) => ({
       isAuthenticated: false,
-      onboardingFinished: false,
+      onboardingFinished: true,
       accessToken: null,
       refreshToken: null,
       logIn: ({ accessToken, refreshToken }) => {
@@ -54,6 +55,14 @@ export const useAuthStore = create<UserState>(
             onboardingFinished: false,
             accessToken: null,
             refreshToken: null
+          }
+        })
+      },
+      startOnboarding: () => {
+        set((state) => {
+          return {
+            ...state,
+            onboardingFinished: false
           }
         })
       },

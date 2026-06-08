@@ -3,11 +3,12 @@ import { apiFetch } from "@/lib/api-fetch";
 import { ProfileSimple } from "@/types/profile-simple";
 import { Minute } from "@/valueobject/Minute";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 export function useProfileSimple() {
-  const { accessToken, isAuthenticated } = useAuthStore()
+  const { accessToken, isAuthenticated, startOnboarding, onboardingFinished } = useAuthStore()
 
-  return useQuery<ProfileSimple>({
+  const result = useQuery<ProfileSimple>({
     queryKey: ["profile-simple"],
     queryFn: async () => {
       const response = await apiFetch({
@@ -25,4 +26,19 @@ export function useProfileSimple() {
     staleTime: new Minute(10).toMilliseconds(),
     retry: true,
   })
+
+  useEffect(() => {
+    if (!result.isSuccess || !result.data) return;
+
+    if (!result.data.onboardingFinished && onboardingFinished) {
+      useAuthStore.getState().startOnboarding();
+      return;
+    }
+    
+    if (result.data.onboardingFinished && !onboardingFinished) {
+      useAuthStore.getState().finishOnboarding();
+    }
+  }, [result.isSuccess, result.data?.onboardingFinished, onboardingFinished]);
+
+  return result
 }
