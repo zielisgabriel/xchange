@@ -4,6 +4,7 @@ import java.util.List;
 
 import br.com.xchange.api.application.dto.response.GlobalCoinMetricsResponse;
 import br.com.xchange.api.domain.entities.Coin;
+import br.com.xchange.api.domain.entities.CoinChartData;
 import br.com.xchange.api.domain.entities.CoinWithMarketData;
 
 public interface CoinServicePort {
@@ -11,4 +12,5 @@ public interface CoinServicePort {
   List<CoinWithMarketData> getCoinsWithMarketData();
   List<CoinWithMarketData> getTrendingCoinsDetailed();
   GlobalCoinMetricsResponse getGlobalCoinMetrics();
+  CoinChartData getChartDataById(String coinId);
 }

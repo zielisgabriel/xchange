@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.xchange.api.application.dto.response.CoinChartDataResponse;
 import br.com.xchange.api.application.dto.response.CoinsListResponse;
 import br.com.xchange.api.application.dto.response.GlobalCoinMetricsResponse;
 import br.com.xchange.api.application.dto.response.SimpleCoinsListResponse;
@@ -18,7 +20,9 @@ import br.com.xchange.api.application.dto.response.CoinsListResponse.CoinsListWr
 import br.com.xchange.api.application.usecase.GetCoinsWithMarketDataUseCase;
 import br.com.xchange.api.application.usecase.GetGlobalCoinMetricsUseCase;
 import br.com.xchange.api.application.usecase.GetTrendingCoinUseCase;
+import br.com.xchange.api.domain.entities.CoinChartData;
 import br.com.xchange.api.domain.entities.CoinWithMarketData;
+import br.com.xchange.api.domain.ports.services.CoinServicePort;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -28,6 +32,7 @@ public class CoinsController {
   private final GetTrendingCoinUseCase getTrendingCoinUseCase;
   private final GetGlobalCoinMetricsUseCase getGlobalCoinMetrics;
   private final GetCoinsWithMarketDataUseCase getCoinsListWithMarketData;
+  private final CoinServicePort coinServicePort;
 
   @Cacheable(value = "simpleCoinsList")
   @ResponseStatus(code = HttpStatus.OK)
@@ -79,5 +84,14 @@ public class CoinsController {
   @GetMapping("/global")
   public GlobalCoinMetricsResponse getGlobalCoinMetrics() {
     return this.getGlobalCoinMetrics.execute();
+  }
+
+  @Cacheable(value = "coinChart", key = "#coinId")
+  @ResponseStatus(code = HttpStatus.OK)
+  @GetMapping("/chart/{coinId}")
+  public CoinChartDataResponse getChartDataById(@PathVariable String coinId) {
+    CoinChartData coinChartData = this.coinServicePort.getChartDataById(coinId);
+
+    return new CoinChartDataResponse(coinChartData.getPrices());
   }
 }

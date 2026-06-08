@@ -9,10 +9,12 @@ import org.springframework.stereotype.Component;
 import br.com.xchange.api.application.dto.response.GlobalCoinMetricsResponse;
 import br.com.xchange.api.application.dto.response.GlobalCoinMetricsResponse.Data;
 import br.com.xchange.api.domain.entities.Coin;
+import br.com.xchange.api.domain.entities.CoinChartData;
 import br.com.xchange.api.domain.entities.CoinWithMarketData;
 import br.com.xchange.api.domain.entities.currencies.Usd;
 import br.com.xchange.api.domain.ports.services.CoinServicePort;
 import br.com.xchange.api.infra.services.coingecko.CoinsGeckoService;
+import br.com.xchange.api.infra.services.coingecko.dto.CoinHistoricalChartData;
 import br.com.xchange.api.infra.services.coingecko.dto.CoinInListWithMarketData;
 import br.com.xchange.api.infra.services.coingecko.dto.GlobalCoinMetrics;
 import br.com.xchange.api.infra.services.coingecko.dto.TrendingCoinsCoinsGecko;
@@ -97,6 +99,16 @@ public class CoinGeckoServiceAdapter implements CoinServicePort {
     );
 
     return new GlobalCoinMetricsResponse(dataResponse);
+  }
+  
+  @Override
+  public CoinChartData getChartDataById(String coinId) {
+    CoinHistoricalChartData data = this.coinsGeckoService.getChartDataById(coinId);
+
+    CoinChartData coinChartData = new CoinChartData();
+    coinChartData.setPrices(data.prices());
+
+    return coinChartData;
   }
 
   private Coin toCoin(TrendingCoinsCoinsGecko.CoinItem item) {
