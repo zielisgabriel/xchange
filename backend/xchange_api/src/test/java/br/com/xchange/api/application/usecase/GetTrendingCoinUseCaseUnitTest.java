@@ -62,7 +62,7 @@ class GetTrendingCoinUseCaseUnitTest {
       assertEquals("Bitcoin", wrapper.name());
       assertEquals("btc", wrapper.symbol());
       assertEquals("https://img.com/btc.png", wrapper.imageUrl());
-      assertEquals(BigDecimal.valueOf(100000), wrapper.price());
+      assertEquals("$100,000.0000", wrapper.price());
       assertEquals("$2T", wrapper.marketCap());
       assertEquals("$50B", wrapper.totalVolume());
       assertEquals("sparkline_btc", wrapper.sparkline());
