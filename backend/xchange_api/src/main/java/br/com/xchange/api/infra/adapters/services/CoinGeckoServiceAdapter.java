@@ -106,7 +106,7 @@ public class CoinGeckoServiceAdapter implements CoinServicePort {
     CoinHistoricalChartData data = this.coinsGeckoService.getChartDataById(coinId);
 
     CoinChartData coinChartData = new CoinChartData();
-    coinChartData.setPrices(data.prices());
+    coinChartData.setPrices(data.prices().subList(data.prices().size() - 5, data.prices().size()));
 
     return coinChartData;
   }

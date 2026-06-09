@@ -1,5 +1,6 @@
 package br.com.xchange.api.infra.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.cache.annotation.Cacheable;
@@ -92,6 +93,6 @@ public class CoinsController {
   public CoinChartDataResponse getChartDataById(@PathVariable String coinId) {
     CoinChartData coinChartData = this.coinServicePort.getChartDataById(coinId);
 
-    return new CoinChartDataResponse(coinChartData.getPrices());
+    return new CoinChartDataResponse(new ArrayList<>(coinChartData.getPrices()));
   }
 }

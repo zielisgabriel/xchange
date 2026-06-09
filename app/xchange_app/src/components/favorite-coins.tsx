@@ -9,9 +9,10 @@ import { Skeleton } from "./ui/skeleton";
 import { cn } from "@/lib/utils";
 import { FavoriteCoin } from "@/types/favorite-coin";
 import { Star } from "lucide-react-native";
+import { FavoriteCoinChart } from "./favorite-coin-chart";
 
 export function FavoriteCoins() {
-  const [selectedCoin, setSelectedCoin] = useState<string>("");
+  const [selectedCoinId, setSelectedCoinId] = useState<string>("");
 
   const { data: favoriteCoins = [], isLoading } = useQuery<FavoriteCoin[]>({
     queryKey: ["favorite-coins"],
@@ -30,28 +31,9 @@ export function FavoriteCoins() {
     }
   })
 
-  // const { data: favoriteCoins = [], isLoading } = useQuery({
-  //   queryKey: ["favoritesStatus"],
-  //   queryFn: async () => {
-  //     const response = await apiFetch({
-  //       input: "/api/favorites/status",
-  //       init: {
-  //         method: "GET"
-  //       }
-  //     })
-
-  //     if (!response.ok) {
-  //       return []
-  //     }
-
-  //     const data = await response.json()
-  //     return data as FavoriteCoin[]
-  //   }
-  // })
-
   useEffect(() => {
-    if (favoriteCoins.length > 0 && !selectedCoin) {
-      setSelectedCoin(favoriteCoins[0].coinId)
+    if (favoriteCoins.length > 0 && !selectedCoinId) {
+      setSelectedCoinId(favoriteCoins[0].coinId)
     }
   }, [favoriteCoins])
 
@@ -98,20 +80,18 @@ export function FavoriteCoins() {
   }
 
   return (
-    <View>
+    <View className="flex flex-col gap-2">
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerClassName="gap-3"
       >
         {favoriteCoins.map((coin) => {
-          const isSelected = selectedCoin === coin.coinId
-          // const { label, color, icon: StatusIcon } = statusConfig[coin.status]
-
+          const isSelected = selectedCoinId === coin.coinId
           return (
             <Pressable
               key={coin.coinId}
-              onPress={() => setSelectedCoin(coin.coinId)}
+              onPress={() => setSelectedCoinId(coin.coinId)}
             >
               <Card className={cn(
                 "w-44",
@@ -147,6 +127,8 @@ export function FavoriteCoins() {
           )
         })}
       </ScrollView>
+
+      <FavoriteCoinChart coinId={selectedCoinId} />
     </View>
   )
 }
