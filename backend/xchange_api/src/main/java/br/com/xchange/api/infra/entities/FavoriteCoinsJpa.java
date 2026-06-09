@@ -12,6 +12,8 @@ public class FavoriteCoinsJpa {
   private String coinId;
   private String name;
   private String symbol;
+  @Column(name = "image_url")
+  private String imageUrl;
 
   public FavoriteCoin toDomain() {
     FavoriteCoin favoriteCoinsDomain = new FavoriteCoin();
@@ -19,6 +21,7 @@ public class FavoriteCoinsJpa {
     favoriteCoinsDomain.setCoinId(coinId);
     favoriteCoinsDomain.setName(name);
     favoriteCoinsDomain.setSymbol(symbol);
+    favoriteCoinsDomain.setImageUrl(imageUrl);
 
     return favoriteCoinsDomain;
   }
@@ -29,6 +32,7 @@ public class FavoriteCoinsJpa {
     favoriteCoinsJpa.setCoinId(favoriteCoinsDomain.getCoinId());
     favoriteCoinsJpa.setName(favoriteCoinsDomain.getName());
     favoriteCoinsJpa.setSymbol(favoriteCoinsDomain.getSymbol());
+    favoriteCoinsJpa.setImageUrl(favoriteCoinsDomain.getImageUrl());
 
     return favoriteCoinsJpa;
   }

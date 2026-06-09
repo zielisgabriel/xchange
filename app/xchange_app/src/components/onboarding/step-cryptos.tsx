@@ -101,7 +101,7 @@ export function StepCryptos({ selected, onToggle, error }: StepCryptosProps) {
   }
 
   function toFavoriteCoin(coin: SimpleCoin): FavoriteCoin {
-    return { coinId: coin.id, name: coin.name, symbol: coin.symbol }
+    return { coinId: coin.id, name: coin.name, symbol: coin.symbol, imageUrl: coin.imageUrl }
   }
 
   return (

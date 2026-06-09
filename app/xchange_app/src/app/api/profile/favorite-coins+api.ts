@@ -1,12 +1,14 @@
 import { fetchClient } from "@/lib/fetch-client";
 
 export async function GET(req: Request) {
+  
   const response = await fetchClient({
-    path: "/api/favorites/status",
+    path: "/profile/favorite-coins",
     init: {
       headers: req.headers,
+      body: req.body,
       method: "GET"
-    }
+    },
   })
 
   return Response.json(response.body, { status: response.status })

@@ -1,6 +1,8 @@
 package br.com.xchange.api.infra.controllers;
 
 import java.security.Principal;
+import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,9 @@ import br.com.xchange.api.application.dto.response.ProfileResponseDto;
 import br.com.xchange.api.application.dto.response.ProfileSimpleResponseDto;
 import br.com.xchange.api.application.usecase.GetProfileUseCase;
 import br.com.xchange.api.application.utils.PrincipalUtils;
+import br.com.xchange.api.domain.entities.FavoriteCoin;
 import br.com.xchange.api.application.usecase.FinishOnboardingUseCase;
+import br.com.xchange.api.application.usecase.GetFavoriteCoinsByUserId;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestBody;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProfileController {
   private final GetProfileUseCase getProfileUseCase;
   private final FinishOnboardingUseCase finishOnboardingUseCase;
+  private final GetFavoriteCoinsByUserId getFavoriteCoinsByUserId;
 
   @GetMapping("/details")
   public ProfileResponseDto getDetails(Principal principal) {
@@ -46,5 +51,13 @@ public class ProfileController {
   ) {
     this.finishOnboardingUseCase
       .execute(PrincipalUtils.recoverUserId(principal), onboardingRequestDto);
+  }
+
+  @GetMapping("/favorite-coins")
+  @ResponseStatus(value = HttpStatus.OK)
+  public Set<FavoriteCoin> getFavoriteCoins(Principal principal) {
+    UUID userId = PrincipalUtils.recoverUserId(principal);
+
+    return this.getFavoriteCoinsByUserId.execute(userId);
   }
 }

@@ -6,54 +6,54 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Text } from "./ui/text";
 import { Skeleton } from "./ui/skeleton";
-import { Minus, Star, TrendingDown, TrendingUp } from "lucide-react-native";
 import { cn } from "@/lib/utils";
-import { FavoriteCoinChart } from "./favorite-coin-chart";
-
-type CoinStatus = "up" | "stable" | "down" | "no_data"
-
-interface FavoriteCoin {
-  id: string,
-  name: string,
-  symbol: string,
-  imageUrl?: string,
-  status: CoinStatus,
-}
-
-const statusConfig: Record<CoinStatus, { label: string, color: string, icon: typeof TrendingUp }> = {
-  up: { label: "Em alta", color: "#22c55e", icon: TrendingUp },
-  stable: { label: "Estável", color: "#eab308", icon: Minus },
-  down: { label: "Em baixa", color: "#ef4444", icon: TrendingDown },
-  no_data: { label: "Sem dados de IA", color: "#9ca3af", icon: Minus },
-}
+import { FavoriteCoin } from "@/types/favorite-coin";
+import { Star } from "lucide-react-native";
 
 export function FavoriteCoins() {
   const [selectedCoin, setSelectedCoin] = useState<string>("");
 
-  const { data: favorites = [], isLoading } = useQuery({
-    queryKey: ["favoritesStatus"],
+  const { data: favoriteCoins = [], isLoading } = useQuery<FavoriteCoin[]>({
+    queryKey: ["favorite-coins"],
     queryFn: async () => {
       const response = await apiFetch({
-        input: "/api/favorites/status",
+        input: "/api/profile/favorite-coins",
         init: {
           method: "GET"
         }
       })
 
-      if (!response.ok) {
-        return []
-      }
+      if (!response.ok) return []
 
       const data = await response.json()
-      return data as FavoriteCoin[]
+      return data
     }
   })
 
+  // const { data: favoriteCoins = [], isLoading } = useQuery({
+  //   queryKey: ["favoritesStatus"],
+  //   queryFn: async () => {
+  //     const response = await apiFetch({
+  //       input: "/api/favorites/status",
+  //       init: {
+  //         method: "GET"
+  //       }
+  //     })
+
+  //     if (!response.ok) {
+  //       return []
+  //     }
+
+  //     const data = await response.json()
+  //     return data as FavoriteCoin[]
+  //   }
+  // })
+
   useEffect(() => {
-    if (favorites.length > 0 && !selectedCoin) {
-      setSelectedCoin(favorites[0].id)
+    if (favoriteCoins.length > 0 && !selectedCoin) {
+      setSelectedCoin(favoriteCoins[0].coinId)
     }
-  }, [favorites])
+  }, [favoriteCoins])
 
   if (isLoading) {
     return (
@@ -83,7 +83,7 @@ export function FavoriteCoins() {
     )
   }
 
-  if (favorites.length === 0) {
+  if (favoriteCoins.length === 0) {
     return (
       <View className="items-center justify-center py-6 gap-3">
         <Star size={32} className="text-muted-foreground/40" />
@@ -104,14 +104,14 @@ export function FavoriteCoins() {
         showsHorizontalScrollIndicator={false}
         contentContainerClassName="gap-3"
       >
-        {favorites.map((coin) => {
-          const isSelected = selectedCoin === coin.id
-          const { label, color, icon: StatusIcon } = statusConfig[coin.status]
+        {favoriteCoins.map((coin) => {
+          const isSelected = selectedCoin === coin.coinId
+          // const { label, color, icon: StatusIcon } = statusConfig[coin.status]
 
           return (
             <Pressable
-              key={coin.id}
-              onPress={() => setSelectedCoin(coin.id)}
+              key={coin.coinId}
+              onPress={() => setSelectedCoin(coin.coinId)}
             >
               <Card className={cn(
                 "w-44",
@@ -134,21 +134,19 @@ export function FavoriteCoins() {
                   </View>
                 </CardHeader>
 
-                <CardContent>
+                {/* <CardContent>
                   <View className="flex-row items-center gap-1.5">
                     <StatusIcon size={14} color={color} />
                     <Text className="text-sm font-medium" style={{ color }}>
                       {label}
                     </Text>
                   </View>
-                </CardContent>
+                </CardContent> */}
               </Card>
             </Pressable>
           )
         })}
       </ScrollView>
-
-      <FavoriteCoinChart coinId={selectedCoin} />
     </View>
   )
 }

@@ -1,5 +1,6 @@
 export interface FavoriteCoin {
   coinId: string,
   name: string,
-  symbol: string
+  symbol: string,
+  imageUrl: string
 }

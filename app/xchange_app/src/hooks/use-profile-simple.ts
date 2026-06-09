@@ -24,7 +24,7 @@ export function useProfileSimple() {
     },
     enabled: isAuthenticated && !!accessToken,
     staleTime: new Minute(10).toMilliseconds(),
-    retry: true,
+    retry: false,
   })
 
   useEffect(() => {
