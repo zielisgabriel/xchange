@@ -19,8 +19,17 @@ def generate_features(df: pd.DataFrame) -> pd.DataFrame:
     # volatilidade do dia: range entre máxima e mínima
     df["high_low_range_pct"] = (df["high_24h"] - df["low_24h"]) / df["low_24h"] * 100
 
-    # % do supply já em circulação (escassez)
-    df["circulating_supply_ratio"] = df["circulating_supply"] / df["max_supply"]
+    df["has_max_supply"] = df["max_supply"].notna().astype(int)
+
+    df["circulating_supply_ratio"] = (
+        df["circulating_supply"] / df["max_supply"]
+    )
+
+    df["circulating_supply_ratio"] = (
+        df["circulating_supply_ratio"]
+        .replace([float("inf"), -float("inf")], 0)
+        .fillna(0)
+    )
 
     # distância do topo histórico (quão longe do ATH)
     df["dist_ath_pct"] = df["ath_change_percentage"]  # já vem negativo

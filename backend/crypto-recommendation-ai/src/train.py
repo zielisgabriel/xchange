@@ -8,7 +8,9 @@ def load_data(features_path: str) -> pd.DataFrame:
     return pd.read_csv(features_path)
 
 def split_data(df: pd.DataFrame):
-    df = df.dropna()
+    numeric_cols = df.select_dtypes(include="number").columns
+
+    df[numeric_cols] = df[numeric_cols].fillna(0)
 
     drop_cols = ["id", "symbol", "name", "label", "price_change_percentage_24h"]
     X = df.drop(columns=[c for c in drop_cols if c in df.columns])

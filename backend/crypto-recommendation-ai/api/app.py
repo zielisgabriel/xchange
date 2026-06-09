@@ -1,12 +1,16 @@
 import pickle
 import pandas as pd
 from fastapi import FastAPI
+from pydantic import BaseModel
 from apscheduler.schedulers.background import BackgroundScheduler
 from contextlib import asynccontextmanager
 
 from src.features import clean_data, generate_features, create_labels
 from src.collector import collector
 
+class PredictRequest(BaseModel):
+    symbols: list[str]
+    
 # ─────────────────────────────────────────
 # ESTADO GLOBAL (cache em memória)
 # ─────────────────────────────────────────
@@ -15,8 +19,7 @@ cache: dict = {"recommendations": [], "last_updated": None}
 
 with open("models/random_forest.pkl", "rb") as f:
     model = pickle.load(f)
-
-
+    
 # ─────────────────────────────────────────
 # JOB: coleta + predição
 # ─────────────────────────────────────────
@@ -29,25 +32,30 @@ def update_recommendations():
             return
 
         df = clean_data(df_raw)
+
         df = generate_features(df)
-        df = df.dropna()
+        
+        numeric_cols = df.select_dtypes(include="number").columns
+        df[numeric_cols] = df[numeric_cols].fillna(0)
 
         drop_cols = ["id", "symbol", "name", "label", "price_change_percentage_24h"]
         X = df.drop(columns=[c for c in drop_cols if c in df.columns])
 
         df["prediction"] = model.predict(X)
+        
+        df.to_csv('pred.csv')
 
         # retorna só as recomendadas como "alta"
-        altas = (
-            df[df["prediction"] == "alta"][["id", "symbol", "name", "current_price", "price_change_percentage_24h", "prediction"]]
-            .sort_values("price_change_percentage_24h", ascending=False)
+        criptos = (
+            df.sort_values("price_change_percentage_24h", ascending=False)
+            [["id", "symbol", "name", "prediction"]]
             .to_dict(orient="records")
         )
 
         from datetime import datetime
-        cache["recommendations"] = altas
+        cache["recommendations"] = criptos
         cache["last_updated"] = datetime.now().isoformat()
-        print(f"  {len(altas)} criptos recomendadas.")
+        print(f"  {len(criptos)} criptos recomendadas.")
 
     except Exception as e:
         print(f"  Erro no job: {e}")
@@ -81,7 +89,22 @@ def recommend():
         "total": len(cache["recommendations"]),
         "data": cache["recommendations"],
     }
+    
+@app.post("/predict")
+def predict(data: PredictRequest):
 
+    symbols = {s.lower() for s in data.symbols}
+
+    result = [
+        crypto
+        for crypto in cache["recommendations"]
+        if crypto["symbol"].lower() in symbols
+    ]
+
+    return {
+        "total": len(result),
+        "data": result
+    }
 
 @app.get("/health")
 def health():
