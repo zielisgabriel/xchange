@@ -1,9 +1,11 @@
 import { fetchClient } from "@/lib/fetch-client";
 
 export async function GET(req: Request) {
-  
+  const url = new URL(req.url)
+  const predictionParam = url.searchParams.get("prediction")
+
   const response = await fetchClient({
-    path: "/profile/favorite-coins",
+    path: `/profile/favorite-coins${predictionParam ? `?prediction=${predictionParam}` : null}`,
     init: {
       headers: req.headers,
       body: req.body,

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import br.com.xchange.api.infra.services.coingecko.dto.CoinDetail;
 import br.com.xchange.api.infra.services.coingecko.dto.CoinHistoricalChartData;
 import br.com.xchange.api.infra.services.coingecko.dto.CoinInListWithMarketData;
 import br.com.xchange.api.infra.services.coingecko.dto.GlobalCoinMetrics;
@@ -51,6 +52,17 @@ public class CoinsGeckoService {
   public CoinHistoricalChartData getChartDataById(String coinId) {
     CoinHistoricalChartData response = this.restTemplate
       .getForObject("https://api.coingecko.com/api/v3/coins/" + coinId + "/market_chart?vs_currency=usd&days=1&interval=hourly&precision=full", CoinHistoricalChartData.class);
+
+    return response;
+  }
+
+  public CoinDetail getCoinDetailById(String coinId) {
+    CoinDetail response = this.restTemplate
+      .getForObject(
+        "https://api.coingecko.com/api/v3/coins/" + coinId +
+        "?market_data=true&sparkline=true&localization=false&tickers=false&community_data=false&developer_data=false&include_categories_details=false&dex_pair_format=symbol",
+        CoinDetail.class
+      );
 
     return response;
   }

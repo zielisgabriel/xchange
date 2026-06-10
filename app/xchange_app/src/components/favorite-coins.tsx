@@ -7,18 +7,39 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Text } from "./ui/text";
 import { Skeleton } from "./ui/skeleton";
 import { cn } from "@/lib/utils";
-import { FavoriteCoin } from "@/types/favorite-coin";
-import { Star } from "lucide-react-native";
-import { FavoriteCoinChart } from "./favorite-coin-chart";
+import { Minus, Star, TrendingDown, TrendingUp } from "lucide-react-native";
+import { FavoriteCoinsWithPredictionResponse } from "@/types/favorite-coins-with-prediction-response";
+import { Icon } from "./ui/icon";
+
+const PREDICTION_PROPS = [
+  {
+    id: "lateral",
+    name: "Lateral",
+    hexColor: "#fcf403",
+    icon: Minus
+  },
+  {
+    id: "alta",
+    name: "Alta",
+    hexColor: "#43eb34",
+    icon: TrendingUp
+  },
+  {
+    id: "baixa",
+    name: "Baixa",
+    hexColor: "#eb3a34",
+    icon: TrendingDown
+  }
+]
 
 export function FavoriteCoins() {
   const [selectedCoinId, setSelectedCoinId] = useState<string>("");
 
-  const { data: favoriteCoins = [], isLoading } = useQuery<FavoriteCoin[]>({
+  const { data: favoriteCoins = [], isLoading } = useQuery<FavoriteCoinsWithPredictionResponse>({
     queryKey: ["favorite-coins"],
     queryFn: async () => {
       const response = await apiFetch({
-        input: "/api/profile/favorite-coins",
+        input: `/api/profile/favorite-coins?prediction=${true}`,
         init: {
           method: "GET"
         }
@@ -88,6 +109,8 @@ export function FavoriteCoins() {
       >
         {favoriteCoins.map((coin) => {
           const isSelected = selectedCoinId === coin.coinId
+          const predictionProps = PREDICTION_PROPS.find(value => coin.prediction === value.id)
+
           return (
             <Pressable
               key={coin.coinId}
@@ -103,7 +126,7 @@ export function FavoriteCoins() {
                       <AvatarImage source={{ uri: coin.imageUrl }} />
                     ) : (
                       <AvatarFallback>
-                        <Text className="text-xs">{coin.symbol.slice(0, 2)}</Text>
+                        <Text className="text-xs">{coin.symbol.slice(0, 2).toUpperCase()}</Text>
                       </AvatarFallback>
                     )}
                   </Avatar>
@@ -113,6 +136,15 @@ export function FavoriteCoins() {
                     <CardDescription className="text-xs">{coin.name}</CardDescription>
                   </View>
                 </CardHeader>
+
+                <CardContent>
+                  <View className="flex flex-row self-start items-center gap-1 border px-2 py-0.5 rounded-sm" style={{borderColor: predictionProps?.hexColor}}>
+                    <Icon as={predictionProps?.icon!} className="w-4 h-4" color={predictionProps?.hexColor} />
+                    <Text className="text-sm font-semibold" style={{color: predictionProps?.hexColor}}>
+                      {predictionProps?.name}
+                    </Text>
+                  </View>
+                </CardContent>
 
                 {/* <CardContent>
                   <View className="flex-row items-center gap-1.5">
@@ -127,8 +159,6 @@ export function FavoriteCoins() {
           )
         })}
       </ScrollView>
-
-      <FavoriteCoinChart coinId={selectedCoinId} />
     </View>
   )
 }

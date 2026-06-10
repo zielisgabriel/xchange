@@ -9,6 +9,7 @@ import { useState } from "react"
 import { CoinItem } from "./coin-item"
 import { Button } from "./ui/button"
 import { ChevronDown, ChevronUp } from "lucide-react-native"
+import { Link } from "expo-router"
 
 export function CoinsList() {
   const [showMoreCoins, setShowMoreCoins] = useState<boolean>(false)
@@ -78,7 +79,7 @@ export function CoinsList() {
       {coinsList?.coins && coinsList?.coins.length > 0 && coinsList?.coins
         .slice(0, showMoreCoins ? 15 : 5)
         .map((coin, index) => (
-          <CoinItem.Root key={coin.id} coinId={coin.id} index={index} routeUrl="/">
+          <CoinItem.Root key={coin.id} coinId={coin.id} index={index} routeUrl={`/coin/${coin.id}`}>
             <CoinItem.Content>
               <CoinItem.Rank>
                 {index + 1}

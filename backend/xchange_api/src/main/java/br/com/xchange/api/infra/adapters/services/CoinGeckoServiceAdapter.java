@@ -1,8 +1,10 @@
 package br.com.xchange.api.infra.adapters.services;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -10,10 +12,12 @@ import br.com.xchange.api.application.dto.response.GlobalCoinMetricsResponse;
 import br.com.xchange.api.application.dto.response.GlobalCoinMetricsResponse.Data;
 import br.com.xchange.api.domain.entities.Coin;
 import br.com.xchange.api.domain.entities.CoinChartData;
+import br.com.xchange.api.domain.entities.CoinDetailData;
 import br.com.xchange.api.domain.entities.CoinWithMarketData;
 import br.com.xchange.api.domain.entities.currencies.Usd;
 import br.com.xchange.api.domain.ports.services.CoinServicePort;
 import br.com.xchange.api.infra.services.coingecko.CoinsGeckoService;
+import br.com.xchange.api.infra.services.coingecko.dto.CoinDetail;
 import br.com.xchange.api.infra.services.coingecko.dto.CoinHistoricalChartData;
 import br.com.xchange.api.infra.services.coingecko.dto.CoinInListWithMarketData;
 import br.com.xchange.api.infra.services.coingecko.dto.GlobalCoinMetrics;
@@ -123,5 +127,74 @@ public class CoinGeckoServiceAdapter implements CoinServicePort {
     }
 
     return coin;
+  }
+
+  @Override
+  public CoinDetailData getCoinDetailById(String coinId) {
+    CoinDetail data = this.coinsGeckoService.getCoinDetailById(coinId);
+
+    if (data == null) return null;
+
+    CoinDetail.MarketData md = data.marketData();
+
+    CoinDetailData entity = new CoinDetailData();
+    entity.setId(data.id());
+    entity.setName(data.name());
+    entity.setSymbol(data.symbol());
+    entity.setImageUrl(data.image() != null ? data.image().large() : null);
+    entity.setUpdatedAt(data.lastUpdated());
+    entity.setDescription(data.description() != null ? data.description().en() : null);
+    entity.setHashingAlgorithm(data.hashingAlgorithm());
+    entity.setGenesisDate(data.genesisDate());
+    entity.setMarketCapRank(data.marketCapRank());
+    entity.setWatchlistPortfolioUsers(data.watchlistPortfolioUsers());
+    entity.setSentimentVotesUpPercentage(data.sentimentVotesUpPercentage());
+    entity.setSentimentVotesDownPercentage(data.sentimentVotesDownPercentage());
+
+    if (md != null) {
+      entity.setPrice(usdFormatted(md.currentPrice(), 2, 7));
+      entity.setMarketCap(usdFormatted(md.marketCap(), 0, 0));
+      entity.setTotalVolume(usdFormatted(md.totalVolume(), 0, 0));
+      entity.setFullyDilutedValuation(usdFormatted(md.fullyDilutedValuation(), 0, 0));
+      entity.setHigh24h(usdFormatted(md.high24h(), 2, 7));
+      entity.setLow24h(usdFormatted(md.low24h(), 2, 7));
+      entity.setAth(usdFormatted(md.ath(), 2, 7));
+      entity.setAtl(usdFormatted(md.atl(), 2, 7));
+
+      entity.setPriceChange24h(md.priceChange24h() != null
+        ? new Usd(md.priceChange24h()).formatted(2, 7) : null);
+
+      entity.setAthChangePercentage(usdPercentage(md.athChangePercentage()));
+      entity.setAthDate(md.athDate() != null ? md.athDate().get("usd") : null);
+      entity.setAtlChangePercentage(usdPercentage(md.atlChangePercentage()));
+      entity.setAtlDate(md.atlDate() != null ? md.atlDate().get("usd") : null);
+
+      entity.setPriceChangePercentage1h(usdPercentage(md.priceChangePercentage1hInCurrency()));
+      entity.setPriceChangePercentage24h(md.priceChangePercentage24h());
+      entity.setPriceChangePercentage7d(md.priceChangePercentage7d());
+      entity.setPriceChangePercentage14d(md.priceChangePercentage14d());
+      entity.setPriceChangePercentage30d(md.priceChangePercentage30d());
+      entity.setPriceChangePercentage60d(md.priceChangePercentage60d());
+      entity.setPriceChangePercentage200d(md.priceChangePercentage200d());
+      entity.setPriceChangePercentage1y(md.priceChangePercentage1y());
+
+      entity.setCirculatingSupply(md.circulatingSupply());
+      entity.setTotalSupply(md.totalSupply());
+      entity.setMaxSupply(md.maxSupply());
+
+      entity.setSparkline7d(md.sparkline7d() != null ? md.sparkline7d().price() : null);
+    }
+
+    return entity;
+  }
+
+  private String usdFormatted(Map<String, BigDecimal> map, int minDecimals, int maxDecimals) {
+    if (map == null) return null;
+    BigDecimal value = map.get("usd");
+    return value != null ? new Usd(value).formatted(minDecimals, maxDecimals) : null;
+  }
+
+  private BigDecimal usdPercentage(Map<String, BigDecimal> map) {
+    return map != null ? map.get("usd") : null;
   }
 }

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,8 +18,10 @@ import br.com.xchange.api.application.dto.response.ProfileSimpleResponseDto;
 import br.com.xchange.api.application.usecase.GetProfileUseCase;
 import br.com.xchange.api.application.utils.PrincipalUtils;
 import br.com.xchange.api.domain.entities.FavoriteCoin;
+import br.com.xchange.api.domain.entities.FavoriteCoinWithPrediction;
 import br.com.xchange.api.application.usecase.FinishOnboardingUseCase;
 import br.com.xchange.api.application.usecase.GetFavoriteCoinsByUserId;
+import br.com.xchange.api.application.usecase.GetFavoriteCoinsWithPredictionByUserId;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestBody;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +35,7 @@ public class ProfileController {
   private final GetProfileUseCase getProfileUseCase;
   private final FinishOnboardingUseCase finishOnboardingUseCase;
   private final GetFavoriteCoinsByUserId getFavoriteCoinsByUserId;
+  private final GetFavoriteCoinsWithPredictionByUserId getFavoriteCoinsWithPredictionByUserId;
 
   @GetMapping("/details")
   public ProfileResponseDto getDetails(Principal principal) {
@@ -53,11 +57,26 @@ public class ProfileController {
       .execute(PrincipalUtils.recoverUserId(principal), onboardingRequestDto);
   }
 
-  @GetMapping("/favorite-coins")
+  @GetMapping(value = "/favorite-coins", params = "!prediction")
   @ResponseStatus(value = HttpStatus.OK)
-  public Set<FavoriteCoin> getFavoriteCoins(Principal principal) {
+  public Set<FavoriteCoin> getFavoriteCoins(
+    Principal principal
+  ) {
     UUID userId = PrincipalUtils.recoverUserId(principal);
 
     return this.getFavoriteCoinsByUserId.execute(userId);
+  }
+
+  @GetMapping(value = "/favorite-coins", params = "prediction=true")
+  @ResponseStatus(value = HttpStatus.OK)
+  public Set<FavoriteCoinWithPrediction> getFavoriteCoinsWithPredictions(
+    @RequestParam boolean prediction,
+    Principal principal
+  ) {
+    UUID userId = PrincipalUtils.recoverUserId(principal);
+
+    Set<FavoriteCoinWithPrediction> favoriteCoinWithPrediction = this.getFavoriteCoinsWithPredictionByUserId.execute(userId);
+
+    return favoriteCoinWithPrediction;
   }
 }

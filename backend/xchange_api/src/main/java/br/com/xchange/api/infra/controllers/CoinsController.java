@@ -12,16 +12,19 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.xchange.api.application.dto.response.CoinChartDataResponse;
+import br.com.xchange.api.application.dto.response.CoinDetailResponse;
 import br.com.xchange.api.application.dto.response.CoinsListResponse;
 import br.com.xchange.api.application.dto.response.GlobalCoinMetricsResponse;
 import br.com.xchange.api.application.dto.response.SimpleCoinsListResponse;
 import br.com.xchange.api.application.dto.response.SimpleCoinsListResponse.SimpleCoinsListWrapper;
 import br.com.xchange.api.application.dto.response.TrendingCoinResponse;
 import br.com.xchange.api.application.dto.response.CoinsListResponse.CoinsListWrapper;
+import br.com.xchange.api.application.usecase.GetCoinDetailByIdUseCase;
 import br.com.xchange.api.application.usecase.GetCoinsWithMarketDataUseCase;
 import br.com.xchange.api.application.usecase.GetGlobalCoinMetricsUseCase;
 import br.com.xchange.api.application.usecase.GetTrendingCoinUseCase;
 import br.com.xchange.api.domain.entities.CoinChartData;
+import br.com.xchange.api.domain.entities.CoinDetailData;
 import br.com.xchange.api.domain.entities.CoinWithMarketData;
 import br.com.xchange.api.domain.ports.services.CoinServicePort;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +36,7 @@ public class CoinsController {
   private final GetTrendingCoinUseCase getTrendingCoinUseCase;
   private final GetGlobalCoinMetricsUseCase getGlobalCoinMetrics;
   private final GetCoinsWithMarketDataUseCase getCoinsListWithMarketData;
+  private final GetCoinDetailByIdUseCase getCoinDetailByIdUseCase;
   private final CoinServicePort coinServicePort;
 
   @Cacheable(value = "simpleCoinsList")
@@ -94,5 +98,52 @@ public class CoinsController {
     CoinChartData coinChartData = this.coinServicePort.getChartDataById(coinId);
 
     return new CoinChartDataResponse(new ArrayList<>(coinChartData.getPrices()));
+  }
+
+  @Cacheable(value = "coinDetail", key = "#coinId")
+  @ResponseStatus(code = HttpStatus.OK)
+  @GetMapping("/detail/{coinId}")
+  public CoinDetailResponse getCoinDetailById(@PathVariable String coinId) {
+    CoinDetailData coin = this.getCoinDetailByIdUseCase.execute(coinId);
+
+    return new CoinDetailResponse(
+      coin.getId(),
+      coin.getName(),
+      coin.getSymbol(),
+      coin.getImageUrl(),
+      coin.getDescription(),
+      coin.getHashingAlgorithm(),
+      coin.getGenesisDate(),
+      coin.getMarketCapRank(),
+      coin.getWatchlistPortfolioUsers(),
+      coin.getSentimentVotesUpPercentage(),
+      coin.getSentimentVotesDownPercentage(),
+      coin.getPrice(),
+      coin.getHigh24h(),
+      coin.getLow24h(),
+      coin.getPriceChange24h(),
+      coin.getMarketCap(),
+      coin.getTotalVolume(),
+      coin.getFullyDilutedValuation(),
+      coin.getPriceChangePercentage1h(),
+      coin.getPriceChangePercentage24h(),
+      coin.getPriceChangePercentage7d(),
+      coin.getPriceChangePercentage14d(),
+      coin.getPriceChangePercentage30d(),
+      coin.getPriceChangePercentage60d(),
+      coin.getPriceChangePercentage200d(),
+      coin.getPriceChangePercentage1y(),
+      coin.getCirculatingSupply(),
+      coin.getTotalSupply(),
+      coin.getMaxSupply(),
+      coin.getAth(),
+      coin.getAthChangePercentage(),
+      coin.getAthDate(),
+      coin.getAtl(),
+      coin.getAtlChangePercentage(),
+      coin.getAtlDate(),
+      coin.getSparkline7d(),
+      coin.getUpdatedAt()
+    );
   }
 }

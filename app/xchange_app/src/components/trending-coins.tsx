@@ -82,7 +82,7 @@ export function TrendingCoins() {
       {trendingCoins?.coins && trendingCoins?.coins.length > 0 && trendingCoins?.coins
         .slice(0, showMoreCoins ? 15 : 5)
         .map((coin, index) => (
-          <CoinItem.Root key={coin.id} coinId={coin.id} index={index} routeUrl="/">
+          <CoinItem.Root key={coin.id} coinId={coin.id} index={index} routeUrl={`/coin/${coin.id}`}>
             <CoinItem.Content>
               <CoinItem.Rank>
                 {index + 1}

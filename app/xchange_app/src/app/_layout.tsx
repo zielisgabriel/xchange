@@ -56,6 +56,7 @@ function AppLayout() {
       <Stack>
         <Stack.Protected guard={isAuthenticated && onboardingFinished}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="coin/[coinId]" />
         </Stack.Protected>
         <Stack.Protected guard={isAuthenticated && !onboardingFinished}>
           <Stack.Screen name="onboarding" options={{ headerShown: false }} />
