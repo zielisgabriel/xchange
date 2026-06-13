@@ -2,6 +2,7 @@ package br.com.xchange.api.infra.controllers;
 
 import java.security.Principal;
 import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -69,13 +70,13 @@ public class ProfileController {
 
   @GetMapping(value = "/favorite-coins", params = "prediction=true")
   @ResponseStatus(value = HttpStatus.OK)
-  public Set<FavoriteCoinWithPrediction> getFavoriteCoinsWithPredictions(
+  public List<FavoriteCoinWithPrediction> getFavoriteCoinsWithPredictions(
     @RequestParam boolean prediction,
     Principal principal
   ) {
     UUID userId = PrincipalUtils.recoverUserId(principal);
 
-    Set<FavoriteCoinWithPrediction> favoriteCoinWithPrediction = this.getFavoriteCoinsWithPredictionByUserId.execute(userId);
+    List<FavoriteCoinWithPrediction> favoriteCoinWithPrediction = this.getFavoriteCoinsWithPredictionByUserId.execute(userId);
 
     return favoriteCoinWithPrediction;
   }

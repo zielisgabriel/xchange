@@ -3,7 +3,6 @@ package br.com.xchange.api.application.usecase;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,7 @@ public class GetFavoriteCoinsWithPredictionByUserId {
   private final ProfileRepositoryPort repositoryPort;
   private final RecommendationCoinServicePort recommendationCoinServicePort;
   
-  public Set<FavoriteCoinWithPrediction> execute(UUID userId) {
+  public List<FavoriteCoinWithPrediction> execute(UUID userId) {
     Profile profile = this.repositoryPort.findById(userId)
       .orElseThrow(() -> new UserNotFoundException());
 
@@ -50,6 +49,6 @@ public class GetFavoriteCoinsWithPredictionByUserId {
       favoriteCoinWithPrediction.setPrediction(prediction);
       
       return favoriteCoinWithPrediction;
-    }).collect(Collectors.toSet());
+    }).toList();
   }
 }
