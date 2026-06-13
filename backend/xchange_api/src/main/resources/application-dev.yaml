@@ -1,11 +1,13 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
   jpa:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:postgresql://localhost:5432/xchange_db
-    username: xchange_user
-    password: xchange_password
+    url: jdbc:postgresql://localhost:5432/${DB_DATABASE}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   data:
     redis:
       host: "localhost"
@@ -14,4 +16,7 @@ spring:
       password: "xchange_password"
 
 jwt:
-  secret-key: "bf683c54bcd4e29a58e24579c55a7828dfc4118d03484b8d19ff12b0548b3218"
+  secret-key: ${JWT_SK}
+
+coingecko:
+  api-key: ${COINGECKO_KEY}

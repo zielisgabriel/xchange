@@ -1,5 +1,6 @@
 package br.com.xchange.api.infra.adapters.services;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,6 +21,10 @@ public class CryptoRecommendationAIServiceAdapter implements RecommendationCoinS
   @Override
   public Set<CoinPrediction> getCoinPredictionBySymbols(List<String> symbols) {
     CoinPredictionResponse response = this.service.getCoinPredictionBySymbols(symbols);
+
+    if (response == null || response.data() == null) {
+      return Collections.emptySet();
+    }
 
     return response.data().stream().map((prediction) -> {
       CoinPrediction coinPrediction = new CoinPrediction();

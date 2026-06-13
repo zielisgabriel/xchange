@@ -15,4 +15,5 @@ public interface CoinServicePort {
   GlobalCoinMetricsResponse getGlobalCoinMetrics();
   CoinChartData getChartDataById(String coinId);
   public CoinDetailData getCoinDetailById(String coinId);
+  public List<Coin> getCoinsByQuery(String query);
 }

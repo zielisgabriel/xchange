@@ -20,6 +20,7 @@ import br.com.xchange.api.infra.services.coingecko.CoinsGeckoService;
 import br.com.xchange.api.infra.services.coingecko.dto.CoinDetail;
 import br.com.xchange.api.infra.services.coingecko.dto.CoinHistoricalChartData;
 import br.com.xchange.api.infra.services.coingecko.dto.CoinInListWithMarketData;
+import br.com.xchange.api.infra.services.coingecko.dto.CoinsByQuery;
 import br.com.xchange.api.infra.services.coingecko.dto.GlobalCoinMetrics;
 import br.com.xchange.api.infra.services.coingecko.dto.TrendingCoinsCoinsGecko;
 import lombok.RequiredArgsConstructor;
@@ -196,5 +197,26 @@ public class CoinGeckoServiceAdapter implements CoinServicePort {
 
   private BigDecimal usdPercentage(Map<String, BigDecimal> map) {
     return map != null ? map.get("usd") : null;
+  }
+
+  @Override
+  public List<Coin> getCoinsByQuery(String query) {
+    CoinsByQuery data = this.coinsGeckoService.getCoinsByQuery(query);
+
+    if (data == null || data.coins() == null) {
+      return Collections.emptyList();
+    }
+
+    return data.coins().stream()
+      .limit(20)
+      .map(item -> {
+        Coin coin = new Coin();
+        coin.setId(item.id());
+        coin.setName(item.name());
+        coin.setSymbol(item.symbol());
+        coin.setImageUrl(item.thumb());
+        return coin;
+      })
+      .toList();
   }
 }

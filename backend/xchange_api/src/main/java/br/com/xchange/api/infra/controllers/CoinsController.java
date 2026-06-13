@@ -8,11 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.xchange.api.application.dto.response.CoinChartDataResponse;
 import br.com.xchange.api.application.dto.response.CoinDetailResponse;
+import br.com.xchange.api.application.dto.response.CoinsByQueryResponse;
 import br.com.xchange.api.application.dto.response.CoinsListResponse;
 import br.com.xchange.api.application.dto.response.GlobalCoinMetricsResponse;
 import br.com.xchange.api.application.dto.response.SimpleCoinsListResponse;
@@ -23,6 +25,7 @@ import br.com.xchange.api.application.usecase.GetCoinDetailByIdUseCase;
 import br.com.xchange.api.application.usecase.GetCoinsWithMarketDataUseCase;
 import br.com.xchange.api.application.usecase.GetGlobalCoinMetricsUseCase;
 import br.com.xchange.api.application.usecase.GetTrendingCoinUseCase;
+import br.com.xchange.api.domain.entities.Coin;
 import br.com.xchange.api.domain.entities.CoinChartData;
 import br.com.xchange.api.domain.entities.CoinDetailData;
 import br.com.xchange.api.domain.entities.CoinWithMarketData;
@@ -145,5 +148,21 @@ public class CoinsController {
       coin.getSparkline7d(),
       coin.getUpdatedAt()
     );
+  }
+  
+  @Cacheable(value = "coinsByQuery", key = "#query")
+  @ResponseStatus(HttpStatus.OK)
+  @GetMapping("/search")
+  public CoinsByQueryResponse getCoinsByQuery(@RequestParam String query) {
+    List<Coin> coins = this.coinServicePort.getCoinsByQuery(query);
+
+    return new CoinsByQueryResponse(coins.stream().map(coin -> {
+      return new CoinsByQueryResponse.CoinByQuery(
+        coin.getId(),
+        coin.getName(),
+        coin.getSymbol(),
+        coin.getImageUrl()
+      );
+    }).toList());
   }
 }

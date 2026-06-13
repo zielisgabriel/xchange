@@ -1,12 +1,14 @@
 import { View, Pressable, ScrollView, Image } from "react-native"
 import { Text } from "@/components/ui/text"
 import { Icon } from "@/components/ui/icon"
-import { Star, Check, X, AlertCircle } from "lucide-react-native"
+import { Button } from "@/components/ui/button"
+import { Star, Check, X, AlertCircle, Search } from "lucide-react-native"
 import { useState, useMemo, useEffect } from "react"
 import Animated, { FadeInDown } from "react-native-reanimated"
 import { SimpleCoin } from "@/types/simple-coin"
 import { FavoriteCoin } from "@/types/favorite-coin"
 import { apiFetch } from "@/lib/api-fetch"
+import { SearchCryptoModal } from "@/components/search-crypto-modal"
 
 const MAX_FAVORITES = 5
 
@@ -70,6 +72,7 @@ function CoinCard({ coin, isSelected, isDisabled, onPress }: {
 
 export function StepCryptos({ selected, onToggle, error }: StepCryptosProps) {
   const [simpleCoins, setSimpleCoins] = useState<SimpleCoin[]>([])
+  const [searchVisible, setSearchVisible] = useState(false)
 
   const selectedIds = useMemo(
     () => new Set(selected.map((c) => c.coinId)),
@@ -113,9 +116,17 @@ export function StepCryptos({ selected, onToggle, error }: StepCryptosProps) {
             Suas favoritas
           </Text>
         </View>
-        <Text className="text-foreground/40 text-sm mb-5">
+        <Text className="text-foreground/40 text-sm mb-3">
           Escolha até {MAX_FAVORITES} criptos para acompanhar de perto
         </Text>
+        <Button
+          onPress={() => setSearchVisible(true)}
+          variant="outline"
+          className="flex-row items-center gap-2 mb-2"
+        >
+          <Icon as={Search} className="size-4 text-foreground/60" />
+          <Text className="text-sm">Pesquisar</Text>
+        </Button>
       </Animated.View>
 
       {error && (
@@ -171,6 +182,17 @@ export function StepCryptos({ selected, onToggle, error }: StepCryptosProps) {
           })}
         </View>
       </ScrollView>
+
+      <SearchCryptoModal
+        visible={searchVisible}
+        onClose={() => setSearchVisible(false)}
+        onSelect={(coin) => {
+          if (selected.length < MAX_FAVORITES && !selectedIds.has(coin.id)) {
+            onToggle({ coinId: coin.id, name: coin.name, symbol: coin.symbol, imageUrl: coin.imageUrl })
+          }
+          setSearchVisible(false)
+        }}
+      />
     </View>
   )
 }

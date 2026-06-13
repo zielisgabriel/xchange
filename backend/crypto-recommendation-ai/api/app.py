@@ -95,11 +95,23 @@ def predict(data: PredictRequest):
 
     symbols = {s.lower() for s in data.symbols}
 
-    result = [
-        crypto
-        for crypto in cache["recommendations"]
-        if crypto["symbol"].lower() in symbols
-    ]
+    found = {}
+    for crypto in cache["recommendations"]:
+        sym = crypto["symbol"].lower()
+        if sym in symbols:
+            found[sym] = crypto
+
+    result = []
+    for s in symbols:
+        if s in found:
+            result.append(found[s])
+        else:
+            result.append({
+                "id": s,
+                "symbol": s,
+                "name": s,
+                "prediction": "sem_dados"
+            })
 
     return {
         "total": len(result),

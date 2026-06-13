@@ -3,11 +3,12 @@ package br.com.xchange.api.infra.services.coingecko;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
+import br.com.xchange.api.infra.providers.CoinGeckoRestProvider;
 import br.com.xchange.api.infra.services.coingecko.dto.CoinDetail;
 import br.com.xchange.api.infra.services.coingecko.dto.CoinHistoricalChartData;
 import br.com.xchange.api.infra.services.coingecko.dto.CoinInListWithMarketData;
+import br.com.xchange.api.infra.services.coingecko.dto.CoinsByQuery;
 import br.com.xchange.api.infra.services.coingecko.dto.GlobalCoinMetrics;
 import br.com.xchange.api.infra.services.coingecko.dto.TrendingCoinsCoinsGecko;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +16,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CoinsGeckoService {
-  private final RestTemplate restTemplate;
+  private final CoinGeckoRestProvider coinGeckoRestProvider;
 
   public List<CoinInListWithMarketData> getCoinsListWithMarketData() {
-    CoinInListWithMarketData[] response = this.restTemplate
-      .getForObject("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=15", CoinInListWithMarketData[].class);
+    CoinInListWithMarketData[] response = this.coinGeckoRestProvider
+      .getForObject("/coins/markets?vs_currency=usd&per_page=15", CoinInListWithMarketData[].class);
 
     return response != null ? List.of(response) : List.of();
   }
@@ -29,39 +30,49 @@ public class CoinsGeckoService {
       return List.of();
     }
     String idsParam = String.join(",", ids);
-    CoinInListWithMarketData[] response = this.restTemplate
-      .getForObject("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=" + idsParam, CoinInListWithMarketData[].class);
+    CoinInListWithMarketData[] response = this.coinGeckoRestProvider
+      .getForObject("/coins/markets?vs_currency=usd&ids=" + idsParam, CoinInListWithMarketData[].class);
 
     return response != null ? List.of(response) : List.of();
   }
 
   public TrendingCoinsCoinsGecko getTrendingCoins() {
-    TrendingCoinsCoinsGecko response = this.restTemplate
-      .getForObject("https://api.coingecko.com/api/v3/search/trending", TrendingCoinsCoinsGecko.class);
+    TrendingCoinsCoinsGecko response = this.coinGeckoRestProvider
+      .getForObject("/search/trending", TrendingCoinsCoinsGecko.class);
 
     return response;
   };
 
   public GlobalCoinMetrics getGlobalCoinMetrics() {
-    GlobalCoinMetrics response = this.restTemplate
-      .getForObject("https://api.coingecko.com/api/v3/global", GlobalCoinMetrics.class);
+    GlobalCoinMetrics response = this.coinGeckoRestProvider
+      .getForObject("/global", GlobalCoinMetrics.class);
 
     return response;
   }
 
   public CoinHistoricalChartData getChartDataById(String coinId) {
-    CoinHistoricalChartData response = this.restTemplate
-      .getForObject("https://api.coingecko.com/api/v3/coins/" + coinId + "/market_chart?vs_currency=usd&days=1&interval=hourly&precision=full", CoinHistoricalChartData.class);
+    CoinHistoricalChartData response = this.coinGeckoRestProvider
+      .getForObject("/coins/" + coinId + "/market_chart?vs_currency=usd&days=1&interval=hourly&precision=full", CoinHistoricalChartData.class);
 
     return response;
   }
 
   public CoinDetail getCoinDetailById(String coinId) {
-    CoinDetail response = this.restTemplate
+    CoinDetail response = this.coinGeckoRestProvider
       .getForObject(
-        "https://api.coingecko.com/api/v3/coins/" + coinId +
+        "/coins/" + coinId +
         "?market_data=true&sparkline=true&localization=false&tickers=false&community_data=false&developer_data=false&include_categories_details=false&dex_pair_format=symbol",
         CoinDetail.class
+      );
+
+    return response;
+  }
+
+  public CoinsByQuery getCoinsByQuery(String query) {
+    CoinsByQuery response = this.coinGeckoRestProvider
+      .getForObject(
+        "/search?query=" + query,
+        CoinsByQuery.class
       );
 
     return response;

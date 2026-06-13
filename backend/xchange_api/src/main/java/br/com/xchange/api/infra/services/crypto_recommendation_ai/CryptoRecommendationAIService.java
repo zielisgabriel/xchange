@@ -8,20 +8,27 @@ import org.springframework.web.client.RestTemplate;
 
 import br.com.xchange.api.infra.services.crypto_recommendation_ai.dto.CoinPredictionResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import br.com.xchange.api.application.dto.request.CoinPredictionRequest;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CryptoRecommendationAIService {
   private final RestTemplate restTemplate;
 
   public CoinPredictionResponse getCoinPredictionBySymbols(List<String> symbols) {
-    HttpEntity<CoinPredictionRequest> requestHttpEntity = new HttpEntity<CoinPredictionRequest>(new CoinPredictionRequest(symbols));
+    try {
+      HttpEntity<CoinPredictionRequest> requestHttpEntity = new HttpEntity<CoinPredictionRequest>(new CoinPredictionRequest(symbols));
 
-    CoinPredictionResponse coinPredictionResponse = this.restTemplate
-      .postForObject("http://localhost:8000/predict", requestHttpEntity, CoinPredictionResponse.class);
+      CoinPredictionResponse coinPredictionResponse = this.restTemplate
+        .postForObject("http://localhost:8000/predict", requestHttpEntity, CoinPredictionResponse.class);
 
-    return coinPredictionResponse;
+      return coinPredictionResponse;
+    } catch (Exception e) {
+      log.error("Falha ao obter predições do serviço de IA: {}", e.getMessage());
+      return null;
+    }
   }
 }
