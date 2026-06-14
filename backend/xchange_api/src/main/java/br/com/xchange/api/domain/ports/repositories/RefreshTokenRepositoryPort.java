@@ -6,7 +6,7 @@ import java.util.UUID;
 import br.com.xchange.api.domain.entities.RefreshToken;
 
 public interface RefreshTokenRepositoryPort {
-  public RefreshToken save(RefreshToken refreshToken);
-  public Optional<RefreshToken> findById(UUID id);
-  public Optional<RefreshToken> findByUserId(UUID userId);
+  RefreshToken save(RefreshToken refreshToken);
+  Optional<RefreshToken> findById(UUID id);
+  Optional<RefreshToken> findByUserId(UUID userId);
 }

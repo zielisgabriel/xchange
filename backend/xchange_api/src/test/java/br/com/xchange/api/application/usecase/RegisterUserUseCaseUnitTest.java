@@ -19,7 +19,6 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import br.com.xchange.api.application.dto.request.RegisterUserRequestDto;
 import br.com.xchange.api.domain.entities.AuthUser;
@@ -27,6 +26,7 @@ import br.com.xchange.api.domain.entities.Profile;
 import br.com.xchange.api.domain.exceptions.UserAlreadyExistsException;
 import br.com.xchange.api.domain.ports.repositories.AuthUserRepositoryPort;
 import br.com.xchange.api.domain.ports.repositories.ProfileRepositoryPort;
+import br.com.xchange.api.domain.ports.services.PasswordEncoderPort;
 
 @ExtendWith(MockitoExtension.class)
 public class RegisterUserUseCaseUnitTest {
@@ -37,7 +37,7 @@ public class RegisterUserUseCaseUnitTest {
   private ProfileRepositoryPort profileRepositoryPort;
 
   @Mock
-  private PasswordEncoder passwordEncoder;
+  private PasswordEncoderPort passwordEncoder;
 
   @InjectMocks
   private RegisterUserUseCase useCase;

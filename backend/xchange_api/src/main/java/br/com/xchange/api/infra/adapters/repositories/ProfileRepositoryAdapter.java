@@ -27,67 +27,7 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
   @Override
   public Profile save(Profile profile) {
     ProfileJpa profileJpa = ProfileJpa.fromDomain(profile);
-    Profile profileSaved = this.jpaProfileRepositoryImpl.save(profileJpa).toDomain();
 
-    return profileSaved;
+    return this.jpaProfileRepositoryImpl.save(profileJpa).toDomain();
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // @Override
-  // @Transactional
-  // public Profile save(Profile profile) {
-  //   ProfileJpa profileJpa;
-
-  //   if (profile.getId() != null) {
-  //     profileJpa = this.jpaProfileRepositoryImpl.findById(profile.getId())
-  //       .orElseGet(() -> ProfileJpa.fromDomain(profile));
-  //   } else {
-  //     profileJpa = new ProfileJpa();
-  //     if (profile.getAuthUser() != null) {
-  //       AuthUserJpa authUser = this.jpaAuthUserRepositoryImpl.findById(profile.getAuthUser().getId())
-  //         .orElseThrow(() -> new RuntimeException("User not found"));
-  //       profileJpa.setAuthUserJpa(authUser);
-  //     }
-  //   }
-
-  //   profileJpa.getFavoriteCoins().clear();
-
-  //   profile.getFavoriteCoins().stream()
-  //     .map(FavoriteCoinsJpa::fromDomain)
-  //     .forEach(profileJpa.getFavoriteCoins()::add);
-
-  //   if (profile.getAuthUser() != null && profileJpa.getAuthUserJpa() != null) {
-  //     profileJpa.getAuthUserJpa().setOnboardingFinished(profile.getAuthUser().isOnboardingFinished());
-  //   }
-
-  //   return this.jpaProfileRepositoryImpl.save(profileJpa).toDomain();
-  // }
 }

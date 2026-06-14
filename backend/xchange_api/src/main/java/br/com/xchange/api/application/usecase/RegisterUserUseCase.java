@@ -1,6 +1,5 @@
 package br.com.xchange.api.application.usecase;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,6 +9,7 @@ import br.com.xchange.api.domain.entities.Profile;
 import br.com.xchange.api.domain.exceptions.UserAlreadyExistsException;
 import br.com.xchange.api.domain.ports.repositories.AuthUserRepositoryPort;
 import br.com.xchange.api.domain.ports.repositories.ProfileRepositoryPort;
+import br.com.xchange.api.domain.ports.services.PasswordEncoderPort;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class RegisterUserUseCase {
   private final AuthUserRepositoryPort authUserRepositoryPort;
   private final ProfileRepositoryPort profileRepositoryPort;
-  private final PasswordEncoder passwordEncoder;
+  private final PasswordEncoderPort passwordEncoder;
 
   @Transactional
   public Profile execute(RegisterUserRequestDto requestDto) {

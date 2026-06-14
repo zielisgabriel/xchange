@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class GetFavoriteCoinsByUserId {
+public class GetFavoriteCoinsByUserIdUseCase {
   private final ProfileRepositoryPort repositoryPort;
 
   public Set<FavoriteCoin> execute(UUID userId) {

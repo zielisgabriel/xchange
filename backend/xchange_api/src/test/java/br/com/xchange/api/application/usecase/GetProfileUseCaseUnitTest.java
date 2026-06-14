@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import br.com.xchange.api.domain.entities.FavoriteCoin;
 import br.com.xchange.api.domain.entities.Profile;
 import br.com.xchange.api.domain.exceptions.InvalidUserException;
-import br.com.xchange.api.domain.ports.repositories.AuthUserRepositoryPort;
 import br.com.xchange.api.domain.ports.repositories.ProfileRepositoryPort;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,9 +25,6 @@ class GetProfileUseCaseUnitTest {
 
   @Mock
   private ProfileRepositoryPort repositoryPort;
-
-  @Mock
-  private AuthUserRepositoryPort authUserRepositoryPort;
 
   @InjectMocks
   private GetProfileUseCase getProfileUseCase;

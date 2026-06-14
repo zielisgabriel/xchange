@@ -11,10 +11,8 @@ import br.com.xchange.api.application.dto.request.RefreshTokenRequestDto;
 import br.com.xchange.api.application.dto.request.RegisterUserRequestDto;
 import br.com.xchange.api.application.dto.response.LoginResponseDto;
 import br.com.xchange.api.application.dto.response.ProfileResponseDto;
+import br.com.xchange.api.application.usecase.RefreshAccessTokenUseCase;
 import br.com.xchange.api.application.usecase.RegisterUserUseCase;
-import br.com.xchange.api.domain.entities.RefreshToken;
-import br.com.xchange.api.domain.ports.services.AccessTokenServicePort;
-import br.com.xchange.api.infra.services.RefreshTokenService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AuthController {
   private final RegisterUserUseCase registerUserUseCase;
-  private final AccessTokenServicePort accessTokenService;
-  private final RefreshTokenService refreshTokenService;
+  private final RefreshAccessTokenUseCase refreshAccessTokenUseCase;
 
   @PostMapping("/register")
   @ResponseStatus(code = HttpStatus.CREATED)
@@ -40,9 +37,6 @@ public class AuthController {
   public LoginResponseDto refresh(
     @Valid @RequestBody RefreshTokenRequestDto requestDto
   ) {
-    RefreshToken refreshToken = this.refreshTokenService.validate(requestDto.refreshToken());
-    String accessToken = this.accessTokenService.generateFromUserId(refreshToken.getUserId());
-
-    return new LoginResponseDto(accessToken, refreshToken.getId().toString());
+    return this.refreshAccessTokenUseCase.execute(requestDto.refreshToken());
   }
 }

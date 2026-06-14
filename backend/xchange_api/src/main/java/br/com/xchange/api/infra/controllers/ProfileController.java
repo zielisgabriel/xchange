@@ -21,7 +21,7 @@ import br.com.xchange.api.application.utils.PrincipalUtils;
 import br.com.xchange.api.domain.entities.FavoriteCoin;
 import br.com.xchange.api.domain.entities.FavoriteCoinWithPrediction;
 import br.com.xchange.api.application.usecase.FinishOnboardingUseCase;
-import br.com.xchange.api.application.usecase.GetFavoriteCoinsByUserId;
+import br.com.xchange.api.application.usecase.GetFavoriteCoinsByUserIdUseCase;
 import br.com.xchange.api.application.usecase.GetFavoriteCoinsWithPredictionByUserId;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProfileController {
   private final GetProfileUseCase getProfileUseCase;
   private final FinishOnboardingUseCase finishOnboardingUseCase;
-  private final GetFavoriteCoinsByUserId getFavoriteCoinsByUserId;
+  private final GetFavoriteCoinsByUserIdUseCase getFavoriteCoinsByUserId;
   private final GetFavoriteCoinsWithPredictionByUserId getFavoriteCoinsWithPredictionByUserId;
 
   @GetMapping("/details")

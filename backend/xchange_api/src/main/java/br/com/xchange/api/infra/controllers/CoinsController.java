@@ -21,15 +21,16 @@ import br.com.xchange.api.application.dto.response.SimpleCoinsListResponse;
 import br.com.xchange.api.application.dto.response.SimpleCoinsListResponse.SimpleCoinsListWrapper;
 import br.com.xchange.api.application.dto.response.TrendingCoinResponse;
 import br.com.xchange.api.application.dto.response.CoinsListResponse.CoinsListWrapper;
+import br.com.xchange.api.application.usecase.GetCoinChartDataUseCase;
 import br.com.xchange.api.application.usecase.GetCoinDetailByIdUseCase;
 import br.com.xchange.api.application.usecase.GetCoinsWithMarketDataUseCase;
 import br.com.xchange.api.application.usecase.GetGlobalCoinMetricsUseCase;
 import br.com.xchange.api.application.usecase.GetTrendingCoinUseCase;
+import br.com.xchange.api.application.usecase.SearchCoinsByQueryUseCase;
 import br.com.xchange.api.domain.entities.Coin;
 import br.com.xchange.api.domain.entities.CoinChartData;
 import br.com.xchange.api.domain.entities.CoinDetailData;
 import br.com.xchange.api.domain.entities.CoinWithMarketData;
-import br.com.xchange.api.domain.ports.services.CoinServicePort;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -40,7 +41,8 @@ public class CoinsController {
   private final GetGlobalCoinMetricsUseCase getGlobalCoinMetrics;
   private final GetCoinsWithMarketDataUseCase getCoinsListWithMarketData;
   private final GetCoinDetailByIdUseCase getCoinDetailByIdUseCase;
-  private final CoinServicePort coinServicePort;
+  private final GetCoinChartDataUseCase getCoinChartDataUseCase;
+  private final SearchCoinsByQueryUseCase searchCoinsByQueryUseCase;
 
   @Cacheable(value = "simpleCoinsList")
   @ResponseStatus(code = HttpStatus.OK)
@@ -98,7 +100,7 @@ public class CoinsController {
   @ResponseStatus(code = HttpStatus.OK)
   @GetMapping("/chart/{coinId}")
   public CoinChartDataResponse getChartDataById(@PathVariable String coinId) {
-    CoinChartData coinChartData = this.coinServicePort.getChartDataById(coinId);
+    CoinChartData coinChartData = this.getCoinChartDataUseCase.execute(coinId);
 
     return new CoinChartDataResponse(new ArrayList<>(coinChartData.getPrices()));
   }
@@ -154,7 +156,7 @@ public class CoinsController {
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/search")
   public CoinsByQueryResponse getCoinsByQuery(@RequestParam String query) {
-    List<Coin> coins = this.coinServicePort.getCoinsByQuery(query);
+    List<Coin> coins = this.searchCoinsByQueryUseCase.execute(query);
 
     return new CoinsByQueryResponse(coins.stream().map(coin -> {
       return new CoinsByQueryResponse.CoinByQuery(

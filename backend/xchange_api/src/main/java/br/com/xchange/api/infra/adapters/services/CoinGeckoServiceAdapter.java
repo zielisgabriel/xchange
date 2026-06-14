@@ -8,12 +8,11 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import br.com.xchange.api.application.dto.response.GlobalCoinMetricsResponse;
-import br.com.xchange.api.application.dto.response.GlobalCoinMetricsResponse.Data;
 import br.com.xchange.api.domain.entities.Coin;
 import br.com.xchange.api.domain.entities.CoinChartData;
 import br.com.xchange.api.domain.entities.CoinDetailData;
 import br.com.xchange.api.domain.entities.CoinWithMarketData;
+import br.com.xchange.api.domain.entities.GlobalCoinMetricsData;
 import br.com.xchange.api.domain.entities.currencies.Usd;
 import br.com.xchange.api.domain.ports.services.CoinServicePort;
 import br.com.xchange.api.infra.services.coingecko.CoinsGeckoService;
@@ -93,17 +92,16 @@ public class CoinGeckoServiceAdapter implements CoinServicePort {
   }
 
   @Override
-  public GlobalCoinMetricsResponse getGlobalCoinMetrics() {
+  public GlobalCoinMetricsData getGlobalCoinMetrics() {
     GlobalCoinMetrics data = this.coinsGeckoService.getGlobalCoinMetrics();
 
-    GlobalCoinMetricsResponse.Data dataResponse = new Data(
-      data.data().totalMarketCap().usd(),
-      data.data().totalVolume().usd(),
-      data.data().marketCapChangePercentage24hUsd(),
-      data.data().volumeChangePercentage24hUsd()
-    );
+    GlobalCoinMetricsData metrics = new GlobalCoinMetricsData();
+    metrics.setTotalMarketCap(data.data().totalMarketCap().usd());
+    metrics.setTotalVolume(data.data().totalVolume().usd());
+    metrics.setMarketCapChangePercentage24hUsd(data.data().marketCapChangePercentage24hUsd());
+    metrics.setVolumeChangePercentage24hUsd(data.data().volumeChangePercentage24hUsd());
 
-    return new GlobalCoinMetricsResponse(dataResponse);
+    return metrics;
   }
   
   @Override

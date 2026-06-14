@@ -5,6 +5,6 @@ import java.util.UUID;
 import br.com.xchange.api.domain.entities.RefreshToken;
 
 public interface RefreshTokenServicePort {
-  public String generate(Object principal);
-  public RefreshToken validate(UUID refreshTokenId);
+  String generate(Object principal);
+  RefreshToken validate(UUID refreshTokenId);
 }
