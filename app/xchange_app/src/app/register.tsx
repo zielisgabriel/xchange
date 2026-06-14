@@ -40,7 +40,7 @@ export default function Register() {
         <Text className="text-sm">
           Já tem uma conta?
         </Text>
-        <Link href={"/register"}>
+        <Link href={"/login"}>
           <Text className="text-sm font-bold text-blue-400 underline">
             Entrar
           </Text>

@@ -10,6 +10,7 @@ import { CoinItem } from "./coin-item"
 import { Button } from "./ui/button"
 import { ChevronDown, ChevronUp } from "lucide-react-native"
 import { Link } from "expo-router"
+import { Icon } from "./ui/icon"
 
 export function CoinsList() {
   const [showMoreCoins, setShowMoreCoins] = useState<boolean>(false)
@@ -116,9 +117,9 @@ export function CoinsList() {
       >
         <View className="flex-row items-center gap-1.5">
           {showMoreCoins ? (
-            <ChevronUp size={16} className="text-muted-foreground" />
+            <Icon as={ChevronUp} size={16} className="text-muted-foreground" />
           ) : (
-            <ChevronDown size={16} className="text-muted-foreground" />
+            <Icon as={ChevronDown} size={16} className="text-muted-foreground" />
           )}
           <Text className="text-sm text-muted-foreground font-medium">
             {showMoreCoins ? "Mostrar menos" : "Ver todas"}

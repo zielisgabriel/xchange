@@ -9,6 +9,7 @@ import { ChevronDown, ChevronUp } from "lucide-react-native"
 import { Skeleton } from "./ui/skeleton"
 import Animated, { FadeInDown } from "react-native-reanimated"
 import { CoinItem } from "./coin-item"
+import { Icon } from "./ui/icon"
 
 interface TrendingCoinResponse {
   coins: CoinWithMarketData[]
@@ -121,9 +122,9 @@ export function TrendingCoins() {
       >
         <View className="flex-row items-center gap-1.5">
           {showMoreCoins ? (
-            <ChevronUp size={16} className="text-muted-foreground" />
+            <Icon as={ChevronUp} size={16} className="text-muted-foreground" />
           ) : (
-            <ChevronDown size={16} className="text-muted-foreground" />
+            <Icon as={ChevronDown} size={16} className="text-muted-foreground" />
           )}
           <Text className="text-sm text-muted-foreground font-medium">
             {showMoreCoins ? "Mostrar menos" : "Ver todas"}
