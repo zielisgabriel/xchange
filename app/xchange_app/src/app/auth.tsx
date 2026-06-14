@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator"
 import { Text } from "@/components/ui/text"
 import { Icon } from "@/components/ui/icon"
 import { Link } from "expo-router"
-import { LinearGradient } from "expo-linear-gradient"
+import { Gradient as LinearGradient } from "@/components/ui/gradient"
 import {
   ArrowRight,
   UserPlus,

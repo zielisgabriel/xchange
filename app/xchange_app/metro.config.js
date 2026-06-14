@@ -20,7 +20,4 @@ config.resolver = {
 module.exports = withUniwindConfig(config, {
   cssEntryFile: './src/global.css',
   dtsFile: './src/uniwind-types.d.ts',
-  plugins: [
-    'react-native-worklets/plugin'
-  ],
 });

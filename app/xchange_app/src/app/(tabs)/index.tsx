@@ -11,7 +11,7 @@ import {
   Star
 } from "lucide-react-native"
 import { Pressable, RefreshControl, ScrollView, View } from "react-native"
-import { LinearGradient } from "expo-linear-gradient"
+import { Gradient as LinearGradient } from "@/components/ui/gradient"
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated"
 import { useQueryClient } from "@tanstack/react-query"
 import { useCallback, useState } from "react"

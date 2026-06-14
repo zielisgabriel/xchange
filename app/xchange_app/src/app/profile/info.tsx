@@ -81,29 +81,29 @@ export default function ProfileInfo() {
           </View>
         </View>
 
-        <InfoField
+        {/* <InfoField
           label="Usuário"
           value={profile?.username}
           placeholder="@usuario"
           icon={AtSign}
           isLoading={isLoading}
-        />
+        /> */}
 
-        <InfoField
+        {/* <InfoField
           label="E-mail"
           value={profile?.email}
           placeholder="seuemail@exemplo.com"
           icon={Mail}
           isLoading={isLoading}
-        />
+        /> */}
 
-        <InfoField
+        {/* <InfoField
           label="Telefone"
           value={profile?.phone}
           placeholder="(00) 00000-0000"
           icon={Phone}
           isLoading={isLoading}
-        />
+        /> */}
       </View>
     </ScrollView>
   )

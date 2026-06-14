@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Pressable, ScrollView, View } from "react-native"
 import { useAuthStore } from "@/hooks/use-auth-store"
-import { LinearGradient } from "expo-linear-gradient"
+import { Gradient as LinearGradient } from "@/components/ui/gradient"
 import { useRouter } from "expo-router"
 import {
   User,

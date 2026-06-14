@@ -1,6 +1,6 @@
 import { Href, router } from "expo-router";
 import { ReactNode } from "react";
-import { Pressable } from "react-native-gesture-handler";
+import { Pressable } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
 interface CoinItemProps {
@@ -21,7 +21,7 @@ export function CoinItemRoot({children, coinId, index, routeUrl}: CoinItemProps)
     >
       <Pressable
         onPress={() => router.push(routeUrl)}
-        className="flex-row items-center justify-between px-2 py-3 rounded-2xl active:bg-muted/50"
+        className="flex-row w-full items-center justify-between px-2 py-3 rounded-2xl active:bg-muted/50"
       >
         {children}
       </Pressable>
