@@ -17,12 +17,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6.0.2
 
-      - name: Run Docker Compose
-        run: docker compose up -d
-
       - name: Setup Java JDK
         uses: actions/setup-java@v5.2.0
         with:
           distribution: "temurin"
           java-version: "25"
-      - run: mvn clean package
+
+      - name: Build and run unit tests
+        run: mvn clean package
