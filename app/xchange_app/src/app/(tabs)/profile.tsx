@@ -18,11 +18,16 @@ import {
 import { MenuItem } from "@/components/menu-item"
 import { useProfileSimple } from "@/hooks/use-profile-simple"
 import { Skeleton } from "@/components/ui/skeleton"
+import { toast } from "sonner-native"
 
 export default function Profile() {
   const router = useRouter()
   const { logOut } = useAuthStore()
   const { data: profileSimple, isLoading, isError } = useProfileSimple()
+
+  function notifyComingSoon() {
+    toast("Em breve")
+  }
 
   return (
     <ScrollView
@@ -67,7 +72,7 @@ export default function Profile() {
           icon={Shield}
           label="Segurança"
           subtitle="Senha e autenticação"
-          onPress={() => router.push("/profile/security")}
+          onPress={notifyComingSoon}
         />
       </View>
 
@@ -83,13 +88,13 @@ export default function Profile() {
           icon={Bell}
           label="Notificações"
           subtitle="Push, e-mail, SMS"
-          onPress={() => router.push("/profile/notifications")}
+          onPress={notifyComingSoon}
         />
         <MenuItem
           icon={Settings}
           label="Configurações"
           subtitle="Tema, idioma, privacidade"
-          onPress={() => router.push("/profile/settings")}
+          onPress={notifyComingSoon}
         />
       </View>
 

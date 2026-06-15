@@ -5,7 +5,7 @@ export async function GET(req: Request) {
   const predictionParam = url.searchParams.get("prediction")
 
   const response = await fetchClient({
-    path: `/profile/favorite-coins${predictionParam ? `?prediction=${predictionParam}` : null}`,
+    path: `/profile/favorite-coins${predictionParam ? `?prediction=${predictionParam}` : ""}`,
     init: {
       headers: req.headers,
       body: req.body,

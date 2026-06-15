@@ -60,26 +60,13 @@ export default function ProfileInfo() {
       <Separator />
 
       <View className="gap-4">
-        <View className="flex-row gap-3">
-          <View className="flex-1">
-            <InfoField
-              label="Nome"
-              value={profile?.firstName}
-              placeholder="Seu nome"
-              icon={User}
-              isLoading={isLoading}
-            />
-          </View>
-          <View className="flex-1">
-            <InfoField
-              label="Sobrenome"
-              value={profile?.lastName}
-              placeholder="Seu sobrenome"
-              icon={User}
-              isLoading={isLoading}
-            />
-          </View>
-        </View>
+        <InfoField
+          label="Nome"
+          value={profile?.firstName}
+          placeholder="Seu nome"
+          icon={User}
+          isLoading={isLoading}
+        />
 
         {/* <InfoField
           label="Usuário"

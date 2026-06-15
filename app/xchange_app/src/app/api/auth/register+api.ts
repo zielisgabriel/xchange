@@ -30,8 +30,6 @@ export async function POST(req: Request) {
     path: "/auth/register"
   })
 
-  console.log(response)
-
   if (response.ok) {
     return Response.json({
       "code": response.status,

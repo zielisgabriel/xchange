@@ -10,6 +10,26 @@ import clsx from "clsx";
 import { apiFetch } from "@/lib/api-fetch";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 
+const currencyFormater = Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+  notation: "compact"
+})
+
+const percentageFormat = Intl.NumberFormat("en-US", {
+  style: "percent",
+  maximumFractionDigits: 1,
+  minimumFractionDigits: 1
+})
+
+// API returns percentage points (e.g. 2.34 → 2.34%). Intl "percent" multiplies
+// by 100, so divide before formatting to avoid showing "234%".
+function formatPercentage(percentagePoints: number): string {
+  return percentageFormat.format(percentagePoints / 100)
+}
+
 export function GlobalCoinsHeader() {
   async function getGlobalCoinMetrics() {
     const response = await apiFetch({
@@ -30,20 +50,6 @@ export function GlobalCoinsHeader() {
   } = useQuery<GlobalCoinMetrics>({
     queryKey: ["global-coin-metrics"],
     queryFn: getGlobalCoinMetrics,
-  })
-
-  const currencyFormater = Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1,
-    notation: "compact"
-  })
-
-  const percentageFormat = Intl.NumberFormat("en-US", {
-    style: "percent",
-    maximumFractionDigits: 1,
-    minimumFractionDigits: 1
   })
 
   return (
@@ -114,7 +120,7 @@ export function GlobalCoinsHeader() {
                   ) : (
                     <ArrowDownRight size={12} />
                   )}
-                  {percentageFormat.format(globalCoinMetrics?.data.marketCapChangePercentage24hUsd!)}
+                  {formatPercentage(globalCoinMetrics?.data.marketCapChangePercentage24hUsd!)}
                 </Text>
               </CardFooter>
             </Card>
@@ -141,7 +147,7 @@ export function GlobalCoinsHeader() {
                   ) : (
                     <ArrowDownRight size={12} />
                   )}
-                  {percentageFormat.format(globalCoinMetrics?.data.volumeChangePercentage24hUsd!)}
+                  {formatPercentage(globalCoinMetrics?.data.volumeChangePercentage24hUsd!)}
                 </Text>
               </CardFooter>
             </Card>

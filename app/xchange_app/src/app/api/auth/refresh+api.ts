@@ -22,8 +22,6 @@ export async function POST(req: Request) {
     }, { status: 200 })
   }
 
-  console.error(response.body)
-
   return Response.json({
     "code": response.status,
     "message": response.status === 401 ? response.body?.["message"] as string : "Erro interno na autenticação do usuário"

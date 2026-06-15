@@ -12,33 +12,11 @@ import { twMerge } from "tailwind-merge"
 import clsx from "clsx"
 import DateTimePicker from "@react-native-community/datetimepicker"
 import { apiFetch } from "@/lib/api-fetch"
+import { formatCpf, formatDateDisplay, toISODate } from "@/utils/format"
 
 interface FieldError {
   field: string,
   message: string
-}
-
-function formatCpf(value: string): string {
-  const digits = value.replace(/\D/g, "").slice(0, 11)
-
-  if (digits.length <= 3) return digits
-  if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`
-  if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`
-  return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`
-}
-
-function formatDateDisplay(date: Date): string {
-  const day = String(date.getDate()).padStart(2, "0")
-  const month = String(date.getMonth() + 1).padStart(2, "0")
-  const year = date.getFullYear()
-  return `${day}/${month}/${year}`
-}
-
-function toISODate(date: Date): string {
-  const day = String(date.getDate()).padStart(2, "0")
-  const month = String(date.getMonth() + 1).padStart(2, "0")
-  const year = date.getFullYear()
-  return `${year}-${month}-${day}`
 }
 
 export function RegisterForm() {
@@ -93,11 +71,7 @@ export function RegisterForm() {
         setFieldErrors(data.fieldErrors)
       }
 
-      console.log(fieldErrors)
-
       toast.error(data.message)
-
-      console.log(data)
     })
   }
 
@@ -217,7 +191,7 @@ export function RegisterForm() {
             <Input
               placeholder="Data de aniversário"
               className={twMerge(clsx("placeholder:text-sm", {
-                "border-destructive": hasErrorByInputFieldName("birth_date")
+                "border-destructive": hasErrorByInputFieldName("birthDate")
               }))}
               placeholderTextColor={"#FFF"}
               textContentType="birthdate"
@@ -225,11 +199,6 @@ export function RegisterForm() {
               autoCorrect={false}
               onChangeText={value => birthDateRef.current = value}
             />
-            {hasErrorByInputFieldName("birth_date") && (
-              <Text className="text-destructive text-xs">
-                {getErrorMessage("birth_date")}
-              </Text>
-            )}
           </>
         ) : (
           <>
@@ -288,7 +257,7 @@ export function RegisterForm() {
         disabled={isPeding}
       >
         <Text className="font-bold">
-          {isPeding ? "Carregando..." : "Entrar"}
+          {isPeding ? "Carregando..." : "Cadastrar"}
         </Text>
       </Button>
     </View>

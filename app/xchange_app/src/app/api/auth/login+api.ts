@@ -16,8 +16,6 @@ export async function POST(req: Request) {
     path: "/auth/login"
   })
 
-  console.log(response)
-
   if (response.ok) {
     return Response.json({
       "code": response.status,
@@ -26,8 +24,6 @@ export async function POST(req: Request) {
       "message": "Bem vindo(a)!"
     })
   }
-
-  console.error(response.body)
 
   return Response.json({
     "code": response.status,

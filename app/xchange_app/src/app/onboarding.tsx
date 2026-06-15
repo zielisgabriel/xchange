@@ -34,8 +34,6 @@ export default function Onboarding() {
   async function submitOnboarding() {
     const payload = { favorite_coins: selectedCryptos }
 
-    console.log("Payload: ", payload)
-
     const result = onboardingSchema.safeParse(payload)
     if (!result.success) {
       const message = result.error.issues[0].message

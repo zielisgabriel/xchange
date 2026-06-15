@@ -36,9 +36,16 @@ export default function Index() {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true)
-    await queryClient.invalidateQueries({ queryKey: ["trending-coins"] })
-    await new Promise((resolve) => setTimeout(resolve, 800))
-    setRefreshing(false)
+    try {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["global-coin-metrics"] }),
+        queryClient.invalidateQueries({ queryKey: ["favorite-coins"] }),
+        queryClient.invalidateQueries({ queryKey: ["coins-list"] }),
+        queryClient.invalidateQueries({ queryKey: ["trending-coins"] }),
+      ])
+    } finally {
+      setRefreshing(false)
+    }
   }, [queryClient])
 
   return (
