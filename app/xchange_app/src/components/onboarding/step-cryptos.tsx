@@ -8,7 +8,6 @@ import Animated, { FadeInDown } from "react-native-reanimated"
 import { SimpleCoin } from "@/types/simple-coin"
 import { FavoriteCoin } from "@/types/favorite-coin"
 import { apiFetch } from "@/lib/api-fetch"
-import { SearchCryptoModal } from "@/components/search-crypto-modal"
 
 const MAX_FAVORITES = 5
 
@@ -16,6 +15,7 @@ interface StepCryptosProps {
   selected: FavoriteCoin[]
   onToggle: (coin: FavoriteCoin) => void
   error: string | null
+  onSearchPress: () => void
 }
 
 function SelectedCoinChip({ coin, onRemove }: { coin: FavoriteCoin; onRemove: () => void }) {
@@ -70,9 +70,8 @@ function CoinCard({ coin, isSelected, isDisabled, onPress }: {
   )
 }
 
-export function StepCryptos({ selected, onToggle, error }: StepCryptosProps) {
+export function StepCryptos({ selected, onToggle, error, onSearchPress }: StepCryptosProps) {
   const [simpleCoins, setSimpleCoins] = useState<SimpleCoin[]>([])
-  const [searchVisible, setSearchVisible] = useState(false)
 
   const selectedIds = useMemo(
     () => new Set(selected.map((c) => c.coinId)),
@@ -120,7 +119,7 @@ export function StepCryptos({ selected, onToggle, error }: StepCryptosProps) {
           Escolha até {MAX_FAVORITES} criptos para acompanhar de perto
         </Text>
         <Button
-          onPress={() => setSearchVisible(true)}
+          onPress={onSearchPress}
           variant="outline"
           className="flex-row items-center gap-2 mb-2"
         >
@@ -182,17 +181,6 @@ export function StepCryptos({ selected, onToggle, error }: StepCryptosProps) {
           })}
         </View>
       </ScrollView>
-
-      <SearchCryptoModal
-        visible={searchVisible}
-        onClose={() => setSearchVisible(false)}
-        onSelect={(coin) => {
-          if (selected.length < MAX_FAVORITES && !selectedIds.has(coin.id)) {
-            onToggle({ coinId: coin.id, name: coin.name, symbol: coin.symbol, imageUrl: coin.imageUrl })
-          }
-          setSearchVisible(false)
-        }}
-      />
     </View>
   )
 }

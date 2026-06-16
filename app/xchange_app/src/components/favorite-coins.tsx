@@ -14,6 +14,7 @@ import { Button } from "./ui/button";
 import { Link } from "expo-router";
 import { CoinDetailResponse } from "@/types/coin-detail-response";
 import { Separator } from "./ui/separator";
+import { compactUsdFromFormatted } from "@/utils/currency-format";
 
 const PREDICTION_PROPS = [
   {
@@ -126,7 +127,7 @@ export function FavoriteCoins() {
   if (favoriteCoins.length === 0) {
     return (
       <View className="items-center justify-center py-6 gap-3">
-        <Star size={32} className="text-muted-foreground/40" />
+        <Icon as={Star} size={32} className="text-muted-foreground" />
         <Text className="text-muted-foreground text-sm">
           Nenhuma cripto favoritada ainda.
         </Text>
@@ -241,7 +242,7 @@ export function FavoriteCoins() {
             </View>
             <View className="flex-row justify-between">
               <Text className="text-xs text-muted-foreground">Market Cap</Text>
-              <Text className="text-xs font-semibold">{coinDetail.marketCap ?? "—"}</Text>
+              <Text className="text-xs font-semibold">{compactUsdFromFormatted(coinDetail.marketCap)}</Text>
             </View>
             {coinDetail.priceChangePercentage24h != null && (
               <View className="flex-row justify-between">

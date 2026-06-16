@@ -14,6 +14,7 @@ import {
 } from "lucide-react-native"
 import { Icon } from "@/components/ui/icon"
 import { type LucideIcon } from "lucide-react-native"
+import { compactUsdFromFormatted } from "@/utils/currency-format"
 
 interface CoinDetailMarketDataProps {
   coin: CoinDetailResponse
@@ -29,13 +30,20 @@ interface StatRowProps {
 function StatRow({ icon, iconColor, label, value }: StatRowProps) {
   return (
     <View className="flex-row items-center justify-between py-3">
-      <View className="flex-row items-center gap-2.5">
+      <View className="flex-row items-center gap-2.5 shrink-0">
         <View className="w-8 h-8 rounded-xl items-center justify-center" style={{ backgroundColor: iconColor + "18" }}>
           <Icon as={icon} className="size-4" color={iconColor} />
         </View>
         <Text className="text-sm text-muted-foreground">{label}</Text>
       </View>
-      <Text className="text-sm font-semibold">{value ?? "—"}</Text>
+      <Text
+        className="text-sm font-semibold text-right flex-1 ml-3"
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.7}
+      >
+        {value ?? "—"}
+      </Text>
     </View>
   )
 }
@@ -53,11 +61,11 @@ export function CoinDetailMarketData({ coin }: CoinDetailMarketDataProps) {
   return (
     <Animated.View entering={FadeInDown.delay(300).duration(500)} className="gap-4">
       <View className="bg-card border border-border rounded-2xl px-4">
-        <StatRow icon={DollarSign} iconColor="#f59e0b" label="Market Cap" value={coin.marketCap} />
+        <StatRow icon={DollarSign} iconColor="#f59e0b" label="Market Cap" value={compactUsdFromFormatted(coin.marketCap)} />
         <Separator />
-        <StatRow icon={Activity} iconColor="#3b82f6" label="Volume 24h" value={coin.totalVolume} />
+        <StatRow icon={Activity} iconColor="#3b82f6" label="Volume 24h" value={compactUsdFromFormatted(coin.totalVolume)} />
         <Separator />
-        <StatRow icon={Layers} iconColor="#8b5cf6" label="FDV" value={coin.fullyDilutedValuation} />
+        <StatRow icon={Layers} iconColor="#8b5cf6" label="FDV" value={compactUsdFromFormatted(coin.fullyDilutedValuation)} />
       </View>
 
       <View className="bg-card border border-border rounded-2xl px-4">

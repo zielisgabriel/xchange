@@ -40,7 +40,7 @@ export function CoinDetailAthAtl({ coin }: CoinDetailAthAtlProps) {
             </View>
             <Text className="text-xs text-muted-foreground font-medium">ATH</Text>
           </View>
-          <Text className="text-lg font-bold">{coin.ath ?? "—"}</Text>
+          <Text className="text-lg font-bold" numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>{coin.ath ?? "—"}</Text>
           {coin.athChangePercentage != null && (
             <View className="flex-row items-center gap-0.5">
               <ChevronDown size={12} color="#ef4444" />
@@ -59,7 +59,7 @@ export function CoinDetailAthAtl({ coin }: CoinDetailAthAtlProps) {
             </View>
             <Text className="text-xs text-muted-foreground font-medium">ATL</Text>
           </View>
-          <Text className="text-lg font-bold">{coin.atl ?? "—"}</Text>
+          <Text className="text-lg font-bold" numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>{coin.atl ?? "—"}</Text>
           {coin.atlChangePercentage != null && (
             <View className="flex-row items-center gap-0.5">
               <ChevronUp size={12} color="#22c55e" />

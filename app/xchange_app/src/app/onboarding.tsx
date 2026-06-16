@@ -18,6 +18,7 @@ import { FavoriteCoin } from "@/types/favorite-coin"
 import { StepWelcome } from "@/components/onboarding/step-welcome"
 import { StepCryptos } from "@/components/onboarding/step-cryptos"
 import { StepFinish } from "@/components/onboarding/step-finish"
+import { SearchCryptoModal } from "@/components/search-crypto-modal"
 import { onboardingSchema } from "@/schemas/onboarding-schema"
 import { toast } from "sonner-native"
 import { queryClient } from "@/lib/query-client"
@@ -30,6 +31,15 @@ export default function Onboarding() {
   const [selectedCryptos, setSelectedCryptos] = useState<FavoriteCoin[]>([])
   const [direction, setDirection] = useState<"forward" | "backward">("forward")
   const [error, setError] = useState<string | null>(null)
+  const [searchVisible, setSearchVisible] = useState(false)
+
+  function handleSelectFromSearch(coin: { id: string; name: string; symbol: string; imageUrl: string }) {
+    const alreadySelected = selectedCryptos.some((c) => c.coinId === coin.id)
+    if (!alreadySelected && selectedCryptos.length < 5) {
+      toggleCrypto({ coinId: coin.id, name: coin.name, symbol: coin.symbol, imageUrl: coin.imageUrl })
+    }
+    setSearchVisible(false)
+  }
 
   async function submitOnboarding() {
     const payload = { favorite_coins: selectedCryptos }
@@ -124,7 +134,12 @@ export default function Onboarding() {
         >
           {currentStep === 0 && <StepWelcome />}
           {currentStep === 1 && (
-            <StepCryptos selected={selectedCryptos} onToggle={toggleCrypto} error={error} />
+            <StepCryptos
+              selected={selectedCryptos}
+              onToggle={toggleCrypto}
+              error={error}
+              onSearchPress={() => setSearchVisible(true)}
+            />
           )}
           {currentStep === 2 && <StepFinish />}
         </Animated.View>
@@ -178,6 +193,12 @@ export default function Onboarding() {
           </View>
         </View>
       </View>
+
+      <SearchCryptoModal
+        visible={searchVisible}
+        onClose={() => setSearchVisible(false)}
+        onSelect={handleSelectFromSearch}
+      />
     </LinearGradient>
   )
 }

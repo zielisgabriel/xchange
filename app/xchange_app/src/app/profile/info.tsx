@@ -48,6 +48,7 @@ export default function ProfileInfo() {
     <ScrollView
       className="flex-1"
       contentContainerClassName="px-5 pt-6 pb-10 gap-6"
+      contentInsetAdjustmentBehavior="automatic"
       showsVerticalScrollIndicator={false}
     >
       <View className="items-center gap-3 pb-2">

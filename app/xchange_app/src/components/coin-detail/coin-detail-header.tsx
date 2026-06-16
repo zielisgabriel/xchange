@@ -29,10 +29,7 @@ export function CoinDetailHeader({ coin }: CoinDetailHeaderProps) {
         )}
       </Avatar>
 
-      <View className="items-center gap-0.5">
-        <Text className="text-xl font-bold tracking-tight">{coin.name ?? ""}</Text>
-        <Text className="text-sm text-muted-foreground uppercase">{coin.symbol ?? ""}</Text>
-      </View>
+      <Text className="text-sm text-muted-foreground uppercase">{coin.symbol ?? ""}</Text>
 
       <Animated.View entering={FadeInDown.delay(100).duration(400)} className="items-center gap-1">
         <Text className="text-3xl font-extrabold tracking-tight">{coin.price}</Text>

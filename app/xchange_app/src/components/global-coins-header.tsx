@@ -9,14 +9,8 @@ import { GlobalCoinMetrics } from "@/types/global-coin-metrics";
 import clsx from "clsx";
 import { apiFetch } from "@/lib/api-fetch";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
-
-const currencyFormater = Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-  notation: "compact"
-})
+import { formatCompactCurrency } from "@/utils/currency-format";
+import { Icon } from "./ui/icon";
 
 const percentageFormat = Intl.NumberFormat("en-US", {
   style: "percent",
@@ -69,7 +63,7 @@ export function GlobalCoinsHeader() {
                 <Skeleton className="h-6 max-w-20" />
               </CardContent>
               <CardFooter>
-                <Skeleton className="h-4 max-w-12" />
+                <Skeleton className="h-4 max-w-16" />
               </CardFooter>
             </Card>
             <Card className="flex-1">
@@ -81,7 +75,7 @@ export function GlobalCoinsHeader() {
                 <Skeleton className="h-6 max-w-20" />
               </CardContent>
               <CardFooter>
-                <Skeleton className="h-4 max-w-12" />
+                <Skeleton className="h-4 max-w-16" />
               </CardFooter>
             </Card>
           </>
@@ -107,7 +101,7 @@ export function GlobalCoinsHeader() {
               </CardHeader>
               <CardContent>
                 <Text className="text-lg font-bold">
-                  {globalCoinMetrics?.data ? currencyFormater.format(globalCoinMetrics?.data.totalMarketCap) : currencyFormater.format(0)}
+                  {formatCompactCurrency(globalCoinMetrics?.data?.totalMarketCap ?? 0)}
                 </Text>
               </CardContent>
               <CardFooter>
@@ -116,9 +110,9 @@ export function GlobalCoinsHeader() {
                   "text-green-500" : globalCoinMetrics?.data.marketCapChangePercentage24hUsd! > 0
                 })}>
                   {globalCoinMetrics?.data.marketCapChangePercentage24hUsd! > 0 ? (
-                    <ArrowUpRight size={12} />
+                    <Icon as={ArrowUpRight} size={16} className="text-green-500" />
                   ) : (
-                    <ArrowDownRight size={12} />
+                    <Icon as={ArrowDownRight} size={16} className="text-red-500" />
                   )}
                   {formatPercentage(globalCoinMetrics?.data.marketCapChangePercentage24hUsd!)}
                 </Text>
@@ -134,7 +128,7 @@ export function GlobalCoinsHeader() {
               </CardHeader>
               <CardContent>
                 <Text className="text-lg font-bold">
-                  {currencyFormater.format(globalCoinMetrics?.data.totalVolume!)}
+                  {formatCompactCurrency(globalCoinMetrics?.data.totalVolume!)}
                 </Text>
               </CardContent>
               <CardFooter>
@@ -143,9 +137,9 @@ export function GlobalCoinsHeader() {
                   "text-green-500" : globalCoinMetrics?.data.volumeChangePercentage24hUsd! > 0
                 })}>
                   {globalCoinMetrics?.data.volumeChangePercentage24hUsd! > 0 ? (
-                    <ArrowUpRight size={12} />
+                    <Icon as={ArrowUpRight} size={16} className="text-green-500" />
                   ) : (
-                    <ArrowDownRight size={12} />
+                    <Icon as={ArrowDownRight} size={16} className="text-red-500" />
                   )}
                   {formatPercentage(globalCoinMetrics?.data.volumeChangePercentage24hUsd!)}
                 </Text>

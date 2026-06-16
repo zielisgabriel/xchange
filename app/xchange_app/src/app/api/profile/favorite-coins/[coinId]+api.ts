@@ -1,14 +1,11 @@
 import { fetchClient } from "@/lib/fetch-client";
 
-export async function POST(req: Request) {
-  const body = await req.json()
-
+export async function DELETE(req: Request, { coinId }: Record<string, string>) {
   const response = await fetchClient({
-    path: "/profile/onboarding",
+    path: `/profile/favorite-coins/${coinId}`,
     init: {
       headers: req.headers,
-      body: JSON.stringify(body),
-      method: "POST"
+      method: "DELETE",
     },
   })
 

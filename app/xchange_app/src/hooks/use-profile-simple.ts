@@ -1,7 +1,6 @@
 import { useAuthStore } from "./use-auth-store";
 import { apiFetch } from "@/lib/api-fetch";
 import { ProfileSimple } from "@/types/profile-simple";
-import { Minute } from "@/valueobject/Minute";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
@@ -23,7 +22,10 @@ export function useProfileSimple() {
       return response.json() as Promise<ProfileSimple>
     },
     enabled: isAuthenticated && !!accessToken,
-    staleTime: new Minute(10).toMilliseconds(),
+    // Onboarding status is derived from this response, so it must never be
+    // served stale from cache — always refetch fresh for the current user.
+    staleTime: 0,
+    refetchOnMount: "always",
     retry: false,
   })
 

@@ -23,8 +23,8 @@ import { FavoriteCoins } from "@/components/favorite-coins"
 
 function getGreeting(): string {
   const hour = new Date().getHours()
-  if (hour < 12) return "Bom dia"
-  if (hour < 18) return "Boa tarde"
+  if (hour > 6 && hour < 12) return "Bom dia"
+  if (hour > 12 && hour < 18) return "Boa tarde"
   return "Boa noite"
 }
 
@@ -75,7 +75,7 @@ export default function Index() {
         >
           <View className="gap-1">
             <Text className="text-foreground/50 text-sm font-medium">
-              {getGreeting()} 👋
+              {getGreeting()}
             </Text>
             {isLoading ? (
               <Skeleton className="h-8 w-32" />

@@ -1,8 +1,13 @@
-import { View, ScrollView, RefreshControl } from "react-native"
+import { View, ScrollView, RefreshControl, Pressable } from "react-native"
 import { useLocalSearchParams, Stack } from "expo-router"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { Star } from "lucide-react-native"
+import { toast } from "sonner-native"
 import { apiFetch } from "@/lib/api-fetch"
 import { CoinDetailResponse } from "@/types/coin-detail-response"
+import { FavoriteCoin } from "@/types/favorite-coin"
+import { useFavoriteCoins } from "@/hooks/use-favorite-coins"
+import { ManageFavoritesModal } from "@/components/manage-favorites-modal"
 import { Text } from "@/components/ui/text"
 import { CoinDetailHeader } from "@/components/coin-detail/coin-detail-header"
 import { CoinDetailSparkline } from "@/components/coin-detail/coin-detail-sparkline"
@@ -43,12 +48,78 @@ export default function CoinPage() {
     setRefreshing(false)
   }, [queryClient, coinId])
 
+  const { favorites, isFavorite, isFull, addFavorite, removeFavorite } = useFavoriteCoins()
+  const [swapModalVisible, setSwapModalVisible] = useState(false)
+
+  const favorited = coin ? isFavorite(coin.id) : false
+
+  function toFavoriteCoin(detail: CoinDetailResponse): FavoriteCoin {
+    return {
+      coinId: detail.id,
+      name: detail.name,
+      symbol: detail.symbol,
+      imageUrl: detail.imageUrl,
+    }
+  }
+
+  function handleToggleFavorite() {
+    if (!coin) return
+
+    if (favorited) {
+      removeFavorite.mutate(coin.id)
+      toast(`${coin.name} removida dos favoritos`)
+      return
+    }
+
+    if (isFull) {
+      setSwapModalVisible(true)
+      return
+    }
+
+    addFavorite.mutate(toFavoriteCoin(coin), {
+      onSuccess: () => toast.success(`${coin.name} adicionada aos favoritos`),
+      onError: (error) => toast.error(error.message),
+    })
+  }
+
+  async function handleSwap(favoriteCoinIdToRemove: string) {
+    if (!coin) return
+
+    try {
+      await removeFavorite.mutateAsync(favoriteCoinIdToRemove)
+      await addFavorite.mutateAsync(toFavoriteCoin(coin))
+      setSwapModalVisible(false)
+      toast.success(`${coin.name} adicionada aos favoritos`)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível substituir")
+    }
+  }
+
+  const isSwapping = removeFavorite.isPending || addFavorite.isPending
+
   return (
     <>
       <Stack.Screen
         options={{
           title: coin?.name ?? "",
-          headerBackTitle: "Voltar",
+          headerLargeTitle: true,
+          headerLargeTitleShadowVisible: false,
+          headerShadowVisible: false,
+          headerBackButtonDisplayMode: "minimal",
+          headerStyle: { backgroundColor: "hsl(0, 0%, 4%)" },
+          headerLargeStyle: { backgroundColor: "hsl(0, 0%, 4%)" },
+          headerTintColor: "#fff",
+          headerTitleStyle: { fontFamily: "Sora-SemiBold", color: "#fff" },
+          headerLargeTitleStyle: { fontFamily: "Sora-Bold", color: "#fff" },
+          headerRight: () => (
+            <Pressable onPress={handleToggleFavorite} hitSlop={12} disabled={!coin}>
+              <Star
+                size={22}
+                color={favorited ? "#f59e0b" : "#a1a1aa"}
+                fill={favorited ? "#f59e0b" : "transparent"}
+              />
+            </Pressable>
+          ),
         }}
       />
 
@@ -102,6 +173,15 @@ export default function CoinPage() {
           </View>
         )}
       </ScrollView>
+
+      <ManageFavoritesModal
+        visible={swapModalVisible}
+        newCoin={coin ? toFavoriteCoin(coin) : null}
+        favorites={favorites}
+        onClose={() => setSwapModalVisible(false)}
+        onSwap={handleSwap}
+        isSwapping={isSwapping}
+      />
     </>
   )
 }

@@ -1,6 +1,7 @@
 import { create } from "zustand"
 import { persist, createJSONStorage } from "expo-zustand-persist"
 import { getItemAsync, setItemAsync, deleteItemAsync } from "expo-secure-store"
+import { queryClient } from "@/lib/query-client"
 
 type UserState = {
   isAuthenticated: boolean;
@@ -38,6 +39,9 @@ export const useAuthStore = create<UserState>(
       accessToken: null,
       refreshToken: null,
       logIn: ({ accessToken, refreshToken }) => {
+        // Drop any cached profile from a previous session so the onboarding
+        // gate is decided by THIS user's fresh `/profile/simple` response.
+        queryClient.removeQueries({ queryKey: ["profile-simple"] })
         set((state) => {
           return {
             ...state,
@@ -48,6 +52,7 @@ export const useAuthStore = create<UserState>(
         })
       },
       logOut: () => {
+        queryClient.clear()
         set((state) => {
           return {
             ...state,
@@ -77,7 +82,17 @@ export const useAuthStore = create<UserState>(
     }),
     {
       name: "auth-store",
-      storage: createJSONStorage(() => authStorage)
+      storage: createJSONStorage(() => authStorage),
+      // `onboardingFinished` is server-derived (set by the profile query), not a
+      // cached value. On native the secure-store hydration is async and replaces
+      // the whole state when it resolves — which could clobber the value that
+      // `startOnboarding()` just set and send a new user to the tabs instead of
+      // onboarding. Keep the runtime `onboardingFinished` on hydration.
+      merge: (persistedState, currentState) => ({
+        ...currentState,
+        ...(persistedState as Partial<UserState>),
+        onboardingFinished: currentState.onboardingFinished,
+      })
     }
   )
 )

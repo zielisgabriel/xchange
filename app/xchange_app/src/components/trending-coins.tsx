@@ -101,8 +101,6 @@ export function TrendingCoins() {
             </CoinItem.Content>
 
             <CoinItem.MarketContent>
-              <CoinItem.Sparkline sparklineUri={coin.sparkline} />
-
               <CoinItem.MarketData>
                 <CoinItem.Price>
                   {coin.price}

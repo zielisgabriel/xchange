@@ -4,6 +4,7 @@ const favoriteCoinSchema = z.object({
   coinId: z.string().min(1),
   name: z.string().min(1),
   symbol: z.string().min(1),
+  imageUrl: z.string().optional(),
 })
 
 export const onboardingSchema = z.object({

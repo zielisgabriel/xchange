@@ -13,5 +13,20 @@ export async function GET(req: Request) {
     },
   })
 
-  return Response.json(response.body, { status: response.status })
+  return Response.json(response.body ?? null, { status: response.status })
+}
+
+export async function POST(req: Request) {
+  const body = await req.json()
+
+  const response = await fetchClient({
+    path: "/profile/favorite-coins",
+    init: {
+      method: "POST",
+      headers: req.headers,
+      body: JSON.stringify(body),
+    },
+  })
+
+  return Response.json(response.body ?? null, { status: response.status })
 }

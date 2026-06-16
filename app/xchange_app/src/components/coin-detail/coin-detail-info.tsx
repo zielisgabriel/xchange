@@ -39,7 +39,7 @@ export function CoinDetailInfo({ coin }: CoinDetailInfoProps) {
               </View>
               <Text className="text-sm text-muted-foreground">Algoritmo</Text>
             </View>
-            <Text className="text-sm font-semibold">{coin.hashingAlgorithm}</Text>
+            <Text className="text-sm font-semibold text-right flex-1 ml-3" numberOfLines={1}>{coin.hashingAlgorithm}</Text>
           </View>
           {coin.genesisDate && <Separator />}
         </>

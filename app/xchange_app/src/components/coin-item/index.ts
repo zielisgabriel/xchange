@@ -7,7 +7,6 @@ import { CoinItemPercentage } from "./percentage";
 import { CoinItemPrice } from "./price";
 import { CoinItemRank } from "./rank";
 import { CoinItemRoot } from "./root";
-import { CoinItemSparkline } from "./sparkline";
 import { CoinItemSymbol } from "./symbol";
 import { CoinItemTitleContent } from "./title-content";
 
@@ -21,7 +20,6 @@ export const CoinItem = {
   Percentage: CoinItemPercentage,
   Price: CoinItemPrice,
   Rank: CoinItemRank,
-  Sparkline: CoinItemSparkline,
   Symbol: CoinItemSymbol,
   TitleContent: CoinItemTitleContent,
 }
