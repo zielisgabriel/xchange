@@ -19,7 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import br.com.xchange.api.application.dto.request.OnboardingRequestDto;
+import br.com.xchange.api.application.dto.request.OnboardingRequest;
 import br.com.xchange.api.domain.entities.AuthUser;
 import br.com.xchange.api.domain.entities.FavoriteCoin;
 import br.com.xchange.api.domain.entities.Profile;
@@ -56,7 +56,7 @@ class FinishOnboardingUseCaseTest {
     profile.setFavoriteCoins(new HashSet<>(Set.of(favoriteCoin("bitcoin", "BTC"))));
 
     Set<FavoriteCoin> newFavorites = Set.of(favoriteCoin("ethereum", "ETH"));
-    OnboardingRequestDto request = new OnboardingRequestDto(newFavorites);
+    OnboardingRequest request = new OnboardingRequest(newFavorites);
 
     when(profileRepositoryPort.findById(USER_ID)).thenReturn(Optional.of(profile));
 
@@ -72,7 +72,7 @@ class FinishOnboardingUseCaseTest {
   @Test
   @DisplayName("Deve lançar UserNotFoundException quando o perfil não existe")
   void shouldThrowWhenProfileNotFound() {
-    OnboardingRequestDto request = new OnboardingRequestDto(Set.of(favoriteCoin("ethereum", "ETH")));
+    OnboardingRequest request = new OnboardingRequest(Set.of(favoriteCoin("ethereum", "ETH")));
     when(profileRepositoryPort.findById(USER_ID)).thenReturn(Optional.empty());
 
     assertThrows(UserNotFoundException.class, () -> useCase.execute(USER_ID, request));

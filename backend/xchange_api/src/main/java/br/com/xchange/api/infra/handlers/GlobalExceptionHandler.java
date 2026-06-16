@@ -16,6 +16,7 @@ import br.com.xchange.api.application.dto.response.FieldValidationErrorResponse.
 import br.com.xchange.api.domain.exceptions.AccessTokenInvalidException;
 import br.com.xchange.api.domain.exceptions.CpfException;
 import br.com.xchange.api.domain.exceptions.EmailOrPasswordInvalidException;
+import br.com.xchange.api.domain.exceptions.FavoriteCoinsLimitExceededException;
 import br.com.xchange.api.domain.exceptions.ForbiddenChangeAnotherUserInfoException;
 import br.com.xchange.api.domain.exceptions.InvalidUserException;
 import br.com.xchange.api.domain.exceptions.RefreshTokenAlreadyExistsException;
@@ -114,6 +115,18 @@ public class GlobalExceptionHandler {
   ) {
     return buildResponse(
       HttpStatus.UNAUTHORIZED,
+      exception.getMessage(),
+      request
+    );
+  }
+
+  @ExceptionHandler(FavoriteCoinsLimitExceededException.class)
+  public ResponseEntity<ApiErrorResponse> handlerFavoriteCoinsLimitExceededException(
+    FavoriteCoinsLimitExceededException exception,
+    HttpServletRequest request
+  ) {
+    return buildResponse(
+      HttpStatus.CONFLICT,
       exception.getMessage(),
       request
     );

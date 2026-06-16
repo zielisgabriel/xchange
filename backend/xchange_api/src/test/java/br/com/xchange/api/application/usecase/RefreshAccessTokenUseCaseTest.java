@@ -12,7 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import br.com.xchange.api.application.dto.response.LoginResponseDto;
+import br.com.xchange.api.application.dto.response.LoginResponse;
 import br.com.xchange.api.domain.entities.RefreshToken;
 import br.com.xchange.api.domain.ports.services.AccessTokenServicePort;
 import br.com.xchange.api.domain.ports.services.RefreshTokenServicePort;
@@ -42,7 +42,7 @@ class RefreshAccessTokenUseCaseTest {
     when(refreshTokenServicePort.validate(refreshTokenId)).thenReturn(refreshToken);
     when(accessTokenServicePort.generateFromUserId(userId)).thenReturn("new-access-token");
 
-    LoginResponseDto response = useCase.execute(refreshTokenId);
+    LoginResponse response = useCase.execute(refreshTokenId);
 
     assertEquals("new-access-token", response.accessToken());
     assertEquals(refreshTokenId.toString(), response.refreshToken());

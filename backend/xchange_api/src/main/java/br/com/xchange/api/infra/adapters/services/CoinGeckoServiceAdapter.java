@@ -81,7 +81,6 @@ public class CoinGeckoServiceAdapter implements CoinServicePort {
         coinWithMarketData.setMarketCap(item.data().marketCap());
         coinWithMarketData.setName(item.name());
         coinWithMarketData.setPrice(new Usd(item.data().price()).formatted(4, 7));
-        coinWithMarketData.setSparkline(item.data().sparkline());
         coinWithMarketData.setSymbol(item.symbol());
         coinWithMarketData.setTotalVolume(item.data().totalVolume());
         coinWithMarketData.setUpdatedAt(LocalDateTime.now().toString());

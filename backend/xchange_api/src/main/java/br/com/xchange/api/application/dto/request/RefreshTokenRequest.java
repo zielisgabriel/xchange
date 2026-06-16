@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.NotNull;
 
-public record RefreshTokenRequestDto(
+public record RefreshTokenRequest(
     @NotNull(message = "O refresh token é obrigatório!")
     @JsonProperty("refresh_token")
     UUID refreshToken

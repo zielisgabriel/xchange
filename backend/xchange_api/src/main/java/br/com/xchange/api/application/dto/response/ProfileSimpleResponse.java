@@ -6,17 +6,17 @@ import java.util.UUID;
 import br.com.xchange.api.domain.entities.FavoriteCoin;
 import br.com.xchange.api.domain.entities.Profile;
 
-public record ProfileResponseDto(
+public record ProfileSimpleResponse(
   UUID id,
-  AuthUserResponseDto authUser,
+  String firstName,
+  boolean onboardingFinished,
   Set<FavoriteCoin> favoriteCoins
 ) {
-  public static ProfileResponseDto fromDomain(Profile profile) {
-    if (profile == null) return null;
-
-    return new ProfileResponseDto(
+  public static ProfileSimpleResponse fromDomain(Profile profile) {
+    return new ProfileSimpleResponse(
       profile.getId(),
-      AuthUserResponseDto.fromDomain(profile.getAuthUser()),
+      profile.getAuthUser().getFirstName(),
+      profile.getAuthUser().isOnboardingFinished(),
       profile.getFavoriteCoins()
     );
   }

@@ -3,7 +3,7 @@ package br.com.xchange.api.application.usecase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.xchange.api.application.dto.request.RegisterUserRequestDto;
+import br.com.xchange.api.application.dto.request.RegisterUserRequest;
 import br.com.xchange.api.domain.entities.AuthUser;
 import br.com.xchange.api.domain.entities.Profile;
 import br.com.xchange.api.domain.exceptions.UserAlreadyExistsException;
@@ -20,7 +20,7 @@ public class RegisterUserUseCase {
   private final PasswordEncoderPort passwordEncoder;
 
   @Transactional
-  public Profile execute(RegisterUserRequestDto requestDto) {
+  public Profile execute(RegisterUserRequest requestDto) {
     this.authUserRepositoryPort.findByEmail(requestDto.email())
       .ifPresent(user -> {
         throw new UserAlreadyExistsException("Usuário já existe!");

@@ -40,7 +40,6 @@ public record TrendingCoinsCoinsGecko(
     @JsonProperty("market_cap_btc") String marketCapBtc,
     @JsonProperty("total_volume") String totalVolume,
     @JsonProperty("total_volume_btc") String totalVolumeBtc,
-    String sparkline,
     CoinContent content,
     @JsonProperty("price_change_percentage_24h") PriceChangePercentage24h priceChangePercentage24h
   ) {}

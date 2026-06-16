@@ -9,8 +9,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.MimeTypeUtils;
 
-import br.com.xchange.api.application.dto.request.LoginUserRequestDto;
-import br.com.xchange.api.application.dto.response.LoginResponseDto;
+import br.com.xchange.api.application.dto.request.LoginUserRequest;
+import br.com.xchange.api.application.dto.response.LoginResponse;
 import br.com.xchange.api.domain.ports.services.AccessTokenServicePort;
 import br.com.xchange.api.infra.services.RefreshTokenService;
 import jakarta.servlet.FilterChain;
@@ -40,8 +40,8 @@ public class XchangeAuthenticationFilter extends UsernamePasswordAuthenticationF
     HttpServletResponse response
   ) throws AuthenticationException {
     try {
-      LoginUserRequestDto loginRequestDto = new ObjectMapper()
-        .readValue(request.getInputStream(), LoginUserRequestDto.class);
+      LoginUserRequest loginRequestDto = new ObjectMapper()
+        .readValue(request.getInputStream(), LoginUserRequest.class);
 
       UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
         loginRequestDto.email(),
@@ -64,7 +64,7 @@ public class XchangeAuthenticationFilter extends UsernamePasswordAuthenticationF
     String accessToken = this.accessTokenServicePort.generate(authResult.getPrincipal());
     String refreshToken = this.refreshTokenService.generate(authResult.getPrincipal());
 
-    LoginResponseDto loginResponseDto = new LoginResponseDto(accessToken, refreshToken);
+    LoginResponse loginResponseDto = new LoginResponse(accessToken, refreshToken);
 
     response.setContentType(MimeTypeUtils.APPLICATION_JSON.getType());
     response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponseDto));

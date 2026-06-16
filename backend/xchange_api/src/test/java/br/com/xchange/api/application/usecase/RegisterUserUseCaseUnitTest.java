@@ -20,7 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import br.com.xchange.api.application.dto.request.RegisterUserRequestDto;
+import br.com.xchange.api.application.dto.request.RegisterUserRequest;
 import br.com.xchange.api.domain.entities.AuthUser;
 import br.com.xchange.api.domain.entities.Profile;
 import br.com.xchange.api.domain.exceptions.UserAlreadyExistsException;
@@ -48,11 +48,11 @@ public class RegisterUserUseCaseUnitTest {
   @Captor
   private ArgumentCaptor<Profile> profileCaptor;
 
-  private RegisterUserRequestDto requestDto;
+  private RegisterUserRequest requestDto;
 
   @BeforeEach
   void init() {
-    requestDto = new RegisterUserRequestDto(
+    requestDto = new RegisterUserRequest(
       "emailtest@gmail.com",
       "12345678909",
       "First Name Test",

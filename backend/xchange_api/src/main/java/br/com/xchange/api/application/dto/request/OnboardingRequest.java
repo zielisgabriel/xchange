@@ -9,7 +9,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record OnboardingRequestDto(
+public record OnboardingRequest(
   @JsonProperty(value = "favorite_coins")
   @NotNull(message = "A lista de moedas favoritas é obrigatória")
   @Size(min = 1, max = 5, message = "Selecione entre 1 e 5 moedas favoritas")
