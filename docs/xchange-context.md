@@ -6,9 +6,7 @@ C4Context
 
   Person(user, "Xchange User", "A person with an account on the platform who monitors cryptocurrency prices.")
 
-  Enterprise_Boundary(b1, "Xchange") {
-    System(xchangeSystem, "Xchange System", "Allows users to monitor real-time cryptocurrency prices.")
-  }
+  System(xchangeSystem, "Xchange System", "Allows users to monitor real-time cryptocurrency prices.")
 
   System_Ext(coingeckoApi, "CoinGecko API", "Provides cryptocurrency market data: prices, trading volume, and market capitalization.")
 
