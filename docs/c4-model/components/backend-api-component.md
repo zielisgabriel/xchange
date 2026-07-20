@@ -11,11 +11,12 @@ Container(aiCoin, "AI Recommendation Service", "Python / FastAPI", "Analyses and
 System_Ext(coinGecko, "CoinGecko API", "External REST service providing cryptocurrency market data.")
 
 Container_Boundary(api, "Backend API (Monolith)") {
-  
   Component(securityFilter, "Security Filter", "Spring Security", "Intercepts requests to validate JWT tokens and enforce access control.")
   
   Component(refreshTokenRepository, "Refresh Token Repository", "Spring Data Redis", "Abstracts redis operations for Refresh Tokens.")
   Component(userRepository, "User Repository", "Spring Data JPA", "Abstracts database operations for User entities.")
+
+  Component(redisCacheProxy, "Redis Cache Proxy", "@Cacheable/Spring Data Redis", "Proxy to save, read response cached")
 
   Boundary(authService, "Auth Module") {
     Component(signInController, "Sign In Controller", "Spring REST Controller", "Endpoint for user authentication.")
@@ -34,10 +35,10 @@ Container_Boundary(api, "Backend API (Monolith)") {
   }
 
   Boundary(coinService, "Coin Module") {
-    Component(getTrendingCoinsController, "Trending Coins Controller", "Spring REST Controller", "Endpoint for returning trending coins.")
-    Component(getTrendingCoinsService, "Trending Coins Service", "Spring Service", "Fetches trending coins, utilizing cache for performance.")
+    Component(trendingCoinsController, "Trending Coins Controller", "Spring REST Controller", "Endpoint for returning trending coins.")
+    Component(trendingCoinsService, "Trending Coins Service", "Spring Service", "Fetches trending coins, utilizing cache for performance.")
 
-    Rel(getTrendingCoinsController, getTrendingCoinsService, "Requests trending coins", "Method Call")
+    Rel(trendingCoinsController, trendingCoinsService, "Requests trending coins", "Method Call")
   }
 
   %% Entry points from Mobile
@@ -46,7 +47,7 @@ Container_Boundary(api, "Backend API (Monolith)") {
   %% Internal Routing from Security Filter
   Rel(securityFilter, signInController, "Forwards public request to", "Method Call")
   Rel(securityFilter, signUpController, "Forwards public request to", "Method Call")
-  Rel(securityFilter, getTrendingCoinsController, "Forwards authenticated request to", "Method Call")
+  Rel(securityFilter, trendingCoinsController, "Forwards authenticated request to", "Method Call")
 }
 
 %% External Database & Cache Relations
@@ -55,6 +56,7 @@ Rel(authTokenService, refreshTokenRepository, "Saves or gets refresh token", "Me
 Rel(userRepository, relationalDb, "Reads/Writes user data", "JDBC/TCP")
 
 %% CoinGecko & Cache Relations
-Rel(getTrendingCoinsService, coinGecko, "Fetches external data if cache misses", "JSON/HTTPS")
-Rel(getTrendingCoinsService, cacheDb, "Saves/Gets cached response via @Cacheable", "RESP/TCP")
+Rel(trendingCoinsService, coinGecko, "Fetches external data if cache misses", "JSON/HTTPS")
+Rel(trendingCoinsService, redisCacheProxy, "Sends, reads response", "Method Call")
+Rel(redisCacheProxy, cacheDb, "Saves/Reads cached response via @Cacheable", "RESP/TCP")
 ```
