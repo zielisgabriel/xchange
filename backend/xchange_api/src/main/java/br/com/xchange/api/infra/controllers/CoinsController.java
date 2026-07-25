@@ -23,7 +23,6 @@ import br.com.xchange.api.application.dto.response.TrendingCoinResponse;
 import br.com.xchange.api.application.dto.response.CoinsListResponse.CoinsListWrapper;
 import br.com.xchange.api.application.usecase.GetCoinChartDataUseCase;
 import br.com.xchange.api.application.usecase.GetCoinDetailByIdUseCase;
-import br.com.xchange.api.application.usecase.GetCoinsWithMarketDataUseCase;
 import br.com.xchange.api.application.usecase.GetGlobalCoinMetricsUseCase;
 import br.com.xchange.api.application.usecase.GetTrendingCoinUseCase;
 import br.com.xchange.api.application.usecase.SearchCoinsByQueryUseCase;
@@ -31,6 +30,8 @@ import br.com.xchange.api.domain.entities.Coin;
 import br.com.xchange.api.domain.entities.CoinChartData;
 import br.com.xchange.api.domain.entities.CoinDetailData;
 import br.com.xchange.api.domain.entities.CoinWithMarketData;
+import br.com.xchange.api.domain.ports.usecases.GetCoinsListUseCasePort;
+import br.com.xchange.api.domain.ports.usecases.GetSimpleCoinUseCasePort;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -39,17 +40,19 @@ import lombok.RequiredArgsConstructor;
 public class CoinsController {
   private final GetTrendingCoinUseCase getTrendingCoinUseCase;
   private final GetGlobalCoinMetricsUseCase getGlobalCoinMetrics;
-  private final GetCoinsWithMarketDataUseCase getCoinsListWithMarketData;
+
+  private final GetSimpleCoinUseCasePort getSimpleCoinUseCasePort;
+  private final GetCoinsListUseCasePort getCoinsListUseCasePort;
+
   private final GetCoinDetailByIdUseCase getCoinDetailByIdUseCase;
   private final GetCoinChartDataUseCase getCoinChartDataUseCase;
   private final SearchCoinsByQueryUseCase searchCoinsByQueryUseCase;
 
-  @Cacheable(value = "simpleCoinsList")
   @ResponseStatus(code = HttpStatus.OK)
   @GetMapping("/simple")
   public SimpleCoinsListResponse getSimpleCoinsListResponse() {
     SimpleCoinsListResponse response = new SimpleCoinsListResponse(
-      this.getCoinsListWithMarketData.execute()
+      this.getSimpleCoinUseCasePort.execute()
         .stream()
         .map((item) -> new SimpleCoinsListWrapper(
           item.getId(),
@@ -61,11 +64,10 @@ public class CoinsController {
     return response;
   }
 
-  @Cacheable(value = "coinsList")
   @ResponseStatus(code = HttpStatus.OK)
   @GetMapping("/list")
   public CoinsListResponse getCoinsList() {
-    List<CoinWithMarketData> coinWithMarketDataList = this.getCoinsListWithMarketData.execute();
+    List<CoinWithMarketData> coinWithMarketDataList = this.getCoinsListUseCasePort.execute();
 
     List<CoinsListWrapper> coins = coinWithMarketDataList.stream()
       .map(coin -> {

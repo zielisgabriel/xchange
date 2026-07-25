@@ -15,6 +15,7 @@ Container_Boundary(api, "Backend API (Monolith)") {
   
   Component(refreshTokenRepository, "Refresh Token Repository", "Spring Data Redis", "Abstracts redis operations for Refresh Tokens.")
   Component(userRepository, "User Repository", "Spring Data JPA", "Abstracts database operations for User entities.")
+  Component(profileRepository, "Profile Repository", "Spring Data JPA", "Abstracts database operations for Profile entities.")
 
   Component(redisCacheProxy, "Redis Cache Proxy", "@Cacheable/Spring Data Redis", "Proxy to save, read response cached")
 
@@ -30,8 +31,11 @@ Container_Boundary(api, "Backend API (Monolith)") {
     Rel(signUpController, signUpService, "Passes registration data to", "Method Call")
     
     Rel(signInService, userRepository, "Finds user by email", "Method Call")
-    Rel(signUpService, userRepository, "Saves new user", "Method Call")
+    Rel(signUpService, userRepository, "Saves new user", "Method Call/@Transactional")
+    Rel(signUpService, profileRepository, "Saves new user", "Method Call/@Transactional")
     Rel(signInService, authTokenService, "Requests token generation", "Method Call")
+
+    UpdateRelStyle(signUpService, userRepository, $offsetY="40", $offsetX="20")
   }
 
   Boundary(coinService, "Coin Module") {
@@ -59,4 +63,7 @@ Rel(userRepository, relationalDb, "Reads/Writes user data", "JDBC/TCP")
 Rel(trendingCoinsService, coinGecko, "Fetches external data if cache misses", "JSON/HTTPS")
 Rel(trendingCoinsService, redisCacheProxy, "Sends, reads response", "Method Call")
 Rel(redisCacheProxy, cacheDb, "Saves/Reads cached response via @Cacheable", "RESP/TCP")
+
+UpdateRelStyle(trendingCoinsService, redisCacheProxy, $offsetY="20", $offsetX="-50")
+UpdateRelStyle(authTokenService, refreshTokenRepository, $offsetY="0", $offsetX="40")
 ```
