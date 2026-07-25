@@ -1,0 +1,49 @@
+name: Docker Build CI
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "backend/crypto-recommendation-ai/**"
+      - "backend/xchange_api/**"
+      - "docker-compose.yaml"
+      - ".github/workflows/docker-build.yaml"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "backend/crypto-recommendation-ai/**"
+      - "backend/xchange_api/**"
+      - "docker-compose.yaml"
+      - ".github/workflows/docker-build.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build ${{ matrix.service }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: Crypto Recommendation AI
+            context: backend/crypto-recommendation-ai
+            dockerfile: backend/crypto-recommendation-ai/Dockerfile
+            image: xchange/crypto-recommendation-ai
+          - service: Xchange API
+            context: backend/xchange_api
+            dockerfile: backend/xchange_api/Dockerfile
+            image: xchange/xchange-api
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --file "${{ matrix.dockerfile }}" \
+            --tag "${{ matrix.image }}:${{ github.sha }}" \
+            "${{ matrix.context }}"
