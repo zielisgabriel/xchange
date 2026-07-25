@@ -31,8 +31,8 @@ Container_Boundary(api, "Backend API (Monolith)") {
     Rel(signUpController, signUpService, "Passes registration data to", "Method Call")
     
     Rel(signInService, userRepository, "Finds user by email", "Method Call")
-    Rel(signUpService, userRepository, "Saves new user", "Method Call/@Transactional")
-    Rel(signUpService, profileRepository, "Saves new user", "Method Call/@Transactional")
+    Rel(signUpService, userRepository, "Saves a new user", "Method Call/@Transactional")
+    Rel(signUpService, profileRepository, "Create a new profile", "Method Call/@Transactional")
     Rel(signInService, authTokenService, "Requests token generation", "Method Call")
 
     UpdateRelStyle(signUpService, userRepository, $offsetY="40", $offsetX="20")
