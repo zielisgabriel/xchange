@@ -1,0 +1,12 @@
+target/
+.env
+
+.git/
+.gitignore
+.gitattributes
+.agents/
+skills-lock.json
+
+*.iml
+.idea/
+.vscode/

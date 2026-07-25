@@ -1,5 +1,6 @@
 package br.com.xchange.api.infra.decorators;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.cache.annotation.Cacheable;
@@ -15,6 +16,6 @@ public class GetSimpleCoinUseCaseCached implements GetSimpleCoinUseCasePort {
   @Override
   @Cacheable(value = "simpleCoinsList")
   public List<Coin> execute() {
-    return this.getSimpleCoinUseCasePort.execute();
+    return new ArrayList<>(this.getSimpleCoinUseCasePort.execute());
   }
 }

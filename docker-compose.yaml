@@ -1,4 +1,16 @@
+# Run the complete backend stack from the repository root:
+#   1. Create a .env file containing COINGECKO_KEY=<your-demo-api-key>.
+#      JWT_SK, database credentials, and Redis credentials can also be overridden there.
+#   2. Run: docker compose up --build
+#      If your Docker installation uses the standalone command, run: docker-compose up --build
+#   3. Backend API: http://localhost:8080
+#      AI API/docs: http://localhost:8000/docs
+#
+# Stop containers: docker compose down
+# Stop containers and delete local PostgreSQL/Redis data: docker compose down --volumes
+
 volumes:
+  postgres-data:
   redis-data:
 
 services:
@@ -6,23 +18,90 @@ services:
     image: postgres:17-alpine
     container_name: xchange_psql_container
     environment:
-      POSTGRES_USER: xchange_user
-      POSTGRES_PASSWORD: xchange_password
-      POSTGRES_DB: xchange_db
+      POSTGRES_USER: ${POSTGRES_USER:-xchange_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-xchange_password}
+      POSTGRES_DB: ${POSTGRES_DB:-xchange_db}
     ports:
       - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+      interval: 5s
+      timeout: 5s
+      retries: 10
     networks:
       - xchange_network
 
   xchange_redis:
     image: redis:8.4.2-alpine
     container_name: xchange_redis_container
+    command:
+      - redis-server
+      - --requirepass
+      - ${REDIS_PASSWORD:-xchange_password}
+      - --appendonly
+      - "yes"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-xchange_password}
     ports:
       - "6379:6379"
-    environment:
-      REDIS_ARGS: --requirepass xchange_password --appendonly yes
     volumes:
       - redis-data:/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - redis-cli -a "$$REDIS_PASSWORD" ping | grep -q PONG
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - xchange_network
+
+  crypto-recommendation-ai:
+    image: xchange/crypto-recommendation-ai:local
+    container_name: crypto_recommendation_ai_container
+    build:
+      context: ./backend/crypto-recommendation-ai
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - xchange_network
+
+  xchange_api:
+    image: xchange/xchange-api:local
+    container_name: xchange_api_container
+    build:
+      context: ./backend/xchange_api
+      dockerfile: Dockerfile
+    env_file: ./.env
+    environment:
+      DB_HOST: xchange_psql
+      DB_PORT: 5432
+      DB_DATABASE: ${POSTGRES_DB:-xchange_db}
+      DB_USERNAME: ${POSTGRES_USER:-xchange_user}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-xchange_password}
+      REDIS_HOST: xchange_redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-xchange_password}
+      CRYPTO_RECOMMENDATION_AI_PREDICT_URL: http://crypto-recommendation-ai:8000/predict
+      COINGECKO_KEY: ${COINGECKO_KEY:-}
+      JWT_SK: ${JWT_SK:-xchange-local-development-secret-key-change-before-production}
+    depends_on:
+      xchange_psql:
+        condition: service_healthy
+      xchange_redis:
+        condition: service_healthy
+      crypto-recommendation-ai:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    networks:
+      - xchange_network
 
 networks:
   xchange_network:
+    driver: bridge

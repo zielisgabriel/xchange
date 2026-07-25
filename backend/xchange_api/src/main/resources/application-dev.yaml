@@ -5,18 +5,21 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:postgresql://localhost:5432/${DB_DATABASE}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   data:
     redis:
-      host: "localhost"
-      port: 6379
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
       database: 0
-      password: "xchange_password"
+      password: ${REDIS_PASSWORD:xchange_password}
 
 jwt:
   secret-key: ${JWT_SK}
 
 coingecko:
   api-key: ${COINGECKO_KEY}
+
+crypto-recommendation-ai:
+  prediction-url: ${CRYPTO_RECOMMENDATION_AI_PREDICT_URL:http://localhost:8000/predict}
