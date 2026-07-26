@@ -1,14 +1,12 @@
+
+![Apresentação da plataforma Xchange](./assets/presentation-image.png)
 <div align="center">
 
-# Xchange
+# **Xchange**
 
 ### Plataforma inteligente de monitoramento de criptomoedas
 
-**Dados em tempo real, análises com IA e alertas personalizados para investidores e traders.**
-
 </div>
-
-![Apresentação da plataforma Xchange](./assets/presentation-image.png)
 
 ---
 
